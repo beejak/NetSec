@@ -45,8 +45,8 @@ After extensive research across **11 specialized agents**, we've identified crit
 ### Research Documents:
 - [RESEARCH_REPORT.md](RESEARCH_REPORT.md) - Network security research
 - [CLOUD_SECURITY_RESEARCH.md](CLOUD_SECURITY_RESEARCH.md) - Cloud security research
-- [CONTAINER_SECURITY_RESEARCH.md](CONTAINER_SECURITY_RESEARCH.md) - Container security research
 - [GAP_ANALYSIS.md](GAP_ANALYSIS.md) - Gap analysis
+- **Container Security Research** - See [netsec-container/docs/research/](netsec-container/docs/research/)
 
 ### Design Documents:
 - [ATTACK_VECTORS_VULNERABILITIES.md](ATTACK_VECTORS_VULNERABILITIES.md) - Attack vectors

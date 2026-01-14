@@ -1,0 +1,53 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs
+*.log
+logs/
+
+# Environment
+.env
+.env.local
+
+# Credentials (NEVER commit)
+credentials.json
+*.pem
+*.key
+*.p12
+aws-credentials
+azure-credentials
+gcp-credentials.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+data/
+temp/
+*.json.bak
+test_results/

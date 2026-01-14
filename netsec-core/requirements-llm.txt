@@ -1,5 +1,13 @@
 # Optional LLM dependencies for NetSec-Core
 -r requirements.txt
 
+# Cloud providers (bring your own API key)
 openai>=1.0.0
 anthropic>=0.7.0
+
+# Local model support (optional)
+# For Ollama, LM Studio, vLLM - uses OpenAI-compatible API (openai package above)
+# For HuggingFace Transformers:
+# transformers>=4.30.0
+# torch>=2.0.0
+# accelerate>=0.20.0

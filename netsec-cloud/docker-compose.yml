@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  netsec-cloud-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: netsec-cloud-api
+    ports:
+      - "8001:8000"
+    environment:
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+      - LOG_LEVEL=INFO
+      # Cloud provider credentials (set these or mount as secrets)
+      # - AWS_ACCESS_KEY_ID=
+      # - AWS_SECRET_ACCESS_KEY=
+      # - AZURE_CLIENT_ID=
+      # - AZURE_CLIENT_SECRET=
+      # - AZURE_TENANT_ID=
+      # - GOOGLE_APPLICATION_CREDENTIALS=
+    volumes:
+      - ./logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s

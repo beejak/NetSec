@@ -1,23 +1,51 @@
-"""LLM-powered security analysis."""
+"""LLM-powered security analysis with support for cloud and local models."""
 
 from typing import Dict, Any, List, Optional
 import os
+import json
 
 
 class LLMAnalyzer:
-    """LLM-powered analyzer for security findings and remediation."""
+    """LLM-powered analyzer for security findings and remediation.
+    
+    Supports:
+    - Cloud providers: OpenAI, Anthropic (bring your own API key)
+    - Local providers: Ollama, LM Studio, vLLM, HuggingFace Transformers
+    """
 
-    def __init__(self, provider: str = "openai", model: str = "gpt-3.5-turbo"):
+    def __init__(
+        self,
+        provider: str = "openai",
+        model: str = "gpt-3.5-turbo",
+        api_key: Optional[str] = None,
+        base_url: Optional[str] = None,
+    ):
         """
         Initialize LLM Analyzer.
 
         Args:
-            provider: LLM provider ("openai", "anthropic", or "local")
-            model: Model name to use
+            provider: LLM provider ("openai", "anthropic", "ollama", "lmstudio", "vllm", "huggingface")
+            model: Model name to use (e.g., "gpt-3.5-turbo", "llama2", "mistral")
+            api_key: API key for cloud providers (optional, can use env vars)
+            base_url: Base URL for local/self-hosted models (e.g., "http://localhost:11434" for Ollama)
         """
-        self.provider = provider
+        self.provider = provider.lower()
         self.model = model
-        self.api_key = os.getenv("OPENAI_API_KEY") or os.getenv("ANTHROPIC_API_KEY")
+        self.base_url = base_url
+        
+        # API key handling - support bring your own key
+        if api_key:
+            self.api_key = api_key
+        elif self.provider == "openai":
+            self.api_key = os.getenv("OPENAI_API_KEY")
+        elif self.provider == "anthropic":
+            self.api_key = os.getenv("ANTHROPIC_API_KEY")
+        elif self.provider in ["ollama", "lmstudio", "vllm"]:
+            # Local models don't need API keys
+            self.api_key = None
+        else:
+            self.api_key = None
+        
         self._client = None
 
     def _get_client(self):
@@ -29,8 +57,14 @@ class LLMAnalyzer:
             try:
                 import openai
                 if not self.api_key:
-                    raise ValueError("OPENAI_API_KEY environment variable not set")
-                self._client = openai.OpenAI(api_key=self.api_key)
+                    raise ValueError(
+                        "OpenAI API key not provided. Set OPENAI_API_KEY env var or pass api_key parameter"
+                    )
+                # Support custom base URL for OpenAI-compatible APIs
+                client_kwargs = {"api_key": self.api_key}
+                if self.base_url:
+                    client_kwargs["base_url"] = self.base_url
+                self._client = openai.OpenAI(**client_kwargs)
                 return self._client
             except ImportError:
                 raise ImportError("openai package not installed. Install with: pip install openai")
@@ -39,14 +73,70 @@ class LLMAnalyzer:
             try:
                 import anthropic
                 if not self.api_key:
-                    raise ValueError("ANTHROPIC_API_KEY environment variable not set")
+                    raise ValueError(
+                        "Anthropic API key not provided. Set ANTHROPIC_API_KEY env var or pass api_key parameter"
+                    )
                 self._client = anthropic.Anthropic(api_key=self.api_key)
                 return self._client
             except ImportError:
                 raise ImportError("anthropic package not installed. Install with: pip install anthropic")
 
+        elif self.provider == "ollama":
+            # Ollama uses OpenAI-compatible API
+            try:
+                import openai
+                base_url = self.base_url or os.getenv("OLLAMA_BASE_URL", "http://localhost:11434/v1")
+                self._client = openai.OpenAI(
+                    api_key="ollama",  # Ollama doesn't require real API key
+                    base_url=base_url
+                )
+                return self._client
+            except ImportError:
+                raise ImportError("openai package required for Ollama. Install with: pip install openai")
+
+        elif self.provider == "lmstudio":
+            # LM Studio uses OpenAI-compatible API
+            try:
+                import openai
+                base_url = self.base_url or os.getenv("LMSTUDIO_BASE_URL", "http://localhost:1234/v1")
+                self._client = openai.OpenAI(
+                    api_key="lm-studio",  # LM Studio doesn't require real API key
+                    base_url=base_url
+                )
+                return self._client
+            except ImportError:
+                raise ImportError("openai package required for LM Studio. Install with: pip install openai")
+
+        elif self.provider == "vllm":
+            # vLLM uses OpenAI-compatible API
+            try:
+                import openai
+                base_url = self.base_url or os.getenv("VLLM_BASE_URL", "http://localhost:8000/v1")
+                self._client = openai.OpenAI(
+                    api_key="vllm",  # vLLM doesn't require real API key
+                    base_url=base_url
+                )
+                return self._client
+            except ImportError:
+                raise ImportError("openai package required for vLLM. Install with: pip install openai")
+
+        elif self.provider == "huggingface":
+            # HuggingFace Transformers (local inference)
+            try:
+                from transformers import pipeline
+                # This will be handled differently in _call_llm
+                self._client = "huggingface"  # Placeholder
+                return self._client
+            except ImportError:
+                raise ImportError(
+                    "transformers package not installed. Install with: pip install transformers torch"
+                )
+
         else:
-            raise ValueError(f"Unsupported provider: {self.provider}")
+            raise ValueError(
+                f"Unsupported provider: {self.provider}. "
+                f"Supported: openai, anthropic, ollama, lmstudio, vllm, huggingface"
+            )
 
     def analyze_traffic(self, traffic_summary: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -190,7 +280,8 @@ class LLMAnalyzer:
 
     def _call_llm(self, prompt: str) -> str:
         """Call LLM with prompt."""
-        if self.provider == "openai":
+        if self.provider in ["openai", "ollama", "lmstudio", "vllm"]:
+            # OpenAI-compatible API
             client = self._get_client()
             response = client.chat.completions.create(
                 model=self.model,
@@ -199,6 +290,7 @@ class LLMAnalyzer:
                     {"role": "user", "content": prompt},
                 ],
                 max_tokens=1000,
+                temperature=0.7,
             )
             return response.choices[0].message.content
 
@@ -212,6 +304,26 @@ class LLMAnalyzer:
                 ],
             )
             return response.content[0].text
+
+        elif self.provider == "huggingface":
+            # Local HuggingFace model
+            try:
+                from transformers import pipeline
+                generator = pipeline(
+                    "text-generation",
+                    model=self.model,
+                    device_map="auto",
+                )
+                full_prompt = f"You are a cybersecurity expert.\n\n{prompt}"
+                result = generator(
+                    full_prompt,
+                    max_length=len(full_prompt.split()) + 200,
+                    num_return_sequences=1,
+                    temperature=0.7,
+                )
+                return result[0]["generated_text"].replace(full_prompt, "").strip()
+            except Exception as e:
+                raise RuntimeError(f"Error calling HuggingFace model: {e}")
 
         else:
             raise ValueError(f"Unsupported provider: {self.provider}")

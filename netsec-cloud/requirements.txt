@@ -1,0 +1,27 @@
+# NetSec-Cloud Dependencies
+# Minimal dependencies - only official cloud SDKs
+
+# AWS SDK
+boto3>=1.28.0
+
+# Azure SDK (optional - install if using Azure)
+# azure-identity>=1.15.0
+# azure-mgmt-resource>=23.0.0
+# azure-mgmt-storage>=21.0.0
+# azure-mgmt-network>=24.0.0
+
+# GCP SDK (optional - install if using GCP)
+# google-cloud-resource-manager>=1.10.0
+# google-cloud-storage>=2.10.0
+# google-cloud-compute>=1.14.0
+
+# Core dependencies
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.5.0
+click>=8.1.0
+
+# Development (optional)
+# pytest>=7.4.0
+# black>=23.0.0
+# ruff>=0.1.0
