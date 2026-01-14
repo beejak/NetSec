@@ -1,0 +1,15 @@
+# Core dependencies for research agents
+# Note: This will be expanded as we build the actual toolkit
+
+# For research agents
+# (No external dependencies needed for basic agents)
+
+# Future dependencies (commented for now)
+# fastapi>=0.104.0
+# uvicorn>=0.24.0
+# websockets>=12.0
+# scapy>=2.5.0
+# dnspython>=2.4.0
+# cryptography>=41.0.0
+# pydantic>=2.5.0
+# pytest>=7.4.0

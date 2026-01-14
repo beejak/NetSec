@@ -1,0 +1,17 @@
+# NetSec-Core Dependencies
+# Core dependencies
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+scapy>=2.5.0
+dnspython>=2.4.0
+cryptography>=41.0.0
+click>=8.1.0
+pydantic>=2.5.0
+python-multipart>=0.0.6
+httpx>=0.25.0
+
+# Development dependencies (install with: pip install -r requirements.txt -r requirements-dev.txt)
+# See requirements-dev.txt
+
+# Optional LLM dependencies (install with: pip install -r requirements.txt -r requirements-llm.txt)
+# See requirements-llm.txt

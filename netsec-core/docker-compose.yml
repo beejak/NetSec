@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  netsec-core-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: netsec-core-api
+    ports:
+      - "8000:8000"
+    environment:
+      - LOG_LEVEL=INFO
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+    restart: unless-stopped
+    networks:
+      - netsec-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8000/api/v1/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # Optional: Add Redis for caching (future enhancement)
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: netsec-core-redis
+  #   ports:
+  #     - "6379:6379"
+  #   networks:
+  #     - netsec-network
+  #   restart: unless-stopped
+
+  # Optional: Add PostgreSQL for result storage (future enhancement)
+  # postgres:
+  #   image: postgres:15-alpine
+  #   container_name: netsec-core-db
+  #   environment:
+  #     - POSTGRES_DB=netsec_core
+  #     - POSTGRES_USER=netsec
+  #     - POSTGRES_PASSWORD=${DB_PASSWORD:-changeme}
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   networks:
+  #     - netsec-network
+  #   restart: unless-stopped
+
+networks:
+  netsec-network:
+    driver: bridge
+
+# volumes:
+#   postgres_data:

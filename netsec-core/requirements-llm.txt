@@ -1,0 +1,5 @@
+# Optional LLM dependencies for NetSec-Core
+-r requirements.txt
+
+openai>=1.0.0
+anthropic>=0.7.0
