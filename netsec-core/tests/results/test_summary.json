@@ -1,0 +1,387 @@
+{
+  "total_tests": 57,
+  "passed": 56,
+  "failed": 1,
+  "skipped": 0,
+  "errors": 0,
+  "test_runs": [
+    {
+      "test_name": "test_verification",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:44:24.853173",
+      "parameters": {
+        "test_type": "verification",
+        "module": "test_logger"
+      },
+      "duration_seconds": 0.1,
+      "test_file": null,
+      "result": {
+        "status": "success"
+      }
+    },
+    {
+      "test_name": "test_verification",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:44:57.738214",
+      "parameters": {
+        "test_type": "verification",
+        "module": "test_logger"
+      },
+      "duration_seconds": 0.1,
+      "test_file": null,
+      "result": {
+        "status": "success"
+      }
+    },
+    {
+      "test_name": "test_root_endpoint",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:45:26.090684",
+      "parameters": {},
+      "duration_seconds": 0.038377500022761524,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\integration\\test_api_integration.py"
+    },
+    {
+      "test_name": "test_health_endpoint",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:45:26.122987",
+      "parameters": {},
+      "duration_seconds": 0.01119360001757741,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\integration\\test_api_integration.py"
+    },
+    {
+      "test_name": "test_dns_scan_endpoint",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:45:36.161514",
+      "parameters": {},
+      "duration_seconds": 10.02048270002706,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\integration\\test_api_integration.py"
+    },
+    {
+      "test_name": "test_ssl_check_endpoint",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:45:36.847910",
+      "parameters": {},
+      "duration_seconds": 0.6314114999840967,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\integration\\test_api_integration.py"
+    },
+    {
+      "test_name": "test_scan_ports_endpoint",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:45:38.914444",
+      "parameters": {},
+      "duration_seconds": 2.034796899999492,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\integration\\test_api_integration.py"
+    },
+    {
+      "test_name": "test_remediation_endpoint",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:45:38.974944",
+      "parameters": {},
+      "duration_seconds": 0.01696450001327321,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\integration\\test_api_integration.py"
+    },
+    {
+      "test_name": "test_remediation_list_endpoint",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:45:39.024462",
+      "parameters": {},
+      "duration_seconds": 0.008778000017628074,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\integration\\test_api_integration.py"
+    },
+    {
+      "test_name": "test_remediation_search_endpoint",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:45:39.062704",
+      "parameters": {},
+      "duration_seconds": 0.007305100036319345,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\integration\\test_api_integration.py"
+    },
+    {
+      "test_name": "test_anomaly_status_endpoint",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:45:39.108040",
+      "parameters": {},
+      "duration_seconds": 0.016802500002086163,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\integration\\test_api_integration.py"
+    },
+    {
+      "test_name": "test_api_docs_available",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:45:39.158783",
+      "parameters": {},
+      "duration_seconds": 0.006680500053334981,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\integration\\test_api_integration.py"
+    },
+    {
+      "test_name": "test_openapi_schema_available",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:45:39.299040",
+      "parameters": {},
+      "duration_seconds": 0.10994639998534694,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\integration\\test_api_integration.py"
+    },
+    {
+      "test_name": "test_cli_version",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:45:39.337884",
+      "parameters": {},
+      "duration_seconds": 0.004761999996844679,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\integration\\test_cli_integration.py"
+    },
+    {
+      "test_name": "test_cli_help",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:45:39.384104",
+      "parameters": {},
+      "duration_seconds": 0.015023000014480203,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\integration\\test_cli_integration.py"
+    },
+    {
+      "test_name": "test_dns_scan_command",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:45:49.421137",
+      "parameters": {},
+      "duration_seconds": 10.009260299964808,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\integration\\test_cli_integration.py"
+    },
+    {
+      "test_name": "test_dns_scan_with_options",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:45:59.461658",
+      "parameters": {},
+      "duration_seconds": 10.010214099951554,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\integration\\test_cli_integration.py"
+    },
+    {
+      "test_name": "test_ssl_check_command",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:46:00.128044",
+      "parameters": {},
+      "duration_seconds": 0.6338196999859065,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\integration\\test_cli_integration.py"
+    },
+    {
+      "test_name": "test_ssl_check_with_port",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:46:00.715657",
+      "parameters": {},
+      "duration_seconds": 0.5618925999733619,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\integration\\test_cli_integration.py"
+    },
+    {
+      "test_name": "test_scan_ports_command",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:46:02.790369",
+      "parameters": {},
+      "duration_seconds": 2.0483980999561027,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\integration\\test_cli_integration.py"
+    },
+    {
+      "test_name": "test_scan_ports_with_options",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:46:04.821092",
+      "parameters": {},
+      "duration_seconds": 2.0057191000087187,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\integration\\test_cli_integration.py"
+    },
+    {
+      "test_name": "test_scan_services_command",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:46:06.880855",
+      "parameters": {},
+      "duration_seconds": 2.0315922999870963,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\integration\\test_cli_integration.py"
+    },
+    {
+      "test_name": "test_remediation_get_command",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:46:12.377868",
+      "parameters": {},
+      "duration_seconds": 5.4702549000503495,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\integration\\test_cli_integration.py"
+    },
+    {
+      "test_name": "test_remediation_list_command",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:46:17.555902",
+      "parameters": {},
+      "duration_seconds": 5.151779900013935,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\integration\\test_cli_integration.py"
+    },
+    {
+      "test_name": "test_anomaly_status_command",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:46:17.585796",
+      "parameters": {},
+      "duration_seconds": 0.0033873000065796077,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\integration\\test_cli_integration.py"
+    },
+    {
+      "test_name": "test_anomaly_learn_command",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:46:17.617794",
+      "parameters": {},
+      "duration_seconds": 0.0011990000493824482,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\integration\\test_cli_integration.py"
+    },
+    {
+      "test_name": "test_assets_discover_command",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:46:53.123015",
+      "parameters": {},
+      "duration_seconds": 35.480644800001755,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\integration\\test_cli_integration.py"
+    },
+    {
+      "test_name": "test_all_command_groups_available",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:46:53.170615",
+      "parameters": {},
+      "duration_seconds": 0.0018896000110544264,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\integration\\test_cli_integration.py"
+    },
+    {
+      "test_name": "test_root_endpoint",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:46:53.210485",
+      "parameters": {},
+      "duration_seconds": 0.007728600001428276,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_api_health.py"
+    },
+    {
+      "test_name": "test_health_endpoint",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:46:53.251563",
+      "parameters": {},
+      "duration_seconds": 0.007471400022041053,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_api_health.py"
+    },
+    {
+      "test_name": "test_scan_request",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:46:53.287631",
+      "parameters": {},
+      "duration_seconds": 0.000318199978210032,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_api_models.py"
+    },
+    {
+      "test_name": "test_scan_result",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:46:53.322215",
+      "parameters": {},
+      "duration_seconds": 0.0005308000254444778,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_api_models.py"
+    },
+    {
+      "test_name": "test_finding",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:46:53.382347",
+      "parameters": {},
+      "duration_seconds": 0.0003933999687433243,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_api_models.py"
+    },
+    {
+      "test_name": "test_dns_scan_request",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:46:53.414161",
+      "parameters": {},
+      "duration_seconds": 0.0002878000377677381,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_api_models.py"
+    },
+    {
+      "test_name": "test_ssl_check_request",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:46:53.449144",
+      "parameters": {},
+      "duration_seconds": 0.00032140000257641077,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_api_models.py"
+    },
+    {
+      "test_name": "test_dns_scan_endpoint",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:47:03.599908",
+      "parameters": {},
+      "duration_seconds": 10.131396499986295,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_api_routes.py"
+    },
+    {
+      "test_name": "test_ssl_check_endpoint",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:47:04.244330",
+      "parameters": {},
+      "duration_seconds": 0.6189490000251681,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_api_routes.py"
+    },
+    {
+      "test_name": "test_scan_ports_endpoint",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:47:06.279840",
+      "parameters": {},
+      "duration_seconds": 2.010924599948339,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_api_routes.py"
+    },
+    {
+      "test_name": "test_cli_version",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:47:06.314600",
+      "parameters": {},
+      "duration_seconds": 0.0008279000176116824,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_cli.py"
+    },
+    {
+      "test_name": "test_cli_help",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:47:06.346939",
+      "parameters": {},
+      "duration_seconds": 0.003805299988016486,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_cli.py"
+    },
+    {
+      "test_name": "test_scan_ports_command",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:47:11.393559",
+      "parameters": {},
+      "duration_seconds": 5.025451700028498,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_cli.py"
+    },
+    {
+      "test_name": "test_dns_scan_command",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:47:31.576648",
+      "parameters": {},
+      "duration_seconds": 20.173716099990997,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_cli.py"
+    },
+    {
+      "test_name": "test_ssl_check_command",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:47:32.233042",
+      "parameters": {},
+      "duration_seconds": 0.6162911999854259,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_cli.py"
+    },
+    {
+      "test_name": "test_dns_scanner_initialization",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:47:32.267557",
+      "parameters": {},
+      "duration_seconds": 0.002515900006983429,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_dns_scanner.py"
+    },
+    {
+      "test_name": "test_scan_domain_basic",
+      "status": "PASSED",
+      "timestamp": "2026-01-15T09:47:52.346811",
+      "parameters": {},
+      "duration_seconds": 20.043310799985193,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_dns_scanner.py"
+    },
+    {
+      "test_name": "test_detect_tunneling",
+      "status": "FAILED",
+      "timestamp": "2026-01-15T09:48:02.783531",
+      "parameters": {},
+      "duration_seconds": 10.135877599997912,
+      "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_dns_scanner.py",
+      "error": 

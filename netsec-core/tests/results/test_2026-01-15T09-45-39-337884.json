@@ -1,0 +1,8 @@
+{
+  "test_name": "test_cli_version",
+  "status": "PASSED",
+  "timestamp": "2026-01-15T09:45:39.337884",
+  "parameters": {},
+  "duration_seconds": 0.004761999996844679,
+  "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\integration\\test_cli_integration.py"
+}

@@ -1,0 +1,8 @@
+{
+  "test_name": "test_ssl_check_endpoint",
+  "status": "PASSED",
+  "timestamp": "2026-01-15T09:47:04.244330",
+  "parameters": {},
+  "duration_seconds": 0.6189490000251681,
+  "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_api_routes.py"
+}

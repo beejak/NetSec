@@ -1,0 +1,8 @@
+{
+  "test_name": "test_scan_services_command",
+  "status": "PASSED",
+  "timestamp": "2026-01-15T09:46:06.880855",
+  "parameters": {},
+  "duration_seconds": 2.0315922999870963,
+  "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\integration\\test_cli_integration.py"
+}

@@ -1,0 +1,8 @@
+{
+  "test_name": "test_dns_scan_endpoint",
+  "status": "PASSED",
+  "timestamp": "2026-01-15T09:47:03.599908",
+  "parameters": {},
+  "duration_seconds": 10.131396499986295,
+  "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_api_routes.py"
+}

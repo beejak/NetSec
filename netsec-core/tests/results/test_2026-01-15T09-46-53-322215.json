@@ -1,0 +1,8 @@
+{
+  "test_name": "test_scan_result",
+  "status": "PASSED",
+  "timestamp": "2026-01-15T09:46:53.322215",
+  "parameters": {},
+  "duration_seconds": 0.0005308000254444778,
+  "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_api_models.py"
+}

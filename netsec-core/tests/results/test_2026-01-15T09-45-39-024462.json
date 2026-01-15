@@ -1,0 +1,8 @@
+{
+  "test_name": "test_remediation_list_endpoint",
+  "status": "PASSED",
+  "timestamp": "2026-01-15T09:45:39.024462",
+  "parameters": {},
+  "duration_seconds": 0.008778000017628074,
+  "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\integration\\test_api_integration.py"
+}

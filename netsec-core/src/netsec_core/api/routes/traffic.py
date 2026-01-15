@@ -1,10 +1,22 @@
 """Traffic analysis routes."""
 
 from fastapi import APIRouter, HTTPException
-from netsec_core.core.traffic_analyzer import TrafficAnalyzer
+from typing import Optional
 
 router = APIRouter()
-analyzer = TrafficAnalyzer()
+_analyzer: Optional[object] = None
+
+
+def _get_analyzer():
+    """Lazy-load TrafficAnalyzer to avoid import errors if scapy is not available."""
+    global _analyzer
+    if _analyzer is None:
+        try:
+            from netsec_core.core.traffic_analyzer import TrafficAnalyzer
+            _analyzer = TrafficAnalyzer()
+        except ImportError as e:
+            raise ImportError(f"scapy is required for traffic analysis: {e}")
+    return _analyzer
 
 
 @router.post("/capture")
@@ -16,6 +28,7 @@ async def capture_traffic(
 ):
     """Capture network traffic."""
     try:
+        analyzer = _get_analyzer()
         result = analyzer.capture_traffic(
             interface=interface,
             count=count,
@@ -49,8 +62,14 @@ async def stream_traffic():
 async def analyze_traffic(pcap_file: str = None):
     """Analyze captured traffic."""
     try:
+        analyzer = _get_analyzer()
         result = analyzer.analyze_traffic(pcap_file=pcap_file)
         return result
+    except ImportError as e:
+        raise HTTPException(
+            status_code=503,
+            detail=f"Traffic analysis requires scapy: {str(e)}",
+        )
     except Exception as e:
         raise HTTPException(
             status_code=500,
@@ -62,12 +81,18 @@ async def analyze_traffic(pcap_file: str = None):
 async def get_flows():
     """Get network flows."""
     try:
+        analyzer = _get_analyzer()
         flows = analyzer.get_flows()
         return {
             "flows": flows,
             "count": len(flows),
             "timestamp": datetime.utcnow().isoformat(),
         }
+    except ImportError as e:
+        raise HTTPException(
+            status_code=503,
+            detail=f"Traffic flows require scapy: {str(e)}",
+        )
     except Exception as e:
         raise HTTPException(
             status_code=500,

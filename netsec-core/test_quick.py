@@ -10,35 +10,35 @@ def test_imports():
     print("Testing imports...")
     try:
         from netsec_core import __version__
-        print(f"✓ NetSec-Core version: {__version__}")
+        print(f"[OK] NetSec-Core version: {__version__}")
         
         from netsec_core.api.main import app
-        print("✓ FastAPI app imported")
+        print("[OK] FastAPI app imported")
         
         from netsec_core.core.dns_scanner import DNSScanner
-        print("✓ DNS Scanner imported")
+        print("[OK] DNS Scanner imported")
         
         from netsec_core.core.ssl_scanner import SSLScanner
-        print("✓ SSL Scanner imported")
+        print("[OK] SSL Scanner imported")
         
         from netsec_core.core.network_scanner import NetworkScanner
-        print("✓ Network Scanner imported")
+        print("[OK] Network Scanner imported")
         
         from netsec_core.core.traffic_analyzer import TrafficAnalyzer
-        print("✓ Traffic Analyzer imported")
+        print("[OK] Traffic Analyzer imported")
         
         from netsec_core.core.anomaly_detector import AnomalyDetector
-        print("✓ Anomaly Detector imported")
+        print("[OK] Anomaly Detector imported")
         
         from netsec_core.core.asset_discovery import AssetDiscovery
-        print("✓ Asset Discovery imported")
+        print("[OK] Asset Discovery imported")
         
         from netsec_core.cli.main import cli
-        print("✓ CLI imported")
+        print("[OK] CLI imported")
         
         return True
     except Exception as e:
-        print(f"✗ Import error: {e}")
+        print(f"[FAIL] Import error: {e}")
         traceback.print_exc()
         return False
 
@@ -54,13 +54,13 @@ def test_dns_scanner():
         result = scanner.scan_domain("example.com", check_tunneling=False, check_spoofing=False, analyze_patterns=False)
         
         if "domain" in result and result["domain"] == "example.com":
-            print("✓ DNS Scanner basic test passed")
+            print("[OK] DNS Scanner basic test passed")
             return True
         else:
-            print("✗ DNS Scanner test failed: unexpected result")
+            print("[FAIL] DNS Scanner test failed: unexpected result")
             return False
     except Exception as e:
-        print(f"✗ DNS Scanner error: {e}")
+        print(f"[FAIL] DNS Scanner error: {e}")
         traceback.print_exc()
         return False
 
@@ -76,13 +76,13 @@ def test_ssl_scanner():
         try:
             result = scanner.check_certificate("example.com", port=443, check_expiration=False, check_ciphers=False, check_chain=False)
             if "hostname" in result:
-                print("✓ SSL Scanner basic test passed")
+                print("[OK] SSL Scanner basic test passed")
                 return True
         except Exception:
-            print("⚠ SSL Scanner test skipped (network unavailable)")
+            print("[WARN] SSL Scanner test skipped (network unavailable)")
             return True  # Not a failure, just network issue
     except Exception as e:
-        print(f"✗ SSL Scanner error: {e}")
+        print(f"[FAIL] SSL Scanner error: {e}")
         traceback.print_exc()
         return False
 
@@ -98,14 +98,14 @@ def test_network_scanner():
         result = scanner.scan_ports("127.0.0.1", ports=[22, 80, 443], scan_type="tcp", timeout=1.0)
         
         if "scan_id" in result and "target" in result:
-            print("✓ Network Scanner basic test passed")
+            print("[OK] Network Scanner basic test passed")
             print(f"  Found {len(result.get('open_ports', []))} open ports")
             return True
         else:
-            print("✗ Network Scanner test failed: unexpected result")
+            print("[FAIL] Network Scanner test failed: unexpected result")
             return False
     except Exception as e:
-        print(f"✗ Network Scanner error: {e}")
+        print(f"[FAIL] Network Scanner error: {e}")
         traceback.print_exc()
         return False
 
@@ -120,13 +120,13 @@ def test_anomaly_detector():
         # Test baseline learning
         result = detector.learn_baseline(duration=60)
         if result.get("status") == "learning":
-            print("✓ Anomaly Detector basic test passed")
+            print("[OK] Anomaly Detector basic test passed")
             return True
         else:
-            print("✗ Anomaly Detector test failed")
+            print("[FAIL] Anomaly Detector test failed")
             return False
     except Exception as e:
-        print(f"✗ Anomaly Detector error: {e}")
+        print(f"[FAIL] Anomaly Detector error: {e}")
         traceback.print_exc()
         return False
 
@@ -150,10 +150,10 @@ def test_api_models():
         )
         assert finding.severity == Severity.HIGH
         
-        print("✓ API Models test passed")
+        print("[OK] API Models test passed")
         return True
     except Exception as e:
-        print(f"✗ API Models error: {e}")
+        print(f"[FAIL] API Models error: {e}")
         traceback.print_exc()
         return False
 
@@ -179,7 +179,7 @@ def main():
             result = test_func()
             results.append((name, result))
         except Exception as e:
-            print(f"✗ {name} test crashed: {e}")
+            print(f"[FAIL] {name} test crashed: {e}")
             results.append((name, False))
     
     # Summary
@@ -191,16 +191,16 @@ def main():
     total = len(results)
     
     for name, result in results:
-        status = "✓ PASS" if result else "✗ FAIL"
+        status = "[OK] PASS" if result else "[FAIL] FAIL"
         print(f"{status}: {name}")
     
     print(f"\nTotal: {passed}/{total} tests passed")
     
     if passed == total:
-        print("\n🎉 All tests passed!")
+        print("\n[SUCCESS] All tests passed!")
         return 0
     else:
-        print(f"\n⚠️  {total - passed} test(s) failed")
+        print(f"\n[WARN]️  {total - passed} test(s) failed")
         return 1
 
 

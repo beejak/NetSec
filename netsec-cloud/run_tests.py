@@ -34,13 +34,13 @@ def test_imports():
         try:
             module = importlib.import_module(module_name)
             if hasattr(module, attr_name):
-                print(f"✓ {module_name}.{attr_name}")
+                print(f"[OK] {module_name}.{attr_name}")
                 results.append(True)
             else:
-                print(f"✗ {module_name}.{attr_name} - Attribute not found")
+                print(f"[FAIL] {module_name}.{attr_name} - Attribute not found")
                 results.append(False)
         except Exception as e:
-            print(f"✗ {module_name} - {e}")
+            print(f"[FAIL] {module_name} - {e}")
             results.append(False)
     
     return all(results)
@@ -61,7 +61,7 @@ def test_api_structure():
             if hasattr(route, 'path') and hasattr(route, 'methods'):
                 routes.append((route.path, route.methods))
         
-        print(f"✓ Found {len(routes)} API routes")
+        print(f"[OK] Found {len(routes)} API routes")
         
         # Check for key routes
         route_paths = [r[0] for r in routes]
@@ -73,13 +73,13 @@ def test_api_structure():
         
         for route in key_routes:
             if any(route in rp for rp in route_paths):
-                print(f"✓ Route exists: {route}")
+                print(f"[OK] Route exists: {route}")
             else:
-                print(f"⚠ Route not found: {route}")
+                print(f"[WARN] Route not found: {route}")
         
         return True
     except Exception as e:
-        print(f"✗ API structure test failed: {e}")
+        print(f"[FAIL] API structure test failed: {e}")
         traceback.print_exc()
         return False
 
@@ -102,10 +102,10 @@ def test_provider_structure():
             module = importlib.import_module(module_name)
             provider_class = getattr(module, class_name)
             # Just check it exists, don't initialize (requires credentials)
-            print(f"✓ {name} class found")
+            print(f"[OK] {name} class found")
             results.append(True)
         except Exception as e:
-            print(f"✗ {name} not found: {e}")
+            print(f"[FAIL] {name} not found: {e}")
             results.append(False)
     
     return all(results)
@@ -120,11 +120,11 @@ def test_scanner_structure():
     try:
         from netsec_cloud.scanner import CloudScanner
         scanner = CloudScanner()
-        print("✓ CloudScanner initialized")
+        print("[OK] CloudScanner initialized")
         print(f"  - Providers: {len(scanner.providers)}")
         return True
     except Exception as e:
-        print(f"✗ Scanner test failed: {e}")
+        print(f"[FAIL] Scanner test failed: {e}")
         traceback.print_exc()
         return False
 
@@ -148,10 +148,10 @@ def test_file_structure():
     for file_path in required_files:
         full_path = base_path / file_path
         if full_path.exists():
-            print(f"✓ {file_path}")
+            print(f"[OK] {file_path}")
             results.append(True)
         else:
-            print(f"✗ {file_path} - Missing")
+            print(f"[FAIL] {file_path} - Missing")
             results.append(False)
     
     return all(results)
@@ -178,7 +178,7 @@ def main():
             result = test_func()
             results.append((name, result))
         except Exception as e:
-            print(f"\n✗ {name} test crashed: {e}")
+            print(f"\n[FAIL] {name} test crashed: {e}")
             traceback.print_exc()
             results.append((name, False))
     
@@ -191,19 +191,19 @@ def main():
     total = len(results)
     
     for name, result in results:
-        status = "✓ PASS" if result else "✗ FAIL"
+        status = "[OK] PASS" if result else "[FAIL] FAIL"
         print(f"{status}: {name}")
     
     print(f"\nTotal: {passed}/{total} test suites passed")
     
     if passed == total:
-        print("\n🎉 All verification tests passed!")
+        print("\n[SUCCESS] All verification tests passed!")
         print("\nNext steps:")
         print("  1. Run pytest: pytest -v")
         print("  2. Start API: uvicorn netsec_cloud.api.main:app --reload")
         return 0
     else:
-        print(f"\n⚠️  {total - passed} test suite(s) failed")
+        print(f"\n[WARN]️  {total - passed} test suite(s) failed")
         print("Please review the errors above.")
         return 1
 

@@ -1,0 +1,8 @@
+{
+  "test_name": "test_dns_scan_request",
+  "status": "PASSED",
+  "timestamp": "2026-01-15T09:42:36.362167",
+  "parameters": {},
+  "duration_seconds": 0.00030010001501068473,
+  "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_api_models.py"
+}

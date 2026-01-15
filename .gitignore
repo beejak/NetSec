@@ -60,3 +60,5 @@ Thumbs.db
 *.cap
 scan_results/
 reports/
+PUSH_WITH_TOKEN.bat
+push_with_token.ps1

@@ -1,0 +1,8 @@
+{
+  "test_name": "test_all_command_groups_available",
+  "status": "PASSED",
+  "timestamp": "2026-01-15T09:46:53.170615",
+  "parameters": {},
+  "duration_seconds": 0.0018896000110544264,
+  "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\integration\\test_cli_integration.py"
+}

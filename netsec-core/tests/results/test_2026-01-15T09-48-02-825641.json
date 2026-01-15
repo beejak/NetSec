@@ -1,0 +1,8 @@
+{
+  "test_name": "test_calculate_entropy",
+  "status": "PASSED",
+  "timestamp": "2026-01-15T09:48:02.825641",
+  "parameters": {},
+  "duration_seconds": 0.003571599954739213,
+  "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_dns_scanner.py"
+}

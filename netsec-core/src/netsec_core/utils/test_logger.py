@@ -1,11 +1,15 @@
 """Test result logging and documentation system."""
 
 import json
+import logging
 import os
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 from enum import Enum
+
+# Set up logger for test logger warnings
+_logger = logging.getLogger(__name__)
 
 
 class TestStatus(Enum):
@@ -70,7 +74,7 @@ class TestResultLogger:
             with open(self.summary_file, 'w') as f:
                 json.dump(self.summary, f, indent=2)
         except Exception as e:
-            print(f"Warning: Could not save test summary: {e}")
+            _logger.warning(f"Could not save test summary: {e}")
     
     def log_test(
         self,
@@ -124,7 +128,7 @@ class TestResultLogger:
             with open(test_log_file, 'w') as f:
                 json.dump(test_record, f, indent=2)
         except Exception as e:
-            print(f"Warning: Could not save test log: {e}")
+            _logger.warning(f"Could not save test log: {e}")
         
         # Update summary
         self.summary["total_tests"] += 1
@@ -239,7 +243,7 @@ class TestResultLogger:
                 with open(output_file, 'w') as f:
                     f.write(report_text)
             except Exception as e:
-                print(f"Warning: Could not save report: {e}")
+                _logger.warning(f"Could not save report: {e}")
         
         return report_text
 

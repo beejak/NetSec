@@ -24,6 +24,7 @@ wheels/
 venv/
 env/
 ENV/
+.venv
 
 # IDE
 .vscode/
@@ -44,6 +45,7 @@ htmlcov/
 *.json
 security_report_*
 scan-report.*
+reports/
 
 # Environment
 .env
@@ -56,3 +58,5 @@ Thumbs.db
 # Project specific
 *.log
 .cache/
+test_images/
+extracted_images/

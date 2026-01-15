@@ -1,0 +1,8 @@
+{
+  "test_name": "test_health_endpoint",
+  "status": "PASSED",
+  "timestamp": "2026-01-15T09:42:36.267774",
+  "parameters": {},
+  "duration_seconds": 0.006404199986718595,
+  "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_api_health.py"
+}

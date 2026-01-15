@@ -1,0 +1,8 @@
+{
+  "test_name": "test_ssl_check_with_port",
+  "status": "PASSED",
+  "timestamp": "2026-01-15T09:46:00.715657",
+  "parameters": {},
+  "duration_seconds": 0.5618925999733619,
+  "test_file": "C:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\integration\\test_cli_integration.py"
+}
