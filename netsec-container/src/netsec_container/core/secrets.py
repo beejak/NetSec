@@ -4,9 +4,10 @@ import asyncio
 import logging
 import re
 from pathlib import Path
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Dict
 
 from netsec_container.core.results import Secret
+from netsec_container.core.image_extractor import ImageExtractor
 
 logger = logging.getLogger(__name__)
 
@@ -17,6 +18,7 @@ class SecretsScanner:
     def __init__(self):
         self.name = "Secrets Scanner"
         self.patterns = self._load_secret_patterns()
+        self.image_extractor = ImageExtractor()
     
     def _load_secret_patterns(self) -> List[Dict[str, any]]:
         """Load secret detection patterns"""
@@ -116,15 +118,19 @@ class SecretsScanner:
     
     async def _extract_image(self, image_path: Union[str, Path]) -> Optional[Path]:
         """Extract container image tar file"""
-        # This would extract the image tar
-        # For now, return None (would need docker/podman to extract)
-        return None
+        try:
+            return self.image_extractor.extract_tar_file(image_path)
+        except Exception as e:
+            logger.error(f"Failed to extract image tar: {e}")
+            return None
     
     async def _extract_image_from_docker(self, image: str) -> Optional[Path]:
-        """Extract image from Docker"""
-        # This would use docker save and extract
-        # For now, return None
-        return None
+        """Extract image from Docker/Podman"""
+        try:
+            return await self.image_extractor.extract_image(image)
+        except Exception as e:
+            logger.error(f"Failed to extract image: {e}")
+            return None
     
     async def _scan_directory(self, directory: Path) -> List[Secret]:
         """Scan directory for secrets"""

@@ -1,36 +1,31 @@
-"""FastAPI application for container security scanner"""
+"""Simple web interface for container scanning"""
 
-from fastapi import FastAPI, File, UploadFile, HTTPException
-from fastapi.responses import FileResponse, JSONResponse, HTMLResponse
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, File, UploadFile, HTTPException, Request
+from fastapi.responses import HTMLResponse, FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
-from typing import Optional
-import tempfile
+from fastapi.templating import Jinja2Templates
 from pathlib import Path
+import tempfile
+import asyncio
 
 from netsec_container import ContainerScanner
-from netsec_container.api.models import ScanRequest, ScanResponse
+
+# Create templates directory if it doesn't exist
+templates_dir = Path(__file__).parent / "templates"
+templates_dir.mkdir(exist_ok=True)
 
 app = FastAPI(
-    title="NetSec-Container API",
-    description="Lightweight Container Security Scanner API",
+    title="NetSec-Container Web Interface",
+    description="Web interface for container security scanning",
     version="0.1.0",
 )
 
-# CORS middleware
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+templates = Jinja2Templates(directory=str(templates_dir))
 
 
 @app.get("/", response_class=HTMLResponse)
-async def root():
-    """API root endpoint - serves web interface"""
-    # Return the web interface HTML
+async def index(request: Request):
+    """Main web interface"""
     html_content = """
 <!DOCTYPE html>
 <html lang="en">
@@ -39,9 +34,13 @@ async def root():
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NetSec-Container Scanner</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
@@ -57,8 +56,15 @@ async def root():
             max-width: 600px;
             width: 100%;
         }
-        h1 { color: #333; margin-bottom: 10px; font-size: 2em; }
-        .subtitle { color: #666; margin-bottom: 30px; }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
         .upload-area {
             border: 3px dashed #667eea;
             border-radius: 10px;
@@ -68,13 +74,34 @@ async def root():
             transition: all 0.3s;
             background: #f8f9ff;
         }
-        .upload-area:hover { border-color: #764ba2; background: #f0f2ff; }
-        .upload-area.dragover { border-color: #764ba2; background: #e8ebff; transform: scale(1.02); }
-        .upload-icon { font-size: 48px; margin-bottom: 20px; }
-        .upload-text { color: #667ee2; font-size: 1.1em; margin-bottom: 10px; }
-        .upload-hint { color: #999; font-size: 0.9em; }
-        input[type="file"] { display: none; }
-        .image-input { margin-top: 20px; }
+        .upload-area:hover {
+            border-color: #764ba2;
+            background: #f0f2ff;
+        }
+        .upload-area.dragover {
+            border-color: #764ba2;
+            background: #e8ebff;
+            transform: scale(1.02);
+        }
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        .upload-text {
+            color: #667ee2;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        .upload-hint {
+            color: #999;
+            font-size: 0.9em;
+        }
+        input[type="file"] {
+            display: none;
+        }
+        .image-input {
+            margin-top: 20px;
+        }
         .image-input input {
             width: 100%;
             padding: 12px;
@@ -95,10 +122,20 @@ async def root():
             margin-top: 20px;
             transition: transform 0.2s;
         }
-        .scan-button:hover { transform: translateY(-2px); }
-        .scan-button:disabled { opacity: 0.6; cursor: not-allowed; }
-        .progress { display: none; margin-top: 20px; }
-        .progress.active { display: block; }
+        .scan-button:hover {
+            transform: translateY(-2px);
+        }
+        .scan-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .progress {
+            display: none;
+            margin-top: 20px;
+        }
+        .progress.active {
+            display: block;
+        }
         .progress-bar {
             width: 100%;
             height: 8px;
@@ -113,9 +150,20 @@ async def root():
             transition: width 0.3s;
             animation: pulse 2s infinite;
         }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
-        .results { display: none; margin-top: 30px; padding: 20px; background: #f8f9ff; border-radius: 10px; }
-        .results.active { display: block; }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .results {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9ff;
+            border-radius: 10px;
+        }
+        .results.active {
+            display: block;
+        }
         .result-item {
             margin-bottom: 15px;
             padding: 15px;
@@ -123,8 +171,24 @@ async def root():
             border-radius: 8px;
             border-left: 4px solid #667eea;
         }
-        .result-label { font-weight: bold; color: #333; margin-bottom: 5px; }
-        .result-value { color: #666; }
+        .result-label {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .result-value {
+            color: #666;
+        }
+        .download-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-top: 10px;
+            margin-right: 10px;
+        }
         .error {
             display: none;
             margin-top: 20px;
@@ -134,7 +198,9 @@ async def root():
             border-radius: 8px;
             color: #c33;
         }
-        .error.active { display: block; }
+        .error.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -156,7 +222,9 @@ async def root():
         <button class="scan-button" id="scanButton" onclick="startScan()">🔍 Scan Container</button>
         
         <div class="progress" id="progress">
-            <div class="progress-bar"><div class="progress-fill"></div></div>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
             <p style="text-align: center; margin-top: 10px; color: #666;">Scanning in progress...</p>
         </div>
         
@@ -178,9 +246,15 @@ async def root():
         const error = document.getElementById('error');
         const resultsContent = document.getElementById('resultsContent');
         
+        // Drag and drop
         uploadArea.addEventListener('click', () => fileInput.click());
-        uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.classList.add('dragover'); });
-        uploadArea.addEventListener('dragleave', () => { uploadArea.classList.remove('dragover'); });
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
         uploadArea.addEventListener('drop', (e) => {
             e.preventDefault();
             uploadArea.classList.remove('dragover');
@@ -206,6 +280,7 @@ async def root():
                 return;
             }
             
+            // Reset UI
             error.classList.remove('active');
             results.classList.remove('active');
             progress.classList.add('active');
@@ -215,6 +290,7 @@ async def root():
                 let response;
                 
                 if (file) {
+                    // Upload file
                     const formData = new FormData();
                     formData.append('file', file);
                     formData.append('format', 'json');
@@ -224,6 +300,7 @@ async def root():
                         body: formData
                     });
                 } else {
+                    // Scan by image name
                     response = await fetch('/api/v1/scan', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -283,102 +360,3 @@ async def root():
 </html>
     """
     return HTMLResponse(content=html_content)
-
-
-@app.post("/api/v1/scan", response_model=ScanResponse)
-async def scan_image(request: ScanRequest):
-    """
-    Scan container image
-    
-    Args:
-        request: Scan request with image name and options
-        
-    Returns:
-        ScanResponse with results
-    """
-    scanner = ContainerScanner(
-        enable_vulnerability=request.enable_vulnerability,
-        enable_secrets=request.enable_secrets,
-        enable_sbom=request.enable_sbom,
-        enable_llm=request.enable_llm,
-        llm_provider=request.llm_provider,
-        llm_model=request.llm_model,
-    )
-    
-    try:
-        results = scanner.scan_image(
-            image=request.image,
-            image_file=request.image_file,
-            dockerfile_path=request.dockerfile_path,
-        )
-        
-        return JSONResponse(content={
-            "success": True,
-            "results": results.to_dict(),
-        })
-    
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@app.post("/api/v1/scan/upload")
-async def scan_uploaded_image(
-    file: UploadFile = File(...),
-    enable_llm: bool = False,
-    format: str = "json",
-):
-    """
-    Scan uploaded container image file
-    
-    Args:
-        file: Uploaded image tar file
-        enable_llm: Enable LLM remediation
-        format: Report format (pdf, csv, json)
-        
-    Returns:
-        Generated report file or JSON results
-    """
-    # Save uploaded file temporarily
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".tar") as tmp_file:
-        content = await file.read()
-        tmp_file.write(content)
-        tmp_file_path = tmp_file.name
-    
-    try:
-        scanner = ContainerScanner(enable_llm=enable_llm)
-        
-        # Scan image
-        results = scanner.scan_image(
-            image=file.filename,
-            image_file=tmp_file_path,
-        )
-        
-        # Return JSON for web interface, or file for download
-        if format == "json":
-            return JSONResponse(content={
-                "success": True,
-                "results": results.to_dict(),
-            })
-        else:
-            # Generate report
-            report_path = scanner.generate_report(results, format=format)
-            
-            # Return report file
-            return FileResponse(
-                report_path,
-                media_type="application/pdf" if format == "pdf" else "text/csv",
-                filename=f"security_report.{format}",
-            )
-    
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    
-    finally:
-        # Cleanup
-        Path(tmp_file_path).unlink(missing_ok=True)
-
-
-@app.get("/api/v1/health")
-async def health():
-    """Health check endpoint"""
-    return {"status": "healthy"}
