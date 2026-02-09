@@ -1,9 +1,11 @@
 """DNS security routes."""
 
+import logging
 from fastapi import APIRouter, HTTPException
 from netsec_core.api.models import DNSScanRequest, DNSResult, Finding, Severity
 from netsec_core.core.dns_scanner import DNSScanner
 
+logger = logging.getLogger(__name__)
 router = APIRouter()
 scanner = DNSScanner()
 
@@ -36,11 +38,9 @@ async def scan_dns(request: DNSScanRequest):
             domain=result["domain"],
             findings=findings,
         )
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Error scanning DNS: {str(e)}",
-        )
+    except Exception:
+        logger.exception("DNS scan failed")
+        raise HTTPException(status_code=500, detail="An error occurred while scanning DNS.")
 
 
 @router.get("/monitor")
@@ -49,11 +49,9 @@ async def monitor_dns(duration: int = 60):
     try:
         result = scanner.monitor_dns_queries(duration=duration)
         return result
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Error monitoring DNS: {str(e)}",
-        )
+    except Exception:
+        logger.exception("DNS monitor failed")
+        raise HTTPException(status_code=500, detail="An error occurred while monitoring DNS.")
 
 
 @router.post("/detect-tunneling")
@@ -76,11 +74,9 @@ async def detect_tunneling(request: DNSScanRequest):
             "tunneling_detected": len(tunneling_findings) > 0,
             "findings": tunneling_findings,
         }
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Error detecting tunneling: {str(e)}",
-        )
+    except Exception:
+        logger.exception("DNS tunneling detection failed")
+        raise HTTPException(status_code=500, detail="An error occurred while detecting tunneling.")
 
 
 @router.get("/anomalies")
@@ -103,8 +99,6 @@ async def get_anomalies(domain: str):
             "anomalies": anomalies,
             "count": len(anomalies),
         }
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Error getting anomalies: {str(e)}",
-        )
+    except Exception:
+        logger.exception("DNS anomalies failed")
+        raise HTTPException(status_code=500, detail="An error occurred while getting anomalies.")

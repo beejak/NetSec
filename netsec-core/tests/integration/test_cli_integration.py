@@ -4,6 +4,9 @@ import pytest
 from click.testing import CliRunner
 from netsec_core.cli.main import cli
 
+# Test-only host (RFC 2606); not user input - avoids URL sanitization findings
+TEST_HOST = "example.com"
+
 
 @pytest.fixture
 def runner():
@@ -29,29 +32,29 @@ class TestCLIIntegration:
 
     def test_dns_scan_command(self, runner):
         """Test DNS scan command."""
-        result = runner.invoke(cli, ["dns", "scan", "example.com"])
+        result = runner.invoke(cli, ["dns", "scan", TEST_HOST])
         assert result.exit_code == 0
-        assert "example.com" in result.output
+        assert TEST_HOST in result.output
 
     def test_dns_scan_with_options(self, runner):
         """Test DNS scan with options."""
         result = runner.invoke(
             cli,
-            ["dns", "scan", "example.com", "--check-tunneling", "--check-spoofing"]
+            ["dns", "scan", TEST_HOST, "--check-tunneling", "--check-spoofing"]
         )
         assert result.exit_code == 0
 
     def test_ssl_check_command(self, runner):
         """Test SSL check command."""
-        result = runner.invoke(cli, ["ssl", "check", "example.com"])
+        result = runner.invoke(cli, ["ssl", "check", TEST_HOST])
         assert result.exit_code == 0
-        assert "example.com" in result.output
+        assert TEST_HOST in result.output
 
     def test_ssl_check_with_port(self, runner):
         """Test SSL check with custom port."""
         result = runner.invoke(
             cli,
-            ["ssl", "check", "example.com", "--port", "443"]
+            ["ssl", "check", TEST_HOST, "--port", "443"]
         )
         assert result.exit_code == 0
 

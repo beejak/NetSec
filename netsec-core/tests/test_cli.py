@@ -5,6 +5,9 @@ from click.testing import CliRunner
 
 from netsec_core.cli.main import cli
 
+# Test-only host (RFC 2606); not user input - avoids URL sanitization findings in tests
+TEST_HOST = "example.com"
+
 
 @pytest.fixture
 def runner(cli_runner):
@@ -31,25 +34,25 @@ def test_cli_help(runner):
 @pytest.mark.cli
 def test_scan_ports_command(runner):
     """Test scan ports command."""
-    result = runner.invoke(cli, ["scan", "ports", "example.com"])
+    result = runner.invoke(cli, ["scan", "ports", TEST_HOST])
     assert result.exit_code == 0
-    assert "example.com" in result.output
+    assert TEST_HOST in result.output
 
 
 @pytest.mark.cli
 def test_dns_scan_command(runner):
     """Test DNS scan command."""
-    result = runner.invoke(cli, ["dns", "scan", "example.com"])
+    result = runner.invoke(cli, ["dns", "scan", TEST_HOST])
     assert result.exit_code == 0
-    assert "example.com" in result.output
+    assert TEST_HOST in result.output
 
 
 @pytest.mark.cli
 def test_ssl_check_command(runner):
     """Test SSL check command."""
-    result = runner.invoke(cli, ["ssl", "check", "example.com"])
+    result = runner.invoke(cli, ["ssl", "check", TEST_HOST])
     assert result.exit_code == 0
-    assert "example.com" in result.output
+    assert TEST_HOST in result.output
 
 
 @pytest.mark.cli

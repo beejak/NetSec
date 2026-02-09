@@ -108,8 +108,10 @@ class SSLScanner:
         }
 
     def _get_certificate(self, hostname: str, port: int) -> bytes:
-        """Get SSL certificate from hostname:port."""
+        """Get SSL certificate from hostname:port. Uses TLS 1.2+ only."""
         context = ssl.create_default_context()
+        if hasattr(context, "minimum_version") and hasattr(ssl, "TLSVersion"):
+            context.minimum_version = ssl.TLSVersion.TLSv1_2
         with socket.create_connection((hostname, port), timeout=10) as sock:
             with context.wrap_socket(sock, server_hostname=hostname) as ssock:
                 cert_der = ssock.getpeercert(binary_form=True)
@@ -207,7 +209,8 @@ class SSLScanner:
                     context.options |= ssl.OP_NO_TLSv1
                 if hasattr(ssl, "OP_NO_TLSv1_1"):
                     context.options |= ssl.OP_NO_TLSv1_1
-            context.set_ciphers("ALL:@SECLEVEL=0")  # Allow all ciphers for testing
+            # Intentionally permissive only to detect weak ciphers on target; TLS 1.2+ enforced above
+            context.set_ciphers("ALL:@SECLEVEL=0")
 
             with socket.create_connection((hostname, port), timeout=10) as sock:
                 with context.wrap_socket(sock, server_hostname=hostname) as ssock:

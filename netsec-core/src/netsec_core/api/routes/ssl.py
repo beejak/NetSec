@@ -1,9 +1,11 @@
 """SSL/TLS security routes."""
 
+import logging
 from fastapi import APIRouter, HTTPException
 from netsec_core.api.models import SSLCheckRequest, SSLResult, Finding, Severity
 from netsec_core.core.ssl_scanner import SSLScanner
 
+logger = logging.getLogger(__name__)
 router = APIRouter()
 scanner = SSLScanner()
 
@@ -39,11 +41,9 @@ async def check_certificate(request: SSLCheckRequest):
             certificate_info=result.get("certificate_info"),
             findings=findings,
         )
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Error checking certificate: {str(e)}",
-        )
+    except Exception:
+        logger.exception("SSL certificate check failed")
+        raise HTTPException(status_code=500, detail="An error occurred while checking the certificate.")
 
 
 @router.get("/certificates")
@@ -52,11 +52,9 @@ async def list_certificates():
     try:
         result = scanner.list_certificates()
         return result
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Error listing certificates: {str(e)}",
-        )
+    except Exception:
+        logger.exception("List certificates failed")
+        raise HTTPException(status_code=500, detail="An error occurred while listing certificates.")
 
 
 @router.post("/detect-weak-ciphers")
@@ -81,11 +79,9 @@ async def detect_weak_ciphers(request: SSLCheckRequest):
             "weak_ciphers_detected": len(cipher_findings) > 0,
             "findings": cipher_findings,
         }
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Error detecting weak ciphers: {str(e)}",
-        )
+    except Exception:
+        logger.exception("Weak cipher detection failed")
+        raise HTTPException(status_code=500, detail="An error occurred while detecting weak ciphers.")
 
 
 @router.get("/expiring-soon")
@@ -110,8 +106,6 @@ async def get_expiring_certificates(hostname: str, port: int = 443):
             "expiring_soon": len(expiration_findings) > 0,
             "findings": expiration_findings,
         }
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Error checking expiration: {str(e)}",
-        )
+    except Exception:
+        logger.exception("Certificate expiration check failed")
+        raise HTTPException(status_code=500, detail="An error occurred while checking expiration.")

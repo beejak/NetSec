@@ -1,8 +1,11 @@
 """Traffic analysis routes."""
 
+import logging
+from datetime import datetime, timezone
 from fastapi import APIRouter, HTTPException
 from typing import Optional
 
+logger = logging.getLogger(__name__)
 router = APIRouter()
 _analyzer: Optional[object] = None
 
@@ -36,16 +39,12 @@ async def capture_traffic(
             filter_str=filter_str,
         )
         return result
-    except ImportError as e:
-        raise HTTPException(
-            status_code=503,
-            detail=f"Traffic capture requires scapy: {str(e)}",
-        )
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Error capturing traffic: {str(e)}",
-        )
+    except ImportError:
+        logger.warning("Traffic capture requires scapy")
+        raise HTTPException(status_code=503, detail="Traffic capture requires scapy.")
+    except Exception:
+        logger.exception("Traffic capture failed")
+        raise HTTPException(status_code=500, detail="An error occurred while capturing traffic.")
 
 
 @router.get("/stream")
@@ -65,16 +64,12 @@ async def analyze_traffic(pcap_file: str = None):
         analyzer = _get_analyzer()
         result = analyzer.analyze_traffic(pcap_file=pcap_file)
         return result
-    except ImportError as e:
-        raise HTTPException(
-            status_code=503,
-            detail=f"Traffic analysis requires scapy: {str(e)}",
-        )
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Error analyzing traffic: {str(e)}",
-        )
+    except ImportError:
+        logger.warning("Traffic analysis requires scapy")
+        raise HTTPException(status_code=503, detail="Traffic analysis requires scapy.")
+    except Exception:
+        logger.exception("Traffic analysis failed")
+        raise HTTPException(status_code=500, detail="An error occurred while analyzing traffic.")
 
 
 @router.get("/flows")
@@ -86,18 +81,11 @@ async def get_flows():
         return {
             "flows": flows,
             "count": len(flows),
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         }
-    except ImportError as e:
-        raise HTTPException(
-            status_code=503,
-            detail=f"Traffic flows require scapy: {str(e)}",
-        )
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Error getting flows: {str(e)}",
-        )
-
-
-from datetime import datetime  # noqa: E402
+    except ImportError:
+        logger.warning("Traffic flows require scapy")
+        raise HTTPException(status_code=503, detail="Traffic flows require scapy.")
+    except Exception:
+        logger.exception("Get flows failed")
+        raise HTTPException(status_code=500, detail="An error occurred while getting flows.")

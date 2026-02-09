@@ -7,7 +7,11 @@ on:
   pull_request:
     branches: [ main, master, develop ]
 
-# Fail the workflow if any job fails
+# Least-privilege permissions (CodeQL / security best practice)
+permissions:
+  contents: read
+  pull-requests: read
+
 jobs:
   test-core:
     name: NetSec-Core

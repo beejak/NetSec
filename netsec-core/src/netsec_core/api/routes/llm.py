@@ -1,9 +1,11 @@
 """LLM-powered analysis routes."""
 
+import logging
 from fastapi import APIRouter, HTTPException
 from typing import List, Dict, Any, Optional
 from netsec_core.llm.analyzer import LLMAnalyzer, LLMAnalyzerLocal
 
+logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
@@ -86,11 +88,9 @@ async def analyze_traffic_llm(
         )
         result = analyzer.analyze_traffic(traffic_summary)
         return result
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Error analyzing traffic: {str(e)}",
-        )
+    except Exception:
+        logger.exception("LLM traffic analysis failed")
+        raise HTTPException(status_code=500, detail="An error occurred while analyzing traffic.")
 
 
 @router.post("/reduce-false-positives")
@@ -116,11 +116,9 @@ async def reduce_false_positives(
             "filtered_count": len(filtered),
             "findings": filtered,
         }
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Error reducing false positives: {str(e)}",
-        )
+    except Exception:
+        logger.exception("Reduce false positives failed")
+        raise HTTPException(status_code=500, detail="An error occurred while reducing false positives.")
 
 
 @router.post("/generate-remediation")
@@ -142,11 +140,9 @@ async def generate_remediation(
         )
         remediation = analyzer.generate_remediation(finding, context)
         return remediation
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Error generating remediation: {str(e)}",
-        )
+    except Exception:
+        logger.exception("Generate remediation failed")
+        raise HTTPException(status_code=500, detail="An error occurred while generating remediation.")
 
 
 @router.post("/explain-finding")
@@ -170,8 +166,6 @@ async def explain_finding(
             "finding_id": finding.get("finding_id"),
             "explanation": explanation,
         }
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Error explaining finding: {str(e)}",
-        )
+    except Exception:
+        logger.exception("Explain finding failed")
+        raise HTTPException(status_code=500, detail="An error occurred while explaining the finding.")
