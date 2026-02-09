@@ -18,6 +18,13 @@ def api_base_url():
     return "http://localhost:8000"
 
 
+@pytest.fixture
+def cli_runner():
+    """Click CliRunner for CLI tests."""
+    from click.testing import CliRunner
+    return CliRunner()
+
+
 @pytest.fixture(autouse=True)
 def log_test_result(request):
     """Automatically log test results."""

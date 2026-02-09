@@ -1,17 +1,31 @@
 # Run All Tests - Complete Guide
 
+For a **unified testing framework** overview (pytest, fixtures, markers, coverage), see **[TESTING.md](TESTING.md)** and **[TESTING_FRAMEWORK_RESEARCH.md](TESTING_FRAMEWORK_RESEARCH.md)**.
+
 ## Quick Start
 
 ### NetSec-Core
 ```bash
 cd netsec-core
+pip install -e ".[dev]"
 python sanitize_and_test.py
+pytest -v
 ```
 
 ### NetSec-Cloud
 ```bash
 cd netsec-cloud
+pip install -e ".[dev]"
 python sanitize_and_test.py
+pytest -v
+```
+
+### NetSec-Container
+```bash
+cd netsec-container
+pip install -e ".[dev]"
+python sanitize_and_test.py
+pytest -v
 ```
 
 ## What Gets Tested
@@ -63,11 +77,30 @@ python sanitize_and_test.py
 # 2. Verification
 python run_tests.py
 
-# 3. Full pytest suite
+# 3. Full pytest suite (uses conftest fixtures: client, scanner)
 pytest -v
 
-# 4. Specific test file
-pytest tests/test_providers.py -v
+# 4. API tests only
+pytest -m api -v
+
+# 5. With coverage
+pytest --cov=netsec_cloud --cov-report=term-missing
+
+# 6. Specific test file
+pytest tests/test_providers.py tests/test_api.py -v
+```
+
+### NetSec-Container
+
+```bash
+# 1. Sanitization & full test suite
+python sanitize_and_test.py
+
+# 2. Full pytest suite (uses conftest: client, container_scanner)
+pytest -v
+
+# 3. Specific test file
+pytest tests/test_scanner.py -v
 ```
 
 ## Test Result Location

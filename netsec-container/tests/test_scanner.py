@@ -4,6 +4,7 @@ import pytest
 from netsec_container.core.scanner import ContainerScanner
 
 
+@pytest.mark.unit
 def test_scanner_initialization():
     """Test scanner initialization."""
     scanner = ContainerScanner()

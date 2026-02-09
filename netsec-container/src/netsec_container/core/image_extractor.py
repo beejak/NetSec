@@ -12,13 +12,15 @@ logger = logging.getLogger(__name__)
 
 
 class ImageExtractor:
-    """Extract container images for scanning"""
-    
+    """Extract container images for scanning (Docker, Podman, skopeo, crane, or tar)."""
+
     def __init__(self):
         self.name = "Image Extractor"
         self.use_docker = self._check_docker_available()
         self.use_podman = self._check_podman_available()
-    
+        self.use_skopeo = self._check_skopeo_available()
+        self.use_crane = self._check_crane_available()
+
     def _check_docker_available(self) -> bool:
         """Check if Docker is available"""
         try:
@@ -42,7 +44,31 @@ class ImageExtractor:
             return result.returncode == 0
         except (FileNotFoundError, subprocess.TimeoutExpired):
             return False
-    
+
+    def _check_skopeo_available(self) -> bool:
+        """Check if skopeo is available (no Docker daemon needed)."""
+        try:
+            result = subprocess.run(
+                ["skopeo", "--version"],
+                capture_output=True,
+                timeout=5,
+            )
+            return result.returncode == 0
+        except (FileNotFoundError, subprocess.TimeoutExpired):
+            return False
+
+    def _check_crane_available(self) -> bool:
+        """Check if crane (go-container) is available."""
+        try:
+            result = subprocess.run(
+                ["crane", "version"],
+                capture_output=True,
+                timeout=5,
+            )
+            return result.returncode == 0
+        except (FileNotFoundError, subprocess.TimeoutExpired):
+            return False
+
     async def extract_image(
         self,
         image: str,
@@ -70,11 +96,17 @@ class ImageExtractor:
             # Try Docker first, then Podman
             if self.use_docker:
                 return await self._extract_with_docker(image, output_path)
-            elif self.use_podman:
+            if self.use_podman:
                 return await self._extract_with_podman(image, output_path)
-            else:
-                logger.warning("Neither Docker nor Podman available for image extraction")
-                return None
+            if self.use_skopeo:
+                return await self._extract_with_skopeo(image, output_path)
+            if self.use_crane:
+                return await self._extract_with_crane(image, output_path)
+            logger.warning(
+                "No image extractor available (Docker, Podman, skopeo, or crane). "
+                "Use upload with a tar file (docker save / podman save)."
+            )
+            return None
         except Exception as e:
             logger.error(f"Image extraction failed: {e}", exc_info=True)
             return None
@@ -164,7 +196,64 @@ class ImageExtractor:
         except Exception as e:
             logger.error(f"Podman extraction error: {e}", exc_info=True)
             return None
-    
+
+    async def _extract_with_skopeo(
+        self,
+        image: str,
+        output_dir: Path,
+    ) -> Optional[Path]:
+        """Extract image using skopeo (no daemon). Copy to oci-archive tar then extract."""
+        try:
+            tar_path = output_dir / "image.tar"
+            src = f"docker://{image}" if "://" not in image else image
+            cmd = ["skopeo", "copy", src, f"oci-archive:{tar_path}"]
+            process = await asyncio.create_subprocess_exec(
+                *cmd,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE,
+            )
+            _, stderr = await process.communicate()
+            if process.returncode != 0:
+                logger.error(f"Skopeo copy failed: {stderr.decode()}")
+                return None
+            extract_path = output_dir / "extracted"
+            extract_path.mkdir(exist_ok=True)
+            with tarfile.open(tar_path, "r") as tar:
+                tar.extractall(extract_path)
+            tar_path.unlink(missing_ok=True)
+            return extract_path
+        except Exception as e:
+            logger.error(f"Skopeo extraction error: {e}", exc_info=True)
+            return None
+
+    async def _extract_with_crane(
+        self,
+        image: str,
+        output_dir: Path,
+    ) -> Optional[Path]:
+        """Extract image using crane export (no daemon). Export to tar then extract."""
+        try:
+            tar_path = output_dir / "image.tar"
+            cmd = ["crane", "export", image, "-o", str(tar_path)]
+            process = await asyncio.create_subprocess_exec(
+                *cmd,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE,
+            )
+            _, stderr = await process.communicate()
+            if process.returncode != 0:
+                logger.error(f"Crane export failed: {stderr.decode()}")
+                return None
+            extract_path = output_dir / "extracted"
+            extract_path.mkdir(exist_ok=True)
+            with tarfile.open(tar_path, "r") as tar:
+                tar.extractall(extract_path)
+            tar_path.unlink(missing_ok=True)
+            return extract_path
+        except Exception as e:
+            logger.error(f"Crane extraction error: {e}", exc_info=True)
+            return None
+
     async def _ensure_image_available(self, image: str, tool: str) -> bool:
         """Ensure image is available locally, pull if needed"""
         try:

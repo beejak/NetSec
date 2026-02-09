@@ -11,6 +11,7 @@ def client():
     return TestClient(app)
 
 
+@pytest.mark.integration
 class TestAPIIntegration:
     """Integration tests for API endpoints."""
 

@@ -113,6 +113,8 @@ class CloudProvider(ABC):
                 findings.extend(self.scan_networking(region))
             if "compute" in check_types:
                 findings.extend(self.scan_compute(region))
+            if "audit" in check_types and hasattr(self, "scan_audit_logging"):
+                findings.extend(self.scan_audit_logging(region))
 
         return findings
 

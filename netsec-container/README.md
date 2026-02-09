@@ -36,6 +36,8 @@ A comprehensive container security scanner that integrates seamlessly into CI/CD
 - **Real-time Results** - Live scanning progress
 - **Report Download** - Instant PDF/CSV generation
 
+**API overview:** See root [API_REFERENCE.md](../API_REFERENCE.md) for endpoints and OpenAPI links.
+
 ## Quick Start
 
 ### Installation
@@ -130,6 +132,26 @@ container-security:
     paths:
       - security-report.pdf
 ```
+
+## Without Docker / tar-only
+
+In CI or restricted environments where Docker/Podman is unavailable:
+
+- **Upload path:** Build the image tar locally (`docker save` or `podman save`), then use **POST /api/v1/scan/upload** with the tar file. The scanner uses the uploaded tar for extraction; no daemon required.
+- **Fallback vuln:** When Trivy is not installed, **BasicVulnerabilityScanner** runs on extracted layers. Optional **OSV** CVE lookup (Debian, Alpine, PyPI, npm) is enabled by default; set `enable_osv_lookup=False` to skip. Query templates and vetted sources: root [VULNERABILITY_INTEL.md](../VULNERABILITY_INTEL.md) and [vulnerability-intel/](../vulnerability-intel/). See [CONTAINER_CLOUD_ENHANCEMENTS.md](../CONTAINER_CLOUD_ENHANCEMENTS.md) for more.
+- **Image extraction without Docker:** If Docker/Podman are unavailable, **skopeo** or **crane** are used when installed (skopeo: oci-archive; crane: export to tar). Otherwise use POST /scan/upload with a tar from `docker save` / `podman save`.
+
+## Testing
+
+Tests use **pytest** with shared fixtures in `tests/conftest.py` (`client` for API, `container_scanner` for ContainerScanner). Install dev deps and run:
+
+```bash
+pip install -e ".[dev]"
+pytest -v
+pytest --cov=netsec_container --cov-report=term-missing   # with coverage
+```
+
+Vulnerability scanning uses **BasicVulnerabilityScanner** (package list, no CVE DB) when Trivy is unavailable. Image extraction uses **ImageExtractor** (Docker/Podman save + tar extract). See the repo root [TESTING.md](../TESTING.md) and [RUN_ALL_TESTS.md](../RUN_ALL_TESTS.md) for the full testing framework.
 
 ## Architecture
 

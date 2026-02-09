@@ -46,6 +46,7 @@ def check_imports():
         "netsec_cloud.providers.aws",
         "netsec_cloud.providers.azure",
         "netsec_cloud.providers.gcp",
+        "netsec_cloud.compliance.mapping",
         "netsec_cloud.api.main",
     ]
     

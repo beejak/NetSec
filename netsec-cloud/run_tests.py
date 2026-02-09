@@ -26,6 +26,7 @@ def test_imports():
         ("netsec_cloud.checks.storage", "StorageSecurityCheck"),
         ("netsec_cloud.checks.iam", "IAMSecurityCheck"),
         ("netsec_cloud.checks.networking", "NetworkingSecurityCheck"),
+        ("netsec_cloud.compliance.mapping", "map_findings_to_cis"),
         ("netsec_cloud.cli.main", "cli"),
     ]
     
@@ -69,6 +70,7 @@ def test_api_structure():
             "/api/v1/health",
             "/api/v1/cloud/scan",
             "/api/v1/cloud/providers",
+            "/api/v1/cloud/compliance/check",
         ]
         
         for route in key_routes:

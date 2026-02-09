@@ -18,9 +18,9 @@ NetSec-Cloud is a lightweight cloud security scanner designed to fill the gap fo
 
 ### Cloud Security Scanning
 - **Storage Security**: S3, Azure Storage, GCP Cloud Storage
-- **IAM Analysis**: AWS IAM, Azure RBAC, GCP IAM
+- **IAM Analysis**: AWS IAM (MFA, overprivileged policies), **Azure RBAC** (subscription-level broad roles, SP Owner), **GCP IAM** (project Owner/Editor for users, SA Owner)
 - **Networking**: Security Groups, NSGs, Firewall Rules
-- **Compute**: EC2, Azure VMs, GCP Compute Engine
+- **Compute**: EC2 (IMDSv2, public IP, EBS encryption); Azure/GCP compute planned
 
 ### Security Checks
 - Public access detection
@@ -29,13 +29,25 @@ NetSec-Cloud is a lightweight cloud security scanner designed to fill the gap fo
 - Misconfigured resources
 - Compliance violations
 
+### Compliance (CIS & NIST)
+- **CIS Benchmarks**: Map scan findings to CIS control IDs (storage, IAM, networking, compute).
+- **NIST CSF**: Map findings to NIST subcategories (e.g. PR.AC-5, PR.DS-1).
+- **POST /api/v1/cloud/compliance/check**: Run a scan and get control-level pass/fail for a framework.
+- **GET /api/v1/cloud/compliance/frameworks/{framework}/controls**: List known controls for CIS or NIST.
+
+### Compute (AWS EC2)
+- **EC2**: IMDSv2 requirement, public IP exposure, EBS volume encryption.
+- **scan_compute** runs EC2 and EBS checks when scanning AWS.
+
+### Audit (AWS CloudTrail)
+- **check_types** can include **`audit`** (AWS only). When present, **scan_audit_logging** runs: checks that at least one CloudTrail trail exists and that at least one has logging enabled. Mapped to CIS 3.x, NIST DE.CM-1, PCI-DSS 10.2, HIPAA Audit Controls.
+
 ## Quick Start
 
 ### Installation
 
 ```bash
-# Clone repository
-git clone https://github.com/your-org/netsec-cloud.git
+# From the toolkit root, go to netsec-cloud
 cd netsec-cloud
 
 # Install
@@ -45,9 +57,11 @@ pip install -e .
 # For Azure support (optional)
 pip install -e ".[azure]"
 
-# For GCP support (optional)
+# For GCP support (optional; includes IAM via google-api-python-client)
 pip install -e ".[gcp]"
 ```
+
+Azure RBAC scanning and GCP IAM scanning require the optional `[azure]` and `[gcp]` extras (which add `azure-mgmt-authorization` and `google-api-python-client` respectively).
 
 ### Usage
 
@@ -66,6 +80,8 @@ netsec-cloud scan gcp --checks storage,networking
 
 #### API
 
+- **API overview:** See root [API_REFERENCE.md](../API_REFERENCE.md) for endpoints and OpenAPI links.
+
 ```bash
 # Start API server
 uvicorn netsec_cloud.api.main:app --reload
@@ -76,13 +92,31 @@ curl -X POST "http://localhost:8000/api/v1/cloud/scan" \
   -d '{
     "provider": "aws",
     "credentials": {},
-    "check_types": ["storage", "iam"]
+    "check_types": ["storage", "iam", "networking", "compute"]
   }'
+
+# Compliance check (CIS or NIST)
+curl -X POST "http://localhost:8000/api/v1/cloud/compliance/check" \
+  -H "Content-Type: application/json" \
+  -d '{"provider": "aws", "framework": "cis", "credentials": {}}'
 ```
 
 ## Architecture
 
 See [ARCHITECTURE_DESIGN.md](ARCHITECTURE_DESIGN.md) for detailed architecture documentation.
+
+## Testing
+
+Tests use **pytest** with shared fixtures in `tests/conftest.py` (`client` for API, `scanner` for CloudScanner). Install dev deps and run:
+
+```bash
+pip install -e ".[dev]"
+pytest -v
+pytest -m api -v          # API tests only
+pytest --cov=netsec_cloud --cov-report=term-missing   # with coverage
+```
+
+Compliance check now supports **CIS**, **NIST**, **PCI-DSS**, and **HIPAA** (finding-to-control mapping). See the repo root [TESTING.md](../TESTING.md) and [RUN_ALL_TESTS.md](../RUN_ALL_TESTS.md) for the full testing framework.
 
 ### Provider Abstraction
 

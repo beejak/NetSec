@@ -31,3 +31,24 @@ def test_provider_authentication_failure():
     result = aws_provider.authenticate()
     # May fail or succeed depending on environment
     assert isinstance(result, bool)
+
+
+def test_aws_scan_compute_returns_list():
+    """AWS scan_compute returns a list (empty when not authenticated)."""
+    provider = AWSProvider(credentials={})
+    findings = provider.scan_compute(region="us-east-1")
+    assert isinstance(findings, list)
+
+
+def test_azure_scan_iam_returns_list():
+    """Azure scan_iam returns a list."""
+    provider = AzureProvider(credentials={"subscription_id": "test-sub"})
+    findings = provider.scan_iam()
+    assert isinstance(findings, list)
+
+
+def test_gcp_scan_iam_returns_list():
+    """GCP scan_iam returns a list (empty when no project_id or no IAM client)."""
+    provider = GCPProvider(credentials={})
+    findings = provider.scan_iam()
+    assert isinstance(findings, list)

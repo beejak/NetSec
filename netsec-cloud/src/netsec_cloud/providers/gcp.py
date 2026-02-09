@@ -99,6 +99,14 @@ class GCPProvider(CloudProvider):
                             resource=f"gs://{bucket_name}",
                             region=bucket.location or region or "global",
                             provider="gcp",
+                            remediation={
+                                "immediate": [
+                                    "Remove allUsers/allAuthenticatedUsers from bucket IAM bindings",
+                                ],
+                                "short_term": [
+                                    "Use IAM conditions and ensure public access prevention is enabled at org level",
+                                ],
+                            },
                         )
                     )
 
@@ -120,6 +128,14 @@ class GCPProvider(CloudProvider):
                             resource=f"gs://{bucket_name}",
                             region=bucket.location or region or "global",
                             provider="gcp",
+                            remediation={
+                                "immediate": [
+                                    "Enable object versioning on the bucket if retention/recovery is required",
+                                ],
+                                "short_term": [
+                                    "Enforce versioning via organization policy for sensitive buckets",
+                                ],
+                            },
                         )
                     )
 
@@ -140,7 +156,7 @@ class GCPProvider(CloudProvider):
         return findings
 
     def scan_iam(self, region: Optional[str] = None) -> List[Finding]:
-        """Scan GCP IAM for security issues."""
+        """Scan GCP project IAM for broad roles (Owner, Editor) granted to users."""
         findings = []
 
         if not GCP_AVAILABLE:
@@ -150,20 +166,80 @@ class GCPProvider(CloudProvider):
             if not self.authenticate():
                 return findings
 
-        try:
-            # GCP IAM scanning requires Cloud Asset API or Resource Manager API
-            # This is a placeholder for future implementation
-            # Would check for:
-            # - Overprivileged IAM bindings
-            # - Service accounts with excessive permissions
-            # - Organization-level policies
+        if not self.project_id:
+            return findings
 
-            pass
+        try:
+            policy = self._get_project_iam_policy()
+            if not policy:
+                return findings
+
+            broad_roles = {"roles/owner", "roles/editor"}
+            seen_member_role: set = set()
+            for binding in policy.get("bindings", []):
+                role = binding.get("role", "")
+                members = binding.get("members", [])
+
+                if role not in broad_roles:
+                    continue
+
+                for member in members:
+                    key = (member, role)
+                    if key in seen_member_role:
+                        continue
+                    seen_member_role.add(key)
+                    if member.startswith("user:"):
+                        safe = member.replace(":", "-").replace("/", "-")[:50]
+                        finding_id = f"gcp-iam-broad-{role.replace('/', '-')}-{safe}"
+                        severity = "high" if role == "roles/owner" else "medium"
+                        title_role = "Owner" if role == "roles/owner" else "Editor"
+                        findings.append(
+                            Finding(
+                                finding_id=finding_id,
+                                type="iam_broad_role",
+                                severity=severity,
+                                title=f"GCP project has User with {title_role}",
+                                description=f"User {member} has project-level {role}; consider minimal roles",
+                                resource=f"projects/{self.project_id}",
+                                region="global",
+                                provider="gcp",
+                                remediation={
+                                    "immediate": [
+                                        "Replace with Viewer or custom role with least privilege",
+                                    ],
+                                    "short_term": [
+                                        "Use IAM conditions and separate dev/prod projects",
+                                    ],
+                                },
+                            )
+                        )
+                    elif member.startswith("serviceAccount:") and role == "roles/owner":
+                        sa_safe = member.replace(":", "-").replace("/", "-")[:55]
+                        findings.append(
+                            Finding(
+                                finding_id=f"gcp-iam-sa-owner-{sa_safe}",
+                                type="iam_sa_owner",
+                                severity="high",
+                                title="GCP project has Service Account with Owner",
+                                description=f"Service account {member} has Owner; high risk if key is exposed",
+                                resource=f"projects/{self.project_id}",
+                                region="global",
+                                provider="gcp",
+                                remediation={
+                                    "immediate": [
+                                        "Replace Owner with Contributor or custom role",
+                                    ],
+                                    "short_term": [
+                                        "Use workload identity and short-lived credentials",
+                                    ],
+                                },
+                            )
+                        )
 
         except Exception as e:
             findings.append(
                 Finding(
-                    finding_id=f"gcp-scan-error-iam",
+                    finding_id="gcp-scan-error-iam",
                     type="scan_error",
                     severity="info",
                     title="Error scanning GCP IAM",
@@ -175,6 +251,28 @@ class GCPProvider(CloudProvider):
             )
 
         return findings
+
+    def _get_project_iam_policy(self) -> Optional[Dict[str, Any]]:
+        """Get IAM policy for the project (requires google-api-python-client or v3 client)."""
+        try:
+            from googleapiclient.discovery import build
+
+            service = build(
+                "cloudresourcemanager",
+                "v1",
+                credentials=self.credential,
+                cache_discovery=False,
+            )
+            resource = f"projects/{self.project_id}"
+            request = service.projects().getIamPolicy(
+                resource=resource,
+                body={"options": {"requestedPolicyVersion": 3}},
+            )
+            return request.execute()
+        except ImportError:
+            return None
+        except Exception:
+            return None
 
     def scan_networking(self, region: Optional[str] = None) -> List[Finding]:
         """Scan GCP networking resources."""
@@ -213,6 +311,14 @@ class GCPProvider(CloudProvider):
                                         resource=f"projects/{self.project_id}/global/firewalls/{rule_name}",
                                         region="global",
                                         provider="gcp",
+                                        remediation={
+                                            "immediate": [
+                                                "Restrict source_ranges to specific IP ranges or use tags/targets",
+                                            ],
+                                            "short_term": [
+                                                "Review firewall rules; use Cloud Armor and load balancers for public ingress",
+                                            ],
+                                        },
                                     )
                                 )
 

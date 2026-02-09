@@ -170,6 +170,29 @@ class AWSProvider(CloudProvider):
         try:
             iam_client = self.session.client("iam")
 
+            # Check 0: Root account access keys (CIS 1.4)
+            try:
+                root_keys = iam_client.list_access_keys(UserName="root")
+                if root_keys.get("AccessKeyMetadata"):
+                    findings.append(
+                        Finding(
+                            finding_id="aws-root-access-keys",
+                            type="iam_root_access_keys",
+                            severity="critical",
+                            title="Root account has active access keys",
+                            description="Root user should not have access keys; use IAM users/roles instead (CIS 1.4)",
+                            resource=f"arn:aws:iam::{self._get_account_id()}:root",
+                            region="global",
+                            provider="aws",
+                            remediation={
+                                "immediate": ["Deactivate and delete root access keys"],
+                                "short_term": ["Use IAM users or roles with least privilege for programmatic access"],
+                            },
+                        )
+                    )
+            except ClientError:
+                pass
+
             # Check 1: Users without MFA
             users = iam_client.list_users()
             for user in users.get("Users", []):
@@ -298,15 +321,224 @@ class AWSProvider(CloudProvider):
         return findings
 
     def scan_compute(self, region: Optional[str] = None) -> List[Finding]:
-        """Scan AWS compute resources."""
+        """Scan AWS compute resources (EC2 instances)."""
         findings = []
 
         if not self.authenticated:
             if not self.authenticate():
                 return findings
 
-        # Placeholder for compute scanning
-        # Would include EC2 instances, Lambda functions, etc.
+        reg = region or "us-east-1"
+        try:
+            ec2_client = self.session.client("ec2", region_name=reg)
+            ec2_resource = self.session.resource("ec2", region_name=reg)
+
+            # EC2 instances
+            paginator = ec2_client.get_paginator("describe_instances")
+            for page in paginator.paginate():
+                for reservation in page.get("Reservations", []):
+                    for instance in reservation.get("Instances", []):
+                        instance_id = instance.get("InstanceId", "")
+                        if not instance_id:
+                            continue
+
+                        # Check 1: IMDSv2 required (CIS 4.2)
+                        metadata_options = instance.get("MetadataOptions") or {}
+                        if metadata_options.get("HttpTokens") != "required":
+                            findings.append(
+                                Finding(
+                                    finding_id=f"aws-ec2-imdsv1-{instance_id}",
+                                    type="ec2_imdsv1",
+                                    severity="medium",
+                                    title=f"EC2 instance '{instance_id}' does not require IMDSv2",
+                                    description="Instance Metadata Service v1 is allowed; prefer IMDSv2 to reduce SSRF risk",
+                                    resource=f"arn:aws:ec2:{reg}:instance/{instance_id}",
+                                    region=reg,
+                                    provider="aws",
+                                    remediation={
+                                        "immediate": [
+                                            "Set instance metadata options to require IMDSv2",
+                                        ],
+                                        "short_term": [
+                                            "Use AWS Systems Manager or modify instance attribute: HttpTokens=required",
+                                        ],
+                                    },
+                                )
+                            )
+
+                        # Check 2: Public IP on instance (exposure)
+                        public_ip = instance.get("PublicIpAddress")
+                        if public_ip and instance.get("State", {}).get("Name") == "running":
+                            # Only flag if no obvious bastion/load-balancer context
+                            findings.append(
+                                Finding(
+                                    finding_id=f"aws-ec2-public-ip-{instance_id}",
+                                    type="ec2_public_ip",
+                                    severity="low",
+                                    title=f"EC2 instance '{instance_id}' has a public IP",
+                                    description=f"Instance {instance_id} has public IP {public_ip}; ensure it is intended and protected",
+                                    resource=f"arn:aws:ec2:{reg}:instance/{instance_id}",
+                                    region=reg,
+                                    provider="aws",
+                                    remediation={
+                                        "immediate": [
+                                            "Review whether this instance must be publicly reachable",
+                                        ],
+                                        "short_term": [
+                                            "Prefer private instances behind a load balancer or bastion host",
+                                        ],
+                                    },
+                                )
+                            )
+
+            # EBS volumes: unencrypted
+            for page in ec2_client.get_paginator("describe_volumes").paginate():
+                for vol in page.get("Volumes", []):
+                    if vol.get("Encrypted") is False:
+                        vol_id = vol.get("VolumeId", "")
+                        findings.append(
+                            Finding(
+                                finding_id=f"aws-ebs-unencrypted-{vol_id}",
+                                type="ebs_unencrypted",
+                                severity="medium",
+                                title=f"EBS volume '{vol_id}' is not encrypted",
+                                description=f"Volume {vol_id} has server-side encryption disabled",
+                                resource=f"arn:aws:ec2:{reg}:volume/{vol_id}",
+                                region=reg,
+                                provider="aws",
+                                remediation={
+                                    "immediate": [
+                                        "Enable encryption on the volume or create an encrypted copy",
+                                    ],
+                                    "short_term": [
+                                        "Use default EBS encryption at the account/region level",
+                                    ],
+                                },
+                            )
+                        )
+
+        except Exception as e:
+            findings.append(
+                Finding(
+                    finding_id="aws-scan-error-compute",
+                    type="scan_error",
+                    severity="info",
+                    title="Error scanning AWS compute",
+                    description=f"Error occurred while scanning compute: {str(e)}",
+                    resource="aws",
+                    region=reg,
+                    provider="aws",
+                )
+            )
+
+        return findings
+
+    def scan_audit_logging(self, region: Optional[str] = None) -> List[Finding]:
+        """Scan AWS CloudTrail for audit logging (CIS 3.x, NIST DE.CM)."""
+        findings = []
+
+        if not self.authenticated:
+            if not self.authenticate():
+                return findings
+
+        reg = region or self.credentials.get("region", "us-east-1")
+        try:
+            cloudtrail = self.session.client("cloudtrail", region_name=reg)
+            trails = cloudtrail.list_trails()
+            trail_arns = [t.get("TrailARN") for t in trails.get("Trails", []) if t.get("TrailARN")]
+
+            if not trail_arns:
+                findings.append(
+                    Finding(
+                        finding_id="aws-cloudtrail-disabled",
+                        type="cloudtrail_disabled",
+                        severity="high",
+                        title="CloudTrail is not enabled",
+                        description="No CloudTrail trail found; enable at least one trail for audit logging (CIS 3.x)",
+                        resource="arn:aws:cloudtrail",
+                        region=reg,
+                        provider="aws",
+                        remediation={
+                            "immediate": ["Enable CloudTrail in the AWS Console or via CloudFormation"],
+                            "short_term": [
+                                "Use a multi-region trail for broad coverage",
+                                "Enable log file validation and encrypt logs",
+                            ],
+                        },
+                    )
+                )
+                return findings
+
+            # Check if at least one trail is logging
+            any_logging = False
+            for arn in trail_arns[:10]:
+                try:
+                    status = cloudtrail.get_trail_status(Name=arn)
+                    if status.get("IsLogging"):
+                        any_logging = True
+                        break
+                except ClientError:
+                    continue
+
+            if not any_logging:
+                findings.append(
+                    Finding(
+                        finding_id="aws-cloudtrail-not-logging",
+                        type="cloudtrail_not_logging",
+                        severity="high",
+                        title="CloudTrail is not logging",
+                        description="CloudTrail trail(s) exist but none have logging enabled",
+                        resource="arn:aws:cloudtrail",
+                        region=reg,
+                        provider="aws",
+                        remediation={
+                            "immediate": ["Start logging on at least one CloudTrail trail"],
+                            "short_term": ["Enable log file validation and monitor trail status"],
+                        },
+                    )
+                )
+        except ClientError as e:
+            code = e.response.get("Error", {}).get("Code", "")
+            if code == "AccessDeniedException":
+                findings.append(
+                    Finding(
+                        finding_id="aws-cloudtrail-access-denied",
+                        type="scan_error",
+                        severity="info",
+                        title="Cannot read CloudTrail",
+                        description="Insufficient permissions to list CloudTrail trails",
+                        resource="arn:aws:cloudtrail",
+                        region=reg,
+                        provider="aws",
+                    )
+                )
+            else:
+                findings.append(
+                    Finding(
+                        finding_id="aws-cloudtrail-error",
+                        type="scan_error",
+                        severity="info",
+                        title="Error scanning CloudTrail",
+                        description=str(e),
+                        resource="arn:aws:cloudtrail",
+                        region=reg,
+                        provider="aws",
+                    )
+                )
+        except Exception as e:
+            findings.append(
+                Finding(
+                    finding_id="aws-cloudtrail-error",
+                    type="scan_error",
+                    severity="info",
+                    title="Error scanning CloudTrail",
+                    description=str(e),
+                    resource="arn:aws:cloudtrail",
+                    region=reg,
+                    provider="aws",
+                )
+            )
+
         return findings
 
     def _get_account_id(self) -> str:

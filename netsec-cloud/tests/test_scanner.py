@@ -4,13 +4,21 @@ import pytest
 from netsec_cloud.scanner import CloudScanner
 
 
-def test_scanner_initialization():
-    """Test scanner initialization."""
-    scanner = CloudScanner()
+@pytest.mark.unit
+def test_scanner_initialization(scanner):
+    """Test scanner initialization using shared fixture."""
     assert scanner is not None
     assert scanner.providers == {}
 
 
+def test_scanner_initialization_standalone():
+    """Test scanner initialization without fixture."""
+    s = CloudScanner()
+    assert s is not None
+    assert s.providers == {}
+
+
+@pytest.mark.unit
 def test_scanner_add_provider():
     """Test adding provider to scanner."""
     scanner = CloudScanner()
@@ -20,16 +28,16 @@ def test_scanner_add_provider():
     assert isinstance(result, bool)
 
 
-def test_scanner_list_providers():
+@pytest.mark.unit
+def test_scanner_list_providers(scanner):
     """Test listing providers."""
-    scanner = CloudScanner()
     providers = scanner.list_providers()
     assert isinstance(providers, list)
 
 
-def test_scanner_get_summary():
+@pytest.mark.unit
+def test_scanner_get_summary(scanner):
     """Test getting scan summary."""
-    scanner = CloudScanner()
     summary = scanner.get_summary({})
     assert "total_findings" in summary
     assert "by_severity" in summary

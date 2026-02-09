@@ -3,8 +3,7 @@
 ## Installation
 
 ```bash
-# Clone repository
-git clone https://github.com/your-org/netsec-cloud.git
+# From the toolkit root, go to netsec-cloud
 cd netsec-cloud
 
 # Install core dependencies

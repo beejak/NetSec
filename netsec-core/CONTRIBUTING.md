@@ -19,11 +19,10 @@ Thank you for your interest in contributing to NetSec-Core! This document provid
 
 ### Development Setup
 
-1. **Fork the repository**
+1. **Get the project** – ensure you have the Netsec-Toolkit (or netsec-core) source locally.
 
-2. **Clone your fork:**
+2. **Go to netsec-core:**
    ```bash
-   git clone https://github.com/your-username/netsec-core.git
    cd netsec-core
    ```
 

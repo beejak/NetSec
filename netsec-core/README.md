@@ -1,6 +1,5 @@
 # NetSec-Core 🛡️
 
-[![CI](https://github.com/your-org/netsec-core/workflows/CI/badge.svg)](https://github.com/your-org/netsec-core/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 
@@ -24,8 +23,7 @@
 ### Quick Install
 
 ```bash
-# Clone the repository
-git clone https://github.com/your-org/netsec-core.git
+# From the toolkit root, go to netsec-core
 cd netsec-core
 
 # Create virtual environment
@@ -82,6 +80,7 @@ uvicorn netsec_core.api.main:app --reload
 
 The API will be available at `http://localhost:8000`
 
+- **API overview:** See root [API_REFERENCE.md](../API_REFERENCE.md) for all endpoints and OpenAPI links.
 - API Documentation: http://localhost:8000/api/docs
 - ReDoc: http://localhost:8000/api/redoc
 - Health Check: http://localhost:8000/api/v1/health
@@ -310,8 +309,6 @@ See [DEPLOYMENT.md](DEPLOYMENT.md) for full configuration options.
 
 Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-- 🐛 [Report a Bug](https://github.com/your-org/netsec-core/issues/new?template=bug_report.md)
-- 💡 [Request a Feature](https://github.com/your-org/netsec-core/issues/new?template=feature_request.md)
 - 📖 [View Documentation](HELP.md)
 - 🧪 [Run Tests](TESTING_GUIDE.md)
 

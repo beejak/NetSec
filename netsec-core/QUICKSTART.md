@@ -46,7 +46,11 @@ netsec-core --help
 # Check API health
 netsec-core health
 
-# Try scanning commands (will show placeholder messages)
+# Run tests (unit + API; exclude integration for speed)
+pip install -e ".[dev]"
+pytest -v -m "not integration"
+
+# Try scanning commands
 netsec-core scan ports example.com
 netsec-core dns scan example.com
 netsec-core ssl check example.com

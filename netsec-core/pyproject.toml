@@ -81,4 +81,10 @@ testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
+markers = [
+    "unit: fast unit tests, no external services",
+    "integration: tests that may use external services or heavy setup",
+    "api: tests that use the FastAPI TestClient",
+    "cli: tests that use the Click CliRunner",
+]
 addopts = "-v --cov=netsec_core --cov-report=term-missing --cov-report=html"

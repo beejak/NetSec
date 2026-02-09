@@ -14,6 +14,18 @@ This document serves as the master index for all NetSec Toolkit projects and doc
 - [RESEARCH_REVIEW.md](RESEARCH_REVIEW.md) - Comprehensive research review
 - [GAP_ANALYSIS.md](GAP_ANALYSIS.md) - Gap analysis and opportunities
 
+### Enterprise & Operations
+- [API_REFERENCE.md](API_REFERENCE.md) - API overview and OpenAPI docs
+- [SECURITY_AND_COMPLIANCE.md](SECURITY_AND_COMPLIANCE.md) - What we check; CIS/NIST/PCI-DSS/HIPAA
+- [ARCHITECTURE.md](ARCHITECTURE.md) - High-level architecture
+- [RUNBOOK.md](RUNBOOK.md) - Deploy, config, health, logs, troubleshooting
+- [CHANGELOG.md](CHANGELOG.md) - Version history
+- [ENTERPRISE_DOCUMENTATION.md](ENTERPRISE_DOCUMENTATION.md) - Enterprise doc checklist
+- [MID_PROJECT_EVALUATION.md](MID_PROJECT_EVALUATION.md) - Mid-project eval (features & roadmap)
+- [CONTAINER_CLOUD_ENHANCEMENTS.md](CONTAINER_CLOUD_ENHANCEMENTS.md) - How to enhance Container and Cloud scanners
+- [SUPPORT_AND_SLA.md](SUPPORT_AND_SLA.md) - Support and SLA (placeholder for commercial use)
+- [VULNERABILITY_INTEL.md](VULNERABILITY_INTEL.md) - Vulnerability intelligence: queries (CVE, CWE, NIST, OSV, CISA KEV, GitHub Advisory), results, scanner-update log; vetted sources only
+
 ### Standards & Compliance
 - [STANDARDS_COMPLIANCE_RECOMMENDATIONS.md](STANDARDS_COMPLIANCE_RECOMMENDATIONS.md) - NIST, CIS, OWASP, MITRE, CISA, ISO recommendations
 - [ENHANCED_FEATURES_ROADMAP.md](ENHANCED_FEATURES_ROADMAP.md) - Additional features based on standards
@@ -114,9 +126,9 @@ This document serves as the master index for all NetSec Toolkit projects and doc
 
 Once created on GitHub:
 
-- **NetSec-Core**: `https://github.com/your-org/netsec-core`
-- **NetSec-Cloud**: `https://github.com/your-org/netsec-cloud`
-- **NetSec-Container**: `https://github.com/your-org/netsec-container`
+- **NetSec-Core**: Replace `your-org` with your GitHub org/user (e.g. `https://github.com/your-org/netsec-core`)
+- **NetSec-Cloud**: Same
+- **NetSec-Container**: Same
 
 ---
 
