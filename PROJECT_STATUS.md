@@ -1,97 +1,46 @@
-# NetSec Toolkit: Complete Project Status
+# NetSec Toolkit: Project Status
 
-## NetSec-Core ✅ COMPLETE
+Current status of the three projects. For what's next, see [ROADMAP_NEXT.md](ROADMAP_NEXT.md).
 
-**Status:** Production Ready
+---
 
-### Completed Features
-- ✅ Network Security Scanning
-- ✅ DNS Security Analysis
-- ✅ SSL/TLS Monitoring
-- ✅ Traffic Analysis
-- ✅ Anomaly Detection
-- ✅ Asset Discovery
-- ✅ LLM Integration
-- ✅ Remediation System
+## NetSec-Core – Complete
 
-### Statistics
-- 30+ API endpoints
-- 20+ CLI commands
-- 55+ test functions
-- 12 documentation files
-- 8 core modules
+**Status:** Implemented and maintained.
 
-### Documentation
-- ✅ Complete README
-- ✅ Usage Guide (with syntax help)
-- ✅ Architecture diagrams
-- ✅ Network diagrams
-- ✅ CI/CD integration examples
-- ✅ Help documentation
-- ✅ "What it does NOT do" section
+- **Features:** Network scanning, DNS security, SSL/TLS monitoring, traffic analysis, anomaly detection, asset discovery, LLM integration, remediation.
+- **API/CLI:** 30+ endpoints, 20+ CLI commands. OpenAPI at `/api/docs`.
+- **Tests:** Unit, API, CLI (including traffic, anomaly, assets, remediation, health). Integration tests available.
+- **Docs:** README, QUICKSTART, USAGE_GUIDE, HELP, ARCHITECTURE.
 
-### GitHub Ready
-- ✅ All code complete
-- ✅ Tests structured
-- ✅ CI/CD configured
-- ✅ Issue templates
-- ✅ PR template
-- ✅ Contributing guide
+---
 
-## NetSec-Cloud 🚧 IN DEVELOPMENT
+## NetSec-Cloud – Implemented
 
-**Status:** Phase 1 - Foundation (40% Complete)
+**Status:** Multi-cloud scanning and compliance in place.
 
-### Completed
-- ✅ Architecture design
-- ✅ Provider abstraction
-- ✅ Unified scanner
-- ✅ AWS provider (partial)
-- ✅ Azure provider (partial)
-- ✅ GCP provider (partial)
-- ✅ API framework
-- ✅ CLI framework
-- ✅ Network architecture diagrams
+- **Features:** AWS, Azure, GCP providers; storage, IAM, networking, compute (AWS EC2), audit (AWS CloudTrail); root account access keys check. Compliance mapping: CIS, NIST, PCI-DSS, HIPAA.
+- **API/CLI:** Scan (single/multi), compliance frameworks and check. Lint enforced in CI; optional pip-audit.
+- **Tests:** API, CLI, scanner, providers, compliance mapping.
+- **Docs:** README, QUICKSTART, ARCHITECTURE_DESIGN.
 
-### In Progress
-- 🔄 Complete AWS provider
-- ⏳ Complete Azure provider
-- ⏳ Complete GCP provider
-- ⏳ Compliance checking
-- ⏳ Testing
-- ⏳ Documentation
+---
 
-### Design Principles
-- Minimal dependencies (only official SDKs)
-- Unified interface for all providers
-- Lightweight implementation
-- Quality over quantity
+## NetSec-Container – Implemented
 
-## NetSec-Container 📋 PLANNED
+**Status:** Image scanning, secrets, fallback vuln path, optional OSV CVE lookup.
 
-**Status:** Not Started
+- **Features:** Image extraction (Docker, Podman, skopeo, crane, tar upload); vulnerability scanning (Trivy or BasicVulnerabilityScanner with optional OSV); secrets, Dockerfile, SBOM, risk scoring.
+- **API/CLI:** Scan, scan/upload. Lint enforced in CI; optional pip-audit.
+- **Tests:** API, CLI, scanner, secrets, vulnerability_basic, dockerfile, scoring, image_extractor.
+- **Docs:** README, ROADMAP.
 
-**Planned Features:**
-- Container image scanning
-- Secrets scanning (PRIMARY)
-- Kubernetes security
-- Runtime security
-- Compliance checking
+---
 
 ## Summary
 
-### NetSec-Core
-- **Status:** ✅ Complete and ready for GitHub
-- **Quality:** Production-ready
-- **Documentation:** Comprehensive
-
-### NetSec-Cloud
-- **Status:** 🚧 Foundation complete, implementation in progress
-- **Quality:** Architecture solid, implementation ongoing
-- **Documentation:** Architecture and design complete
-
-### Next Actions
-1. Complete NetSec-Cloud provider implementations
-2. Add comprehensive testing
-3. Complete documentation
-4. Integration with NetSec-Core
+| Project   | Status      | Next (see ROADMAP_NEXT)        |
+|-----------|-------------|---------------------------------|
+| Core      | Complete    | Optional unit tests; defer log/exfil |
+| Cloud     | Implemented | More identity/encryption checks |
+| Container | Implemented | Runtime/K8s, SBOM (Phase 2)    |

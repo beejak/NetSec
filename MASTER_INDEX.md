@@ -36,11 +36,18 @@ This document serves as the master index for all NetSec Toolkit projects and doc
 - [MITIGATION_REMEDIATION_GUIDE.md](MITIGATION_REMEDIATION_GUIDE.md) - Remediation steps for findings
 - [LLM_POWERED_SCANNING.md](LLM_POWERED_SCANNING.md) - LLM integration design
 
+### Testing & CI
+- [TESTING.md](TESTING.md) - Unified testing framework
+- [RUN_ALL_TESTS.md](RUN_ALL_TESTS.md) - How to run all tests
+- [TEST_STATUS_CONFIRMATION.md](TEST_STATUS_CONFIRMATION.md) - Test pass and coverage summary
+- [TESTING_GAPS.md](TESTING_GAPS.md) - Feature coverage and gaps
+- [CI_AND_BRANCH_PROTECTION.md](CI_AND_BRANCH_PROTECTION.md) - Root CI and branch protection
+
 ### Project Planning
 - [PROJECT_PROPOSAL.md](PROJECT_PROPOSAL.md) - Original project proposal
 - [PROJECT_SPLIT_RECOMMENDATIONS.md](PROJECT_SPLIT_RECOMMENDATIONS.md) - Project split strategy
 - [PROJECT_CONSOLIDATION.md](PROJECT_CONSOLIDATION.md) - Complete project consolidation
-- [REPOSITORY_SETUP_GUIDE.md](REPOSITORY_SETUP_GUIDE.md) - Repository setup instructions
+- [ROADMAP_NEXT.md](ROADMAP_NEXT.md) - What's next on the roadmap
 
 ### Research Agents
 - [agents/](agents/) - All research agent scripts
@@ -63,7 +70,7 @@ This document serves as the master index for all NetSec Toolkit projects and doc
 - Traffic analysis
 - Anomaly detection
 
-**Status**: Ready to initialize
+**Status**: Implemented
 
 ---
 
@@ -78,7 +85,7 @@ This document serves as the master index for all NetSec Toolkit projects and doc
 - Runtime security
 - Compliance checking
 
-**Status**: Ready to initialize
+**Status**: Implemented
 
 ---
 
@@ -92,175 +99,24 @@ This document serves as the master index for all NetSec Toolkit projects and doc
 - Governance-as-code
 - Risk assessment
 
-**Status**: Ready to initialize
+**Status**: Implemented
 
 ---
 
-## 📋 Quick Start Guide
+## Quick Start
 
-### 1. Review Research
-- Read [RESEARCH_REVIEW.md](RESEARCH_REVIEW.md) for overview
-- Review [GAP_ANALYSIS.md](GAP_ANALYSIS.md) for opportunities
-
-### 2. Understand Standards
-- Read [STANDARDS_COMPLIANCE_RECOMMENDATIONS.md](STANDARDS_COMPLIANCE_RECOMMENDATIONS.md)
-- Review [ENHANCED_FEATURES_ROADMAP.md](ENHANCED_FEATURES_ROADMAP.md)
-
-### 3. Review Security Design
-- [ATTACK_VECTORS_VULNERABILITIES.md](ATTACK_VECTORS_VULNERABILITIES.md)
-- [SECRETS_SCANNING_DESIGN.md](SECRETS_SCANNING_DESIGN.md)
-- [MITIGATION_REMEDIATION_GUIDE.md](MITIGATION_REMEDIATION_GUIDE.md)
-- [LLM_POWERED_SCANNING.md](LLM_POWERED_SCANNING.md)
-
-### 4. Set Up Repositories
-- Follow [REPOSITORY_SETUP_GUIDE.md](REPOSITORY_SETUP_GUIDE.md)
-- Use initialization scripts in `scripts/`
-
-### 5. Start Development
-- Begin with NetSec-Core
-- Follow [PROJECT_CONSOLIDATION.md](PROJECT_CONSOLIDATION.md) for roadmap
+- **Run a project:** See root [README.md](README.md) (Quick Start). Each project: `pip install -e ".[dev]"`, then `uvicorn ...` and `pytest -v`.
+- **Run all tests:** [RUN_ALL_TESTS.md](RUN_ALL_TESTS.md). Scripts: `run_all_tests_parallel.sh` / `.bat` / `.py`.
+- **Roadmap:** [ROADMAP_NEXT.md](ROADMAP_NEXT.md). Research and standards: [RESEARCH_REVIEW.md](RESEARCH_REVIEW.md), [ENHANCED_FEATURES_ROADMAP.md](ENHANCED_FEATURES_ROADMAP.md).
 
 ---
 
-## 🔗 Repository Links
+## Repository links
 
-Once created on GitHub:
-
-- **NetSec-Core**: Replace `your-org` with your GitHub org/user (e.g. `https://github.com/your-org/netsec-core`)
-- **NetSec-Cloud**: Same
-- **NetSec-Container**: Same
+Replace `your-org` with your GitHub org or user in docs (e.g. [SUPPORT_AND_SLA.md](SUPPORT_AND_SLA.md)). Per-project READMEs: [netsec-core/README.md](netsec-core/README.md), [netsec-cloud/README.md](netsec-cloud/README.md), [netsec-container/README.md](netsec-container/README.md).
 
 ---
 
-## 📊 Research Summary
+## Current status
 
-### Agents Run: 11
-- Network Security: 6 agents
-- Cloud Security: 4 agents
-- Container Security: 1 agent
-
-### Tools Analyzed: 50+
-- Open-source: 30+
-- Enterprise: 20+
-
-### Gaps Identified: 25+
-- Critical: 6 gaps
-- High Priority: 10+ gaps
-- Medium Priority: 9+ gaps
-
-### Standards Covered:
-- NIST (CSF, SP 800-190, SP 800-53)
-- CIS Controls (v8)
-- OWASP (Top 10, Container Top 10)
-- MITRE ATT&CK
-- CISA (Zero Trust, Supply Chain)
-- ISO 27001
-
----
-
-## 🎯 Implementation Priority
-
-### Phase 1: NetSec-Core (Weeks 1-8)
-1. Foundation & API
-2. Network Scanner
-3. DNS Security
-4. SSL/TLS Monitor
-5. LLM Integration
-6. Remediation
-
-### Phase 2: NetSec-Container (Weeks 9-16)
-1. Foundation & API
-2. Secrets Scanner (PRIMARY)
-3. Image Scanner
-4. Kubernetes Security
-5. LLM Integration
-6. Remediation
-
-### Phase 3: NetSec-Cloud (Weeks 17-24)
-1. Foundation & API
-2. Multi-cloud CSPM
-3. Compliance Automation
-4. Governance Module
-5. Risk Assessment
-6. LLM Integration
-7. Remediation
-
----
-
-## 📝 Key Features by Project
-
-### NetSec-Core:
-- ✅ Network scanning
-- ✅ DNS security analysis
-- ✅ SSL/TLS monitoring
-- ✅ Traffic analysis
-- ✅ Anomaly detection
-- ⭐ Asset discovery
-- ⭐ Log analysis
-- ⭐ LLM enhancements
-
-### NetSec-Container:
-- ✅ Image vulnerability scanning
-- ✅ **Secrets scanning (PRIMARY)** ⭐⭐⭐
-- ✅ Kubernetes security
-- ✅ Runtime security
-- ✅ Compliance checking
-- ⭐ Image signature verification
-- ⭐ Malware scanning
-- ⭐ SBOM generation
-- ⭐ LLM enhancements
-
-### NetSec-Cloud:
-- ✅ Multi-cloud CSPM
-- ✅ Compliance automation
-- ✅ Governance-as-code
-- ✅ Risk assessment
-- ⭐ Identity validation
-- ⭐ Data encryption validation
-- ⭐ LLM enhancements
-
----
-
-## 🤖 LLM Integration
-
-All projects will include:
-- Context-aware analysis
-- False positive reduction
-- Remediation generation
-- Natural language explanations
-- Automated fix generation
-
----
-
-## 🔧 Remediation
-
-All projects will include:
-- Immediate mitigation steps
-- Short-term remediation
-- Long-term prevention
-- Automated remediation (where safe)
-- Verification steps
-
----
-
-## 📈 Success Metrics
-
-### Per Project:
-- Detection accuracy > 95%
-- False positive rate < 5%
-- Performance impact < 10%
-- API response time < 5 seconds
-- Standards compliance 100%
-
----
-
-## 🚀 Ready to Start!
-
-**Next Steps**:
-1. ✅ Review this master index
-2. ✅ Choose starting project (recommend NetSec-Core)
-3. ✅ Follow repository setup guide
-4. ✅ Initialize first repository
-5. ✅ Start development!
-
-**Let's build these projects!** 🎉
+See [PROJECT_STATUS.md](PROJECT_STATUS.md) for per-project status. See [ROADMAP_NEXT.md](ROADMAP_NEXT.md) for what's next.

@@ -38,15 +38,17 @@ uvicorn netsec_container.api.main:app --reload
 pytest -v
 ```
 
-### Run all tests (sanity + pytest)
+### Run all tests
 
-See **[RUN_ALL_TESTS.md](RUN_ALL_TESTS.md)**, **[TESTING.md](TESTING.md)**, and **[COMPREHENSIVE_TESTING_FRAMEWORK.md](COMPREHENSIVE_TESTING_FRAMEWORK.md)** (parallel runs, use cases, phases).
+See **[RUN_ALL_TESTS.md](RUN_ALL_TESTS.md)** and **[TEST_STATUS_CONFIRMATION.md](TEST_STATUS_CONFIRMATION.md)**. Per project:
 
 ```bash
-cd netsec-core    && pip install -e ".[dev]" && python sanitize_and_test.py && pytest -v
-cd netsec-cloud   && pip install -e ".[dev]" && python sanitize_and_test.py && pytest -v
-cd netsec-container && pip install -e ".[dev]" && python sanitize_and_test.py && pytest -v
+cd netsec-core    && pip install -e ".[dev]" && pytest -v -m "not integration"
+cd netsec-cloud   && pip install -e ".[dev]" && pytest -v
+cd netsec-container && pip install -e ".[dev]" && pytest -v
 ```
+
+Or use `run_all_tests_parallel.sh` / `.bat` / `.py` at repo root.
 
 ---
 

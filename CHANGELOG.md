@@ -18,6 +18,7 @@ All notable changes to the NetSec Toolkit are documented here. Format is based o
 
 ### Changed
 - TESTING_GAPS.md updated to reflect new Core and Container test coverage.
+- **Documentation cleanup:** Removed obsolete one-time status and duplicate docs (sanitization, verification, push duplicates, implementation-complete reports). Updated [MASTER_INDEX.md](MASTER_INDEX.md) (Testing section, project status Implemented, Quick Start simplified, removed broken REPOSITORY_SETUP_GUIDE link). Updated [PROJECT_STATUS.md](PROJECT_STATUS.md) to current state. README run-all-tests section trimmed.
 
 ---
 
