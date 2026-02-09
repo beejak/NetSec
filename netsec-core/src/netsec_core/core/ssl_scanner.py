@@ -198,6 +198,15 @@ class SSLScanner:
 
         try:
             context = ssl.create_default_context()
+            # Restrict protocols to TLS 1.2+ to avoid deprecated SSL/TLS versions
+            if hasattr(context, "minimum_version") and hasattr(ssl, "TLSVersion"):
+                context.minimum_version = ssl.TLSVersion.TLSv1_2
+            else:
+                # Fallback for older Python: disable TLSv1 and TLSv1_1 explicitly if available
+                if hasattr(ssl, "OP_NO_TLSv1"):
+                    context.options |= ssl.OP_NO_TLSv1
+                if hasattr(ssl, "OP_NO_TLSv1_1"):
+                    context.options |= ssl.OP_NO_TLSv1_1
             context.set_ciphers("ALL:@SECLEVEL=0")  # Allow all ciphers for testing
 
             with socket.create_connection((hostname, port), timeout=10) as sock:
