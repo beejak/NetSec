@@ -61,6 +61,17 @@ class ScanResponse(BaseModel):
     timestamp: datetime
 
 
+class ComplianceCheckRequest(BaseModel):
+    """Request body for compliance check."""
+
+    credentials: Dict[str, Any] = Field(default_factory=dict, description="Provider credentials")
+    regions: Optional[List[str]] = Field(None, description="Regions to scan")
+    check_types: Optional[List[str]] = Field(
+        None,
+        description="Check types (storage, iam, networking, compute)",
+    )
+
+
 class MultiCloudScanRequest(BaseModel):
     """Request model for multi-cloud scanning."""
 

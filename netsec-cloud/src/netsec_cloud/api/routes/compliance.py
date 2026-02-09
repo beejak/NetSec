@@ -1,9 +1,10 @@
 """Compliance checking routes."""
 
 from fastapi import APIRouter, HTTPException
-from typing import List, Dict, Any, Optional
-from datetime import datetime
+from typing import List
+from datetime import datetime, timezone
 
+from netsec_cloud.api.models import ComplianceCheckRequest
 from netsec_cloud.scanner import CloudScanner
 from netsec_cloud.compliance.mapping import (
     map_findings_to_framework,
@@ -69,9 +70,7 @@ async def list_framework_controls(framework: str):
 async def check_compliance(
     provider: str,
     framework: str,
-    credentials: Dict[str, Any],
-    regions: Optional[List[str]] = None,
-    check_types: Optional[List[str]] = None,
+    body: ComplianceCheckRequest,
 ):
     """
     Run a cloud scan and map findings to the given compliance framework.
@@ -91,8 +90,8 @@ async def check_compliance(
         scanner = CloudScanner()
         success = scanner.add_provider(
             provider_name=provider.lower(),
-            credentials=credentials,
-            regions=regions,
+            credentials=body.credentials,
+            regions=body.regions,
         )
         if not success:
             raise HTTPException(
@@ -102,7 +101,7 @@ async def check_compliance(
 
         findings = scanner.scan_provider(
             provider_name=provider.lower(),
-            check_types=check_types,
+            check_types=body.check_types,
         )
         control_results = map_findings_to_framework(findings, fw)
         failed_count = sum(1 for c in control_results if c["status"] == "failed")
@@ -111,7 +110,7 @@ async def check_compliance(
         return {
             "provider": provider.lower(),
             "framework": fw,
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "findings_count": len(findings),
             "controls": control_results,
             "summary": {
@@ -123,6 +122,12 @@ async def check_compliance(
     except HTTPException:
         raise
     except Exception as e:
+        msg = str(e).lower()
+        if "credential" in msg or "auth" in msg or "unauthorized" in msg or "access denied" in msg:
+            raise HTTPException(
+                status_code=401,
+                detail=f"Failed to authenticate with provider: {provider}",
+            )
         raise HTTPException(
             status_code=500,
             detail=f"Compliance check failed: {str(e)}",

@@ -70,28 +70,28 @@ def test_scan_requires_auth(client):
             "check_types": ["storage"],
         },
     )
-    # Without valid creds: 401 (auth) or 500 (provider init failure)
-    assert response.status_code in (401, 500)
+    # Without valid creds, expect 401 (auth failure)
+    assert response.status_code == 401
 
 
 @pytest.mark.api
 def test_compliance_check_requires_auth(client):
-    """POST /compliance/check with empty creds returns 401 or 422 (validation)."""
+    """POST /compliance/check with empty creds returns 401."""
     response = client.post(
         "/api/v1/cloud/compliance/check?provider=aws&framework=cis",
-        json={},
+        json={"credentials": {}},
     )
-    assert response.status_code in (401, 422)
+    assert response.status_code == 401
 
 
 @pytest.mark.api
 def test_compliance_check_bad_framework(client):
-    """POST /compliance/check with unsupported framework returns 400 or 422."""
+    """POST /compliance/check with unsupported framework returns 400."""
     response = client.post(
         "/api/v1/cloud/compliance/check?provider=aws&framework=unknown_fw",
-        json={},
+        json={"credentials": {}},
     )
-    assert response.status_code in (400, 422)
+    assert response.status_code == 400
 
 
 @pytest.mark.api

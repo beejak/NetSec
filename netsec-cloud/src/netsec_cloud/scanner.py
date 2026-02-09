@@ -1,7 +1,7 @@
 """Unified cloud security scanner."""
 
 from typing import List, Dict, Any, Optional
-from datetime import datetime
+from datetime import datetime, timezone
 
 from netsec_cloud.providers.base import CloudProvider, Finding
 from netsec_cloud.providers.aws import AWSProvider
@@ -130,7 +130,7 @@ class CloudScanner:
                 "info": 0,
             },
             "by_type": {},
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         }
 
         for provider_name, provider_findings in findings.items():

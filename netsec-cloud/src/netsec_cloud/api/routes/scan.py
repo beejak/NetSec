@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter, HTTPException
 from typing import Dict, Any
-from datetime import datetime
+from datetime import datetime, timezone
 import uuid
 
 from netsec_cloud.api.models import (
@@ -58,10 +58,18 @@ async def scan_cloud(request: ScanRequest):
             provider=request.provider.value,
             findings=finding_models,
             summary=summary,
-            timestamp=datetime.utcnow(),
+            timestamp=datetime.now(timezone.utc),
         )
 
+    except HTTPException:
+        raise
     except Exception as e:
+        msg = str(e).lower()
+        if "credential" in msg or "auth" in msg or "unauthorized" in msg or "access denied" in msg:
+            raise HTTPException(
+                status_code=401,
+                detail=f"Failed to authenticate with {request.provider.value}",
+            )
         raise HTTPException(
             status_code=500,
             detail=f"Error scanning cloud: {str(e)}",
@@ -105,10 +113,18 @@ async def scan_multi_cloud(request: MultiCloudScanRequest):
             scan_id=scan_id,
             results=results_models,
             summary=summary,
-            timestamp=datetime.utcnow(),
+            timestamp=datetime.now(timezone.utc),
         )
 
+    except HTTPException:
+        raise
     except Exception as e:
+        msg = str(e).lower()
+        if "credential" in msg or "auth" in msg or "unauthorized" in msg or "access denied" in msg:
+            raise HTTPException(
+                status_code=401,
+                detail="Failed to authenticate with one or more providers",
+            )
         raise HTTPException(
             status_code=500,
             detail=f"Error scanning clouds: {str(e)}",
