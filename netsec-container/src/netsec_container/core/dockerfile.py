@@ -3,7 +3,7 @@
 import asyncio
 import logging
 from pathlib import Path
-from typing import List, Optional, Union
+from typing import Dict, List, Optional, Union
 
 from netsec_container.core.results import DockerfileIssue
 
