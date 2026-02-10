@@ -1,0 +1,8 @@
+{
+  "test_name": "test_check_certificate_basic",
+  "status": "PASSED",
+  "timestamp": "2026-02-10T04:44:50.617329",
+  "parameters": {},
+  "duration_seconds": 0.1266396000282839,
+  "test_file": "c:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_ssl_scanner.py"
+}

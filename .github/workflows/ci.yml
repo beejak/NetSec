@@ -29,7 +29,7 @@ jobs:
       - name: Pytest
         run: pytest -v -m "not integration" --tb=short
       - name: Lint
-        run: ruff check src/ tests/ || true
+        run: ruff check src/ tests/
       - name: Pip-audit (optional)
         run: pip install pip-audit && pip-audit --skip-editable || true
 
@@ -49,7 +49,7 @@ jobs:
       - name: Pytest
         run: pytest -v -m "not integration" --tb=short
       - name: Lint
-        run: ruff check src/ tests/ || true
+        run: ruff check src/ tests/
       - name: Pip-audit (optional)
         run: pip install pip-audit && pip-audit --skip-editable || true
 
@@ -69,6 +69,6 @@ jobs:
       - name: Pytest
         run: pytest -v -m "not integration" --tb=short
       - name: Lint
-        run: ruff check src/ tests/ || true
+        run: ruff check src/ tests/
       - name: Pip-audit (optional)
         run: pip install pip-audit && pip-audit --skip-editable || true

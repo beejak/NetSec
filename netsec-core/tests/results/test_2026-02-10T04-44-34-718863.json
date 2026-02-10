@@ -1,0 +1,8 @@
+{
+  "test_name": "test_scan_ports_command",
+  "status": "PASSED",
+  "timestamp": "2026-02-10T04:44:34.718863",
+  "parameters": {},
+  "duration_seconds": 5.0244417999638245,
+  "test_file": "c:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_cli.py"
+}

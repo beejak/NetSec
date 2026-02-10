@@ -9,8 +9,8 @@ This document summarizes the **next priorities** across the NetSec Toolkit, base
 | Area | Next |
 |------|------|
 | **Core** | Add API tests for traffic routes, assets/discover, LLM (mock); CLI tests for traffic, anomaly, assets, remediation, health; unit tests for TrafficAnalyzer (scapy), LLMAnalyzer (mock). |
-| **Cloud** | Add test for multi-cloud scan response shape; optional tests with mocked boto3/azure/gcp. |
-| **Container** | Add test for root HTML; CLI tests for full scan and serve. |
+| **Cloud** | IAM wildcard check extended to all customer-managed policies (not just name filter); S3 encryption and IAM wildcard provider tests added. |
+| **Container** | Root HTML content test and CLI smoke for scan/serve added. |
 
 See **[TESTING_GAPS.md](TESTING_GAPS.md)** for the full gap list.
 
@@ -57,7 +57,7 @@ See **[TESTING_GAPS.md](TESTING_GAPS.md)** for the full gap list.
 
 | Area | Next |
 |------|------|
-| **CI** | Enforce lint in root workflow (remove `\|\| true`); optional coverage upload and thresholds. |
+| **CI** | Lint enforced (removed `\|\| true` from ruff check); optional coverage upload and thresholds. |
 | **Docs** | Refresh per-project HELP/QUICKSTART; replace any remaining placeholders. |
 | **Dependencies** | Run `pip-audit` per project; add audit step to CI; see [DEPENDENCY_AUDIT.md](DEPENDENCY_AUDIT.md). |
 | **Vulnerability intel** | Use [VULNERABILITY_INTEL.md](VULNERABILITY_INTEL.md) and `vulnerability-intel/` (queries, results, scanner-update log) to feed CVE DB or scanner updates; all sources vetted (NVD, CVE, CWE, OSV, CISA KEV, GitHub Advisory). |
@@ -66,9 +66,9 @@ See **[TESTING_GAPS.md](TESTING_GAPS.md)** for the full gap list.
 
 ## Suggested order
 
-1. **Close testing gaps** (Core traffic/assets/LLM tests, Cloud multi-scan, Container HTML/CLI) for stability. *(Done: API/CLI smoke and multi/compliance/upload covered.)*
+1. **Close testing gaps** (Core traffic/assets/LLM tests, Cloud multi-scan, Container HTML/CLI) for stability. *(Done: API/CLI smoke, multi-scan response shape, root HTML/CLI scan/serve smoke, S3 encryption provider test; CI lint enforced.)*
 2. **NetSec-Container**: Image extraction and fallback vuln path so container scanning is usable without Trivy. *(Done: skopeo/crane when no Docker; optional OSV CVE lookup in BasicVulnerabilityScanner.)*
-3. **NetSec-Cloud**: Deeper provider coverage and identity/encryption validation for compliance. *(In progress: root access keys check + mapping; CloudTrail audit. Next: more identity/encryption checks.)*
+3. **NetSec-Cloud**: Deeper provider coverage and identity/encryption validation for compliance. *(Done: S3 default encryption check + CIS/NIST mapping; root access keys, CloudTrail. Next: more identity/encryption checks.)*
 4. **NetSec-Core**: Log analysis and data exfiltration/DoS detection for detection value. *(Defer until use case.)*
 5. **Container**: Runtime/K8s and image signing/SBOM as Phase 2.
 

@@ -1,0 +1,8 @@
+{
+  "test_name": "test_remediation_get_known",
+  "status": "PASSED",
+  "timestamp": "2026-02-10T04:43:54.262175",
+  "parameters": {},
+  "duration_seconds": 0.0045563000021502376,
+  "test_file": "c:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_api_routes.py"
+}

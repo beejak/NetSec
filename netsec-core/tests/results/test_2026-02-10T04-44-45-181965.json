@@ -1,0 +1,8 @@
+{
+  "test_name": "test_explain_finding_returns_string",
+  "status": "PASSED",
+  "timestamp": "2026-02-10T04:44:45.181965",
+  "parameters": {},
+  "duration_seconds": 0.000685799983330071,
+  "test_file": "c:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_llm_analyzer.py"
+}

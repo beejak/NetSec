@@ -1,0 +1,8 @@
+{
+  "test_name": "test_scan_domain_basic",
+  "status": "PASSED",
+  "timestamp": "2026-02-10T04:44:44.444559",
+  "parameters": {},
+  "duration_seconds": 0.06597709993366152,
+  "test_file": "c:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_dns_scanner.py"
+}

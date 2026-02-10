@@ -1,0 +1,8 @@
+{
+  "test_name": "test_network_scanner_initialization",
+  "status": "PASSED",
+  "timestamp": "2026-02-10T04:44:45.200599",
+  "parameters": {},
+  "duration_seconds": 0.00022769998759031296,
+  "test_file": "c:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_network_scanner.py"
+}

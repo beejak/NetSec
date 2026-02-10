@@ -1,0 +1,8 @@
+{
+  "test_name": "test_parse_network_single_ip",
+  "status": "PASSED",
+  "timestamp": "2026-02-10T04:44:29.567438",
+  "parameters": {},
+  "duration_seconds": 0.000215600011870265,
+  "test_file": "c:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_asset_discovery.py"
+}

@@ -1,0 +1,8 @@
+{
+  "test_name": "test_remediation_get_command",
+  "status": "PASSED",
+  "timestamp": "2026-02-10T04:44:39.695940",
+  "parameters": {},
+  "duration_seconds": 4.5684174000052735,
+  "test_file": "c:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_cli.py"
+}

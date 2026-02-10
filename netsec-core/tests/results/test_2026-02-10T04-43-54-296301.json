@@ -1,0 +1,8 @@
+{
+  "test_name": "test_assets_inventory_endpoint",
+  "status": "PASSED",
+  "timestamp": "2026-02-10T04:43:54.296301",
+  "parameters": {},
+  "duration_seconds": 0.009009799920022488,
+  "test_file": "c:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_api_routes.py"
+}

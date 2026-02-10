@@ -1,0 +1,8 @@
+{
+  "test_name": "test_traffic_command",
+  "status": "PASSED",
+  "timestamp": "2026-02-10T04:44:35.071137",
+  "parameters": {},
+  "duration_seconds": 0.0009760999819263816,
+  "test_file": "c:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_cli.py"
+}

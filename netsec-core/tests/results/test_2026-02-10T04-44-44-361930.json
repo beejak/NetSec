@@ -1,0 +1,8 @@
+{
+  "test_name": "test_dns_scanner_initialization",
+  "status": "PASSED",
+  "timestamp": "2026-02-10T04:44:44.361930",
+  "parameters": {},
+  "duration_seconds": 0.002347499947063625,
+  "test_file": "c:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_dns_scanner.py"
+}

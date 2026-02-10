@@ -1,0 +1,8 @@
+{
+  "test_name": "test_anomaly_detector_init",
+  "status": "PASSED",
+  "timestamp": "2026-02-10T04:43:53.926398",
+  "parameters": {},
+  "duration_seconds": 0.00023140001576393843,
+  "test_file": "c:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_anomaly_detector.py"
+}

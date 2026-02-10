@@ -217,39 +217,36 @@ class AWSProvider(CloudProvider):
                             )
                         )
 
-            # Check 2: Overprivileged policies (simplified check)
-            # This is a basic check - full analysis would be more complex
+            # Check 2: Overprivileged policies – any customer-managed policy with wildcard actions
             policies = iam_client.list_policies(Scope="Local")
             for policy in policies.get("Policies", []):
                 policy_arn = policy["Arn"]
                 policy_name = policy["PolicyName"]
-
-                # Check for overly permissive policies (simplified)
-                if "*" in policy_name.lower() or "admin" in policy_name.lower():
-                    # Get policy version
-                    try:
-                        policy_version = iam_client.get_policy_version(
-                            PolicyArn=policy_arn,
-                            VersionId=policy["DefaultVersionId"],
-                        )
-                        document = policy_version["PolicyVersion"]["Document"]
-
-                        # Simple check for wildcard actions
-                        if self._has_wildcard_action(document):
-                            findings.append(
-                                Finding(
-                                    finding_id=f"aws-iam-wildcard-{policy_name}",
-                                    type="iam_overprivileged",
-                                    severity="medium",
-                                    title=f"IAM Policy '{policy_name}' may be overprivileged",
-                                    description=f"Policy {policy_name} contains wildcard actions which may grant excessive permissions",
-                                    resource=policy_arn,
-                                    region="global",
-                                    provider="aws",
-                                )
+                try:
+                    policy_version = iam_client.get_policy_version(
+                        PolicyArn=policy_arn,
+                        VersionId=policy["DefaultVersionId"],
+                    )
+                    document = policy_version["PolicyVersion"]["Document"]
+                    if self._has_wildcard_action(document):
+                        findings.append(
+                            Finding(
+                                finding_id=f"aws-iam-wildcard-{policy_name}",
+                                type="iam_overprivileged",
+                                severity="medium",
+                                title=f"IAM Policy '{policy_name}' may be overprivileged",
+                                description=f"Policy {policy_name} contains wildcard actions which may grant excessive permissions",
+                                resource=policy_arn,
+                                region="global",
+                                provider="aws",
+                                remediation={
+                                    "immediate": ["Replace wildcard actions with least-privilege actions"],
+                                    "short_term": ["Use policy conditions and resource constraints where possible"],
+                                },
                             )
-                    except Exception:
-                        pass
+                        )
+                except ClientError:
+                    pass
 
         except Exception as e:
             findings.append(

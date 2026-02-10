@@ -1,0 +1,8 @@
+{
+  "test_name": "test_assets_discover_command",
+  "status": "PASSED",
+  "timestamp": "2026-02-10T04:43:53.885080",
+  "parameters": {},
+  "duration_seconds": 32.66478360001929,
+  "test_file": "c:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\integration\\test_cli_integration.py"
+}

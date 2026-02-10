@@ -1,0 +1,8 @@
+{
+  "test_name": "test_asset_discovery_init",
+  "status": "PASSED",
+  "timestamp": "2026-02-10T04:44:29.548739",
+  "parameters": {},
+  "duration_seconds": 0.00029449991416186094,
+  "test_file": "c:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_asset_discovery.py"
+}

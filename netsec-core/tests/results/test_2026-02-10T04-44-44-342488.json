@@ -1,0 +1,8 @@
+{
+  "test_name": "test_health_command",
+  "status": "PASSED",
+  "timestamp": "2026-02-10T04:44:44.342488",
+  "parameters": {},
+  "duration_seconds": 4.6267698999727145,
+  "test_file": "c:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_cli.py"
+}

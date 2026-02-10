@@ -1,0 +1,8 @@
+{
+  "test_name": "test_analyze_traffic_returns_analysis_and_timestamp",
+  "status": "PASSED",
+  "timestamp": "2026-02-10T04:44:45.123968",
+  "parameters": {},
+  "duration_seconds": 0.0007621999830007553,
+  "test_file": "c:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_llm_analyzer.py"
+}

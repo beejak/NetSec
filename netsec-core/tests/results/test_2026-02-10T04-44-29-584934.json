@@ -1,0 +1,8 @@
+{
+  "test_name": "test_parse_network_cidr_24",
+  "status": "PASSED",
+  "timestamp": "2026-02-10T04:44:29.584934",
+  "parameters": {},
+  "duration_seconds": 0.00036669999826699495,
+  "test_file": "c:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_asset_discovery.py"
+}

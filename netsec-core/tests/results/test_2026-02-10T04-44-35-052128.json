@@ -1,0 +1,8 @@
+{
+  "test_name": "test_ssl_check_command",
+  "status": "PASSED",
+  "timestamp": "2026-02-10T04:44:35.052128",
+  "parameters": {},
+  "duration_seconds": 0.22488209989387542,
+  "test_file": "c:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_cli.py"
+}

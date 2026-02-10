@@ -1,0 +1,8 @@
+{
+  "test_name": "test_detect_tunneling",
+  "status": "PASSED",
+  "timestamp": "2026-02-10T04:44:44.702429",
+  "parameters": {},
+  "duration_seconds": 0.2393957000458613,
+  "test_file": "c:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_dns_scanner.py"
+}

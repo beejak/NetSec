@@ -1,0 +1,8 @@
+{
+  "test_name": "test_parse_network_range",
+  "status": "PASSED",
+  "timestamp": "2026-02-10T04:44:29.603586",
+  "parameters": {},
+  "duration_seconds": 0.00029070000164210796,
+  "test_file": "c:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_asset_discovery.py"
+}

@@ -106,8 +106,32 @@ def test_multi_cloud_scan_accepts_body(client):
             "check_types": ["storage"],
         },
     )
-    # Without valid creds we get 401 or 500; we're testing route accepts body
     assert response.status_code in [200, 401, 500]
     if response.status_code == 200:
         data = response.json()
-        assert "results" in data or "summary" in data
+        assert "scan_id" in data
+        assert "results" in data
+        assert "summary" in data
+        assert "timestamp" in data
+        assert isinstance(data["results"], dict)
+        assert isinstance(data["summary"], dict)
+
+
+@pytest.mark.api
+def test_multi_cloud_scan_response_shape(client):
+    """Multi-cloud scan response has required shape (scan_id, results, summary, timestamp)."""
+    response = client.post(
+        "/api/v1/cloud/scan/multi",
+        json={
+            "providers": [{"provider": "aws", "credentials": {}}],
+            "check_types": ["storage"],
+        },
+    )
+    # Without creds we get 401; shape test documents expected keys when 200
+    assert response.status_code in (200, 401, 500)
+    if response.status_code == 200:
+        data = response.json()
+        assert "scan_id" in data and isinstance(data["scan_id"], str)
+        assert "results" in data and isinstance(data["results"], dict)
+        assert "summary" in data and isinstance(data["summary"], dict)
+        assert "timestamp" in data

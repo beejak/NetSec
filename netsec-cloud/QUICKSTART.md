@@ -88,6 +88,16 @@ curl -X POST "http://localhost:8000/api/v1/cloud/scan" \
 
 See [examples/basic_scan.py](examples/basic_scan.py) for code examples.
 
+## Multi-cloud scan (API)
+
+```bash
+# POST /api/v1/cloud/scan/multi with providers and optional check_types
+curl -X POST "http://localhost:8000/api/v1/cloud/scan/multi" \
+  -H "Content-Type: application/json" \
+  -d '{"providers": ["aws", "azure"], "check_types": ["storage", "iam"]}'
+# Response: scan_id, results (per provider), summary, timestamp
+```
+
 ## Documentation
 
 - [README](README.md) - Overview
@@ -97,4 +107,4 @@ See [examples/basic_scan.py](examples/basic_scan.py) for code examples.
 
 ## Status
 
-🚧 **In Development** - Foundation complete, features in progress
+Multi-cloud scan API, storage/IAM checks (including S3 encryption), and compliance mapping (CIS, NIST, PCI-DSS, HIPAA) are in place. CI enforces lint; tests cover API, providers, and compliance.

@@ -17,6 +17,17 @@ def test_root_returns_html(client):
 
 
 @pytest.mark.api
+def test_root_html_contains_scanner_ui(client):
+    """GET / returns HTML with scanner UI (title or upload)."""
+    response = client.get("/")
+    assert response.status_code == 200
+    ct = response.headers.get("content-type", "")
+    if "text/html" in ct.lower():
+        text = response.text
+        assert "NetSec" in text or "Scanner" in text or "upload" in text.lower()
+
+
+@pytest.mark.api
 def test_health(client):
     """GET /api/v1/health returns healthy."""
     response = client.get("/api/v1/health")

@@ -125,6 +125,11 @@ async def root():
         }
         .result-label { font-weight: bold; color: #333; margin-bottom: 5px; }
         .result-value { color: #666; }
+        .detail-list { margin-top: 10px; max-height: 200px; overflow-y: auto; }
+        .detail-item { font-size: 0.9em; padding: 8px; background: #fff; border-radius: 6px; margin-bottom: 6px; border-left: 3px solid #667eea; }
+        .detail-item.critical { border-left-color: #c33; }
+        .detail-item.high { border-left-color: #e67e22; }
+        .detail-item.medium { border-left-color: #f1c40f; }
         .error {
             display: none;
             margin-top: 20px;
@@ -254,19 +259,32 @@ async def root():
         
         function displayResults(data) {
             const results_data = data.results || data;
+            const vulns = results_data.vulnerabilities || [];
+            const secrets = results_data.secrets || [];
+            const maxShow = 10;
             
             let html = `
                 <div class="result-item">
                     <div class="result-label">Risk Score</div>
-                    <div class="result-value">${results_data.risk_score || 0}/100 (${(results_data.risk_level || 'unknown').toUpperCase()})</div>
+                    <div class="result-value">${results_data.risk_score ?? 0}/100 (${(results_data.risk_level || 'unknown').toUpperCase()})</div>
                 </div>
                 <div class="result-item">
                     <div class="result-label">Vulnerabilities</div>
-                    <div class="result-value">${(results_data.vulnerabilities || []).length} found</div>
+                    <div class="result-value">${vulns.length} found</div>
+                    ${vulns.length ? `<div class="detail-list">${vulns.slice(0, maxShow).map(v => `
+                        <div class="detail-item ${(v.severity || '').toLowerCase()}">
+                            ${v.cve_id || v.package || 'N/A'} ${v.severity ? '(' + v.severity + ')' : ''} ${v.description ? ': ' + (v.description.substring(0, 60) + (v.description.length > 60 ? '...' : '')) : ''}
+                        </div>
+                    `).join('')}${vulns.length > maxShow ? `<div class="detail-item">... and ${vulns.length - maxShow} more</div>` : ''}</div>` : ''}
                 </div>
                 <div class="result-item">
                     <div class="result-label">Secrets</div>
-                    <div class="result-value">${(results_data.secrets || []).length} found</div>
+                    <div class="result-value">${secrets.length} found</div>
+                    ${secrets.length ? `<div class="detail-list">${secrets.slice(0, maxShow).map(s => `
+                        <div class="detail-item high">
+                            ${s.type || 'Secret'} ${s.file_path ? ' in ' + s.file_path : ''}
+                        </div>
+                    `).join('')}${secrets.length > maxShow ? `<div class="detail-item">... and ${secrets.length - maxShow} more</div>` : ''}</div>` : ''}
                 </div>
             `;
             

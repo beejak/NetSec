@@ -1,0 +1,8 @@
+{
+  "test_name": "test_ssl_scanner_initialization",
+  "status": "PASSED",
+  "timestamp": "2026-02-10T04:44:50.470137",
+  "parameters": {},
+  "duration_seconds": 0.00027489999774843454,
+  "test_file": "c:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_ssl_scanner.py"
+}

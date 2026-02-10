@@ -1,0 +1,8 @@
+{
+  "test_name": "test_scan_port",
+  "status": "PASSED",
+  "timestamp": "2026-02-10T04:44:47.261365",
+  "parameters": {},
+  "duration_seconds": 2.042191299959086,
+  "test_file": "c:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_network_scanner.py"
+}

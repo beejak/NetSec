@@ -1,0 +1,8 @@
+{
+  "test_name": "test_remediation_guide_init",
+  "status": "PASSED",
+  "timestamp": "2026-02-10T04:44:50.395708",
+  "parameters": {},
+  "duration_seconds": 0.00024149997625499964,
+  "test_file": "c:\\Users\\rohit.jinsiwale\\Netsec-Toolkit\\netsec-core\\tests\\test_remediation_guide.py"
+}
