@@ -1,6 +1,7 @@
 """Anomaly detection routes."""
 
 from fastapi import APIRouter, HTTPException
+
 from netsec_core.core.anomaly_detector import AnomalyDetector
 
 router = APIRouter()

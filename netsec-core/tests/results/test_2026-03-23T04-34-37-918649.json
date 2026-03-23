@@ -1,0 +1,8 @@
+{
+  "test_name": "test_analyze_traffic_returns_error_on_failure",
+  "status": "PASSED",
+  "timestamp": "2026-03-23T04:34:37.918649",
+  "parameters": {},
+  "duration_seconds": 0.0005776140000079977,
+  "test_file": "/home/user/NetSec/netsec-core/tests/test_llm_analyzer.py"
+}

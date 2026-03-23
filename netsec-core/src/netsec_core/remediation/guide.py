@@ -1,7 +1,7 @@
 """Remediation guidance system."""
 
-from typing import Dict, Any, Optional, List
 from datetime import datetime
+from typing import Any
 
 
 class RemediationGuide:
@@ -14,8 +14,8 @@ class RemediationGuide:
     def get_remediation(
         self,
         finding_type: str,
-        finding: Optional[Dict[str, Any]] = None,
-    ) -> Dict[str, Any]:
+        finding: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
         """
         Get remediation guidance for a finding.
 
@@ -39,7 +39,7 @@ class RemediationGuide:
             "timestamp": datetime.utcnow().isoformat(),
         }
 
-    def _load_remediation_database(self) -> Dict[str, Dict[str, Any]]:
+    def _load_remediation_database(self) -> dict[str, dict[str, Any]]:
         """Load remediation database."""
         return {
             "dns_tunneling": {
@@ -241,7 +241,7 @@ class RemediationGuide:
             },
         }
 
-    def _default_remediation(self) -> Dict[str, List[str]]:
+    def _default_remediation(self) -> dict[str, list[str]]:
         """Default remediation for unknown finding types."""
         return {
             "immediate": [
@@ -265,35 +265,35 @@ class RemediationGuide:
 
     def _customize_remediation(
         self,
-        remediation: Dict[str, List[str]],
-        finding: Dict[str, Any],
-    ) -> Dict[str, List[str]]:
+        remediation: dict[str, list[str]],
+        finding: dict[str, Any],
+    ) -> dict[str, list[str]]:
         """Customize remediation based on finding details."""
         # Add finding-specific details if needed
         severity = finding.get("severity", "").lower()
         if severity == "critical":
-            remediation["immediate"].insert(
-                0, "⚠️ CRITICAL: Address immediately - high risk"
-            )
+            remediation["immediate"].insert(0, "⚠️ CRITICAL: Address immediately - high risk")
         elif severity == "high":
             remediation["immediate"].insert(0, "⚠️ HIGH: Address as soon as possible")
 
         return remediation
 
-    def get_all_remediations(self) -> Dict[str, Dict[str, Any]]:
+    def get_all_remediations(self) -> dict[str, dict[str, Any]]:
         """Get all available remediations."""
         return self.remediation_db
 
-    def search_remediation(self, keyword: str) -> List[Dict[str, Any]]:
+    def search_remediation(self, keyword: str) -> list[dict[str, Any]]:
         """Search remediations by keyword."""
         results = []
         keyword_lower = keyword.lower()
 
         for finding_type, remediation in self.remediation_db.items():
             if keyword_lower in finding_type.lower():
-                results.append({
-                    "finding_type": finding_type,
-                    "remediation": remediation,
-                })
+                results.append(
+                    {
+                        "finding_type": finding_type,
+                        "remediation": remediation,
+                    }
+                )
 
         return results

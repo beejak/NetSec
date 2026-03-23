@@ -6,6 +6,17 @@ All notable changes to the NetSec Toolkit are documented here. Format is based o
 
 ## [Unreleased]
 
+### Fixed (2026-03-23)
+- **netsec-core:** `CryptographyDeprecationWarning` in `ssl_scanner.py` — replaced `not_valid_before`/`not_valid_after` with timezone-aware `not_valid_before_utc`/`not_valid_after_utc`
+- **netsec-core:** All ruff lint errors across `src/` and `tests/` (import sorting, typing modernization, unused variables/imports); reformatted with black
+- **netsec-cloud:** All ruff lint errors — removed unused imports, unused variable assignments, and f-string prefixes without placeholders
+- **netsec-container:** All 30 ruff lint errors — removed 29 unused imports and one f-string prefix
+
+### Changed (2026-03-23)
+- **netsec-core tests:** Replaced live network calls with deterministic mocks — DNS (`resolver.resolve`), SSL (`_get_certificate`), TCP (`socket.socket`)
+- **netsec-core tests:** Unblocked 3 traffic analyzer tests via runtime `SCAPY_AVAILABLE` patch (run without scapy installed)
+- **netsec-core:** Added `tests/results/test_*.json` to `.gitignore`
+
 ### Added
 - **Testing:** Core API tests for traffic (flows, analyze), assets discover, anomaly learn-baseline, LLM analyze-traffic. Core CLI tests for traffic, anomaly, assets, remediation get, health. Container API test for root (HTML or JSON).
 - **Docs:** Mid-project evaluation ([MID_PROJECT_EVALUATION.md](MID_PROJECT_EVALUATION.md)), enterprise documentation guide ([ENTERPRISE_DOCUMENTATION.md](ENTERPRISE_DOCUMENTATION.md)), enterprise docs (API_REFERENCE, SECURITY_AND_COMPLIANCE, ARCHITECTURE, RUNBOOK), enhancement guide for Container and Cloud ([CONTAINER_CLOUD_ENHANCEMENTS.md](CONTAINER_CLOUD_ENHANCEMENTS.md)), ROADMAP_NEXT, SUPPORT_AND_SLA placeholder. Per-project READMEs link to root API_REFERENCE.

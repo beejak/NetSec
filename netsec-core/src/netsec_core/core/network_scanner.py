@@ -1,12 +1,9 @@
 """Network Scanner implementation."""
 
-import socket
-import subprocess
-import platform
-from typing import List, Dict, Any, Optional
-from datetime import datetime
 import concurrent.futures
-import threading
+import socket
+from datetime import datetime
+from typing import Any
 
 
 class NetworkScanner:
@@ -20,10 +17,10 @@ class NetworkScanner:
     def scan_ports(
         self,
         target: str,
-        ports: Optional[List[int]] = None,
+        ports: list[int] | None = None,
         scan_type: str = "tcp",
-        timeout: Optional[float] = None,
-    ) -> Dict[str, Any]:
+        timeout: float | None = None,
+    ) -> dict[str, Any]:
         """
         Scan target for open ports.
 
@@ -42,8 +39,27 @@ class NetworkScanner:
         # Default to common ports if not specified
         if ports is None:
             ports = [
-                21, 22, 23, 25, 53, 80, 110, 111, 135, 139, 143, 443, 445,
-                993, 995, 1723, 3306, 3389, 5900, 8080, 8443,
+                21,
+                22,
+                23,
+                25,
+                53,
+                80,
+                110,
+                111,
+                135,
+                139,
+                143,
+                443,
+                445,
+                993,
+                995,
+                1723,
+                3306,
+                3389,
+                5900,
+                8080,
+                8443,
             ]
 
         open_ports = []
@@ -52,8 +68,7 @@ class NetworkScanner:
         # Use thread pool for concurrent scanning
         with concurrent.futures.ThreadPoolExecutor(max_workers=self.max_workers) as executor:
             future_to_port = {
-                executor.submit(self._scan_port, target, port, scan_type): port
-                for port in ports
+                executor.submit(self._scan_port, target, port, scan_type): port for port in ports
             }
 
             for future in concurrent.futures.as_completed(future_to_port):
@@ -63,12 +78,14 @@ class NetworkScanner:
                     if result["open"]:
                         open_ports.append(port)
                         if result.get("service"):
-                            services.append({
-                                "port": port,
-                                "service": result["service"],
-                                "banner": result.get("banner"),
-                            })
-                except Exception as e:
+                            services.append(
+                                {
+                                    "port": port,
+                                    "service": result["service"],
+                                    "banner": result.get("banner"),
+                                }
+                            )
+                except Exception:
                     pass  # Port is closed or error occurred
 
         scan_id = f"scan-{target}-{datetime.utcnow().timestamp()}"
@@ -81,7 +98,7 @@ class NetworkScanner:
             "timestamp": datetime.utcnow().isoformat(),
         }
 
-    def _scan_port(self, target: str, port: int, scan_type: str) -> Dict[str, Any]:
+    def _scan_port(self, target: str, port: int, scan_type: str) -> dict[str, Any]:
         """Scan a single port."""
         result = {"open": False, "port": port}
 
@@ -116,7 +133,7 @@ class NetworkScanner:
                 try:
                     data, addr = sock.recvfrom(1024)
                     result["open"] = True
-                except socket.timeout:
+                except TimeoutError:
                     result["open"] = False  # UDP is unreliable
                 sock.close()
 
@@ -125,7 +142,7 @@ class NetworkScanner:
 
         return result
 
-    def _grab_banner(self, sock: socket.socket, port: int) -> Optional[str]:
+    def _grab_banner(self, sock: socket.socket, port: int) -> str | None:
         """Grab service banner from open port."""
         try:
             # Try to receive some data
@@ -135,7 +152,7 @@ class NetworkScanner:
         except Exception:
             return None
 
-    def _detect_service(self, port: int, banner: Optional[str] = None) -> Optional[str]:
+    def _detect_service(self, port: int, banner: str | None = None) -> str | None:
         """Detect service based on port and banner."""
         # Common port to service mapping
         port_services = {
@@ -174,7 +191,7 @@ class NetworkScanner:
 
         return service
 
-    def scan_services(self, target: str, ports: Optional[List[int]] = None) -> Dict[str, Any]:
+    def scan_services(self, target: str, ports: list[int] | None = None) -> dict[str, Any]:
         """
         Scan target for services (enhanced port scan with service detection).
 
@@ -190,14 +207,13 @@ class NetworkScanner:
 
         # Enhance service information
         for service in result["services"]:
-            port = service["port"]
             # Add more service details if available
             service["protocol"] = "tcp"
             service["status"] = "open"
 
         return result
 
-    def os_fingerprint(self, target: str) -> Dict[str, Any]:
+    def os_fingerprint(self, target: str) -> dict[str, Any]:
         """
         Perform basic OS fingerprinting (placeholder for future implementation).
 

@@ -1,13 +1,13 @@
 """DNS Security Scanner implementation."""
 
-import dns.resolver
-import dns.query
-import dns.message
-import dns.exception
-from typing import List, Dict, Any, Optional
-from datetime import datetime
 import re
-import statistics
+from datetime import datetime
+from typing import Any
+
+import dns.exception
+import dns.message
+import dns.query
+import dns.resolver
 
 
 class DNSScanner:
@@ -25,7 +25,7 @@ class DNSScanner:
         check_tunneling: bool = True,
         check_spoofing: bool = True,
         analyze_patterns: bool = True,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Scan domain for DNS security issues.
 
@@ -65,13 +65,15 @@ class DNSScanner:
             findings.extend(malicious_findings)
 
         except dns.exception.DNSException as e:
-            findings.append({
-                "finding_id": f"dns-error-{domain}",
-                "type": "dns_error",
-                "severity": "medium",
-                "description": f"DNS resolution error: {str(e)}",
-                "timestamp": datetime.utcnow().isoformat(),
-            })
+            findings.append(
+                {
+                    "finding_id": f"dns-error-{domain}",
+                    "type": "dns_error",
+                    "severity": "medium",
+                    "description": f"DNS resolution error: {str(e)}",
+                    "timestamp": datetime.utcnow().isoformat(),
+                }
+            )
 
         return {
             "domain": domain,
@@ -80,7 +82,7 @@ class DNSScanner:
             "timestamp": datetime.utcnow().isoformat(),
         }
 
-    def _resolve_domain(self, domain: str) -> Dict[str, Any]:
+    def _resolve_domain(self, domain: str) -> dict[str, Any]:
         """Resolve domain and get DNS records."""
         info = {
             "a_records": [],
@@ -108,8 +110,7 @@ class DNSScanner:
             # MX records
             answers = self.resolver.resolve(domain, "MX")
             info["mx_records"] = [
-                {"priority": rdata.preference, "exchange": str(rdata.exchange)}
-                for rdata in answers
+                {"priority": rdata.preference, "exchange": str(rdata.exchange)} for rdata in answers
             ]
         except (dns.resolver.NoAnswer, dns.resolver.NXDOMAIN):
             pass
@@ -130,7 +131,7 @@ class DNSScanner:
 
         return info
 
-    def _detect_tunneling(self, domain: str) -> List[Dict[str, Any]]:
+    def _detect_tunneling(self, domain: str) -> list[dict[str, Any]]:
         """
         Detect potential DNS tunneling attempts.
 
@@ -145,13 +146,15 @@ class DNSScanner:
         # Check for long subdomains (potential data exfiltration)
         parts = domain.split(".")
         if len(parts) > 4:  # More than 4 levels
-            findings.append({
-                "finding_id": f"dns-tunnel-1-{domain}",
-                "type": "dns_tunneling",
-                "severity": "medium",
-                "description": f"Domain has {len(parts)} levels, which may indicate DNS tunneling",
-                "timestamp": datetime.utcnow().isoformat(),
-            })
+            findings.append(
+                {
+                    "finding_id": f"dns-tunnel-1-{domain}",
+                    "type": "dns_tunneling",
+                    "severity": "medium",
+                    "description": f"Domain has {len(parts)} levels, which may indicate DNS tunneling",
+                    "timestamp": datetime.utcnow().isoformat(),
+                }
+            )
 
         # Check for high entropy (random-looking strings)
         for part in parts[:-2]:  # Exclude TLD and domain
@@ -159,28 +162,32 @@ class DNSScanner:
                 # Calculate entropy (simple version)
                 entropy = self._calculate_entropy(part)
                 if entropy > 4.0:  # High entropy threshold
-                    findings.append({
-                        "finding_id": f"dns-tunnel-2-{domain}",
-                        "type": "dns_tunneling",
-                        "severity": "high",
-                        "description": f"High entropy subdomain '{part}' detected (entropy: {entropy:.2f})",
-                        "timestamp": datetime.utcnow().isoformat(),
-                    })
+                    findings.append(
+                        {
+                            "finding_id": f"dns-tunnel-2-{domain}",
+                            "type": "dns_tunneling",
+                            "severity": "high",
+                            "description": f"High entropy subdomain '{part}' detected (entropy: {entropy:.2f})",
+                            "timestamp": datetime.utcnow().isoformat(),
+                        }
+                    )
 
         # Check for unusual patterns
         unusual_patterns = re.findall(r"[^a-zA-Z0-9.-]", domain)
         if unusual_patterns:
-            findings.append({
-                "finding_id": f"dns-tunnel-3-{domain}",
-                "type": "dns_tunneling",
-                "severity": "medium",
-                "description": f"Unusual characters detected in domain: {set(unusual_patterns)}",
-                "timestamp": datetime.utcnow().isoformat(),
-            })
+            findings.append(
+                {
+                    "finding_id": f"dns-tunnel-3-{domain}",
+                    "type": "dns_tunneling",
+                    "severity": "medium",
+                    "description": f"Unusual characters detected in domain: {set(unusual_patterns)}",
+                    "timestamp": datetime.utcnow().isoformat(),
+                }
+            )
 
         return findings
 
-    def _detect_spoofing(self, domain: str) -> List[Dict[str, Any]]:
+    def _detect_spoofing(self, domain: str) -> list[dict[str, Any]]:
         """
         Detect potential DNS spoofing/poisoning.
 
@@ -197,43 +204,50 @@ class DNSScanner:
             ns_list = [str(ns) for ns in ns_records]
 
             if len(ns_list) < 2:
-                findings.append({
-                    "finding_id": f"dns-spoof-1-{domain}",
-                    "type": "dns_spoofing",
-                    "severity": "low",
-                    "description": f"Only {len(ns_list)} nameserver(s) found (recommended: 2+)",
-                    "timestamp": datetime.utcnow().isoformat(),
-                })
+                findings.append(
+                    {
+                        "finding_id": f"dns-spoof-1-{domain}",
+                        "type": "dns_spoofing",
+                        "severity": "low",
+                        "description": f"Only {len(ns_list)} nameserver(s) found (recommended: 2+)",
+                        "timestamp": datetime.utcnow().isoformat(),
+                    }
+                )
 
             # Check response times (simple check)
             import time
+
             start = time.time()
             try:
                 self.resolver.resolve(domain, "A")
                 response_time = time.time() - start
                 if response_time > 2.0:  # Slow response
-                    findings.append({
-                        "finding_id": f"dns-spoof-2-{domain}",
-                        "type": "dns_spoofing",
-                        "severity": "medium",
-                        "description": f"Slow DNS response time: {response_time:.2f}s (may indicate spoofing)",
-                        "timestamp": datetime.utcnow().isoformat(),
-                    })
+                    findings.append(
+                        {
+                            "finding_id": f"dns-spoof-2-{domain}",
+                            "type": "dns_spoofing",
+                            "severity": "medium",
+                            "description": f"Slow DNS response time: {response_time:.2f}s (may indicate spoofing)",
+                            "timestamp": datetime.utcnow().isoformat(),
+                        }
+                    )
             except Exception:
                 pass
 
         except Exception as e:
-            findings.append({
-                "finding_id": f"dns-spoof-3-{domain}",
-                "type": "dns_spoofing",
-                "severity": "low",
-                "description": f"Could not verify nameservers: {str(e)}",
-                "timestamp": datetime.utcnow().isoformat(),
-            })
+            findings.append(
+                {
+                    "finding_id": f"dns-spoof-3-{domain}",
+                    "type": "dns_spoofing",
+                    "severity": "low",
+                    "description": f"Could not verify nameservers: {str(e)}",
+                    "timestamp": datetime.utcnow().isoformat(),
+                }
+            )
 
         return findings
 
-    def _analyze_patterns(self, domain: str) -> List[Dict[str, Any]]:
+    def _analyze_patterns(self, domain: str) -> list[dict[str, Any]]:
         """Analyze DNS query patterns for anomalies."""
         findings = []
 
@@ -246,17 +260,19 @@ class DNSScanner:
 
         for pattern, pattern_type, severity in suspicious_patterns:
             if re.match(pattern, domain, re.IGNORECASE):
-                findings.append({
-                    "finding_id": f"dns-pattern-{pattern_type}-{domain}",
-                    "type": "dns_pattern",
-                    "severity": severity,
-                    "description": f"Suspicious pattern detected: {pattern_type}",
-                    "timestamp": datetime.utcnow().isoformat(),
-                })
+                findings.append(
+                    {
+                        "finding_id": f"dns-pattern-{pattern_type}-{domain}",
+                        "type": "dns_pattern",
+                        "severity": severity,
+                        "description": f"Suspicious pattern detected: {pattern_type}",
+                        "timestamp": datetime.utcnow().isoformat(),
+                    }
+                )
 
         return findings
 
-    def _check_malicious_indicators(self, domain: str) -> List[Dict[str, Any]]:
+    def _check_malicious_indicators(self, domain: str) -> list[dict[str, Any]]:
         """Check for indicators of malicious domains."""
         findings = []
 
@@ -266,13 +282,15 @@ class DNSScanner:
         for common in common_domains:
             if common in domain_lower and domain_lower != f"{common}.com":
                 # Potential typosquatting
-                findings.append({
-                    "finding_id": f"dns-malicious-typo-{domain}",
-                    "type": "malicious_indicator",
-                    "severity": "medium",
-                    "description": f"Potential typosquatting: domain contains '{common}'",
-                    "timestamp": datetime.utcnow().isoformat(),
-                })
+                findings.append(
+                    {
+                        "finding_id": f"dns-malicious-typo-{domain}",
+                        "type": "malicious_indicator",
+                        "severity": "medium",
+                        "description": f"Potential typosquatting: domain contains '{common}'",
+                        "timestamp": datetime.utcnow().isoformat(),
+                    }
+                )
 
         return findings
 
@@ -282,6 +300,7 @@ class DNSScanner:
             return 0.0
 
         import math
+
         entropy = 0.0
         text_length = len(text)
         char_counts = {}
@@ -295,7 +314,7 @@ class DNSScanner:
 
         return entropy
 
-    def monitor_dns_queries(self, duration: int = 60) -> Dict[str, Any]:
+    def monitor_dns_queries(self, duration: int = 60) -> dict[str, Any]:
         """
         Monitor DNS queries (placeholder for future implementation).
 

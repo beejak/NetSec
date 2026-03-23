@@ -1,10 +1,11 @@
 """Health check routes."""
 
 from datetime import datetime
+
 from fastapi import APIRouter
 
-from netsec_core.api.models import HealthResponse
 from netsec_core import __version__
+from netsec_core.api.models import HealthResponse
 
 router = APIRouter()
 

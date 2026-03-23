@@ -1,7 +1,9 @@
 """Unit tests for LLMAnalyzer (mocked LLM calls)."""
 
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
+
 import pytest
+
 from netsec_core.llm.analyzer import LLMAnalyzer
 
 
@@ -41,7 +43,12 @@ def test_analyze_traffic_returns_error_on_failure():
 def test_generate_remediation_returns_finding_id_and_remediation():
     """generate_remediation returns finding_id, remediation, generated_by when LLM succeeds."""
     analyzer = LLMAnalyzer(provider="openai", model="gpt-3.5-turbo")
-    finding = {"finding_id": "test-1", "type": "xss", "severity": "high", "description": "Reflected XSS"}
+    finding = {
+        "finding_id": "test-1",
+        "type": "xss",
+        "severity": "high",
+        "description": "Reflected XSS",
+    }
     with patch.object(analyzer, "_call_llm", return_value="1. Sanitize input. 2. Use CSP."):
         result = analyzer.generate_remediation(finding)
     assert result["finding_id"] == "test-1"

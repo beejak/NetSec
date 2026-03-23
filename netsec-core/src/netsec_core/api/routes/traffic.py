@@ -2,12 +2,12 @@
 
 import logging
 from datetime import datetime, timezone
+
 from fastapi import APIRouter, HTTPException
-from typing import Optional
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
-_analyzer: Optional[object] = None
+_analyzer: object | None = None
 
 
 def _get_analyzer():
@@ -16,6 +16,7 @@ def _get_analyzer():
     if _analyzer is None:
         try:
             from netsec_core.core.traffic_analyzer import TrafficAnalyzer
+
             _analyzer = TrafficAnalyzer()
         except ImportError as e:
             raise ImportError(f"scapy is required for traffic analysis: {e}")

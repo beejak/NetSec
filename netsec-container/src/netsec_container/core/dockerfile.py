@@ -1,9 +1,8 @@
 """Dockerfile security analyzer"""
 
-import asyncio
 import logging
 from pathlib import Path
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Union
 
 from netsec_container.core.results import DockerfileIssue
 

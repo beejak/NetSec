@@ -1,6 +1,5 @@
 """Test that all modules can be imported."""
 
-import pytest
 
 
 def test_package_import():

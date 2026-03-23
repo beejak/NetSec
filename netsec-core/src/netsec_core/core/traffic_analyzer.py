@@ -1,15 +1,13 @@
 """Traffic Analyzer implementation using scapy."""
 
-from typing import List, Dict, Any, Optional
-from datetime import datetime
 from collections import defaultdict
-import threading
-import queue
-
+from datetime import datetime
+from typing import Any
 
 try:
-    from scapy.all import sniff, IP, TCP, UDP, DNS, HTTP, Raw
+    from scapy.all import DNS, HTTP, IP, TCP, UDP, Raw, sniff
     from scapy.layers import http
+
     SCAPY_AVAILABLE = True
 except ImportError:
     SCAPY_AVAILABLE = False
@@ -21,18 +19,22 @@ class TrafficAnalyzer:
     def __init__(self):
         """Initialize Traffic Analyzer."""
         if not SCAPY_AVAILABLE:
-            raise ImportError("scapy is required for traffic analysis. Install with: pip install scapy")
+            raise ImportError(
+                "scapy is required for traffic analysis. Install with: pip install scapy"
+            )
         self.capturing = False
         self.packets = []
-        self.flows = defaultdict(lambda: {"packets": [], "bytes": 0, "start_time": None, "end_time": None})
+        self.flows = defaultdict(
+            lambda: {"packets": [], "bytes": 0, "start_time": None, "end_time": None}
+        )
 
     def capture_traffic(
         self,
-        interface: Optional[str] = None,
-        count: Optional[int] = None,
-        timeout: Optional[int] = None,
-        filter_str: Optional[str] = None,
-    ) -> Dict[str, Any]:
+        interface: str | None = None,
+        count: int | None = None,
+        timeout: int | None = None,
+        filter_str: str | None = None,
+    ) -> dict[str, Any]:
         """
         Capture network traffic.
 
@@ -49,7 +51,9 @@ class TrafficAnalyzer:
             return {"error": "Already capturing traffic"}
 
         self.packets = []
-        self.flows = defaultdict(lambda: {"packets": [], "bytes": 0, "start_time": None, "end_time": None})
+        self.flows = defaultdict(
+            lambda: {"packets": [], "bytes": 0, "start_time": None, "end_time": None}
+        )
 
         try:
             self.capturing = True
@@ -92,7 +96,6 @@ class TrafficAnalyzer:
                 ip_layer = packet[IP]
                 src_ip = ip_layer.src
                 dst_ip = ip_layer.dst
-                protocol = ip_layer.proto
 
                 # Create flow key
                 if TCP in packet:
@@ -130,7 +133,7 @@ class TrafficAnalyzer:
         except Exception:
             pass  # Skip malformed packets
 
-    def analyze_traffic(self, pcap_file: Optional[str] = None) -> Dict[str, Any]:
+    def analyze_traffic(self, pcap_file: str | None = None) -> dict[str, Any]:
         """
         Analyze captured traffic or pcap file.
 
@@ -176,33 +179,41 @@ class TrafficAnalyzer:
         )[:10]
 
         for flow_key, flow_data in sorted_flows:
-            analysis["top_flows"].append({
-                "src_ip": flow_key[0],
-                "dst_ip": flow_key[1],
-                "src_port": flow_key[2],
-                "dst_port": flow_key[3],
-                "protocol": flow_key[4],
-                "packets": len(flow_data["packets"]),
-                "bytes": flow_data["bytes"],
-            })
+            analysis["top_flows"].append(
+                {
+                    "src_ip": flow_key[0],
+                    "dst_ip": flow_key[1],
+                    "src_port": flow_key[2],
+                    "dst_port": flow_key[3],
+                    "protocol": flow_key[4],
+                    "packets": len(flow_data["packets"]),
+                    "bytes": flow_data["bytes"],
+                }
+            )
 
         return analysis
 
-    def get_flows(self) -> List[Dict[str, Any]]:
+    def get_flows(self) -> list[dict[str, Any]]:
         """Get all detected flows."""
         flows_list = []
         for flow_key, flow_data in self.flows.items():
-            flows_list.append({
-                "src_ip": flow_key[0],
-                "dst_ip": flow_key[1],
-                "src_port": flow_key[2],
-                "dst_port": flow_key[3],
-                "protocol": flow_key[4],
-                "packets": len(flow_data["packets"]),
-                "bytes": flow_data["bytes"],
-                "start_time": flow_data["start_time"].isoformat() if flow_data["start_time"] else None,
-                "end_time": flow_data["end_time"].isoformat() if flow_data["end_time"] else None,
-            })
+            flows_list.append(
+                {
+                    "src_ip": flow_key[0],
+                    "dst_ip": flow_key[1],
+                    "src_port": flow_key[2],
+                    "dst_port": flow_key[3],
+                    "protocol": flow_key[4],
+                    "packets": len(flow_data["packets"]),
+                    "bytes": flow_data["bytes"],
+                    "start_time": (
+                        flow_data["start_time"].isoformat() if flow_data["start_time"] else None
+                    ),
+                    "end_time": (
+                        flow_data["end_time"].isoformat() if flow_data["end_time"] else None
+                    ),
+                }
+            )
         return flows_list
 
     def stop_capture(self):

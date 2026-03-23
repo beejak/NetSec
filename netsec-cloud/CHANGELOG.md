@@ -2,6 +2,16 @@
 
 All notable changes to NetSec-Cloud will be documented in this file.
 
+## [Unreleased] - 2026-03-23
+
+### Fixed
+- All ruff lint errors across `src/` and `tests/`:
+  - Removed unused imports (`typing.List/Dict/Any/Optional`, `AWSProvider`,
+    `AzureProvider`, `GCPProvider`, `AzureError`, `GoogleAuthError`, `datetime`)
+  - Removed unused variable assignments (`control_title_key`, `encryption`,
+    `ec2_resource`, `principal_id`, `resource_group`)
+  - Stripped extraneous `f` prefix from 7 f-strings without placeholders
+
 ## [0.1.0] - 2024-12-XX
 
 ### Added - Phase 1: Foundation

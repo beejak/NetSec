@@ -2,6 +2,7 @@
 
 import pytest
 from click.testing import CliRunner
+
 from netsec_core.cli.main import cli
 
 # Test-only host (RFC 2606); not user input - avoids URL sanitization findings
@@ -39,8 +40,7 @@ class TestCLIIntegration:
     def test_dns_scan_with_options(self, runner):
         """Test DNS scan with options."""
         result = runner.invoke(
-            cli,
-            ["dns", "scan", TEST_HOST, "--check-tunneling", "--check-spoofing"]
+            cli, ["dns", "scan", TEST_HOST, "--check-tunneling", "--check-spoofing"]
         )
         assert result.exit_code == 0
 
@@ -52,10 +52,7 @@ class TestCLIIntegration:
 
     def test_ssl_check_with_port(self, runner):
         """Test SSL check with custom port."""
-        result = runner.invoke(
-            cli,
-            ["ssl", "check", TEST_HOST, "--port", "443"]
-        )
+        result = runner.invoke(cli, ["ssl", "check", TEST_HOST, "--port", "443"])
         assert result.exit_code == 0
 
     def test_scan_ports_command(self, runner):
@@ -67,8 +64,7 @@ class TestCLIIntegration:
     def test_scan_ports_with_options(self, runner):
         """Test port scan with options."""
         result = runner.invoke(
-            cli,
-            ["scan", "ports", "127.0.0.1", "--ports", "22,80,443", "--timeout", "2.0"]
+            cli, ["scan", "ports", "127.0.0.1", "--ports", "22,80,443", "--timeout", "2.0"]
         )
         assert result.exit_code == 0
 

@@ -1,6 +1,7 @@
 """Unit tests for RemediationGuide (no network)."""
 
 import pytest
+
 from netsec_core.remediation.guide import RemediationGuide
 
 

@@ -1,6 +1,5 @@
 """Secrets scanner for container images"""
 
-import asyncio
 import logging
 import re
 from pathlib import Path

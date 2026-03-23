@@ -10,7 +10,7 @@ Current status of the three projects. For what's next, see [ROADMAP_NEXT.md](ROA
 
 - **Features:** Network scanning, DNS security, SSL/TLS monitoring, traffic analysis, anomaly detection, asset discovery, LLM integration, remediation.
 - **API/CLI:** 30+ endpoints, 20+ CLI commands. OpenAPI at `/api/docs`.
-- **Tests:** Unit (anomaly, LLM analyzer mocked, TrafficAnalyzer when scapy present/absent), API, CLI (including traffic, anomaly, assets, remediation, health). Integration tests available.
+- **Tests:** Unit (DNS, SSL, network, remediation, anomaly detector, asset discovery, LLM analyzer mocked, TrafficAnalyzer via runtime scapy mock — all pass without scapy installed), API, CLI (including traffic, anomaly, assets, remediation, health). Integration tests available.
 - **Docs:** README, QUICKSTART, USAGE_GUIDE, HELP, ARCHITECTURE.
 
 ---

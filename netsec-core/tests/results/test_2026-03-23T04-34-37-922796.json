@@ -1,0 +1,8 @@
+{
+  "test_name": "test_generate_remediation_returns_finding_id_and_remediation",
+  "status": "PASSED",
+  "timestamp": "2026-03-23T04:34:37.922796",
+  "parameters": {},
+  "duration_seconds": 0.0007268340000337048,
+  "test_file": "/home/user/NetSec/netsec-core/tests/test_llm_analyzer.py"
+}

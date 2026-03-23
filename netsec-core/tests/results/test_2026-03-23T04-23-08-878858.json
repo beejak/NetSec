@@ -1,0 +1,8 @@
+{
+  "test_name": "test_check_certificate_basic",
+  "status": "PASSED",
+  "timestamp": "2026-03-23T04:23:08.878858",
+  "parameters": {},
+  "duration_seconds": 20.057920733000003,
+  "test_file": "/home/user/NetSec/netsec-core/tests/test_ssl_scanner.py"
+}

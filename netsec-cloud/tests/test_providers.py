@@ -1,7 +1,6 @@
 """Tests for cloud providers."""
 
 from unittest.mock import MagicMock, patch
-import pytest
 from botocore.exceptions import ClientError
 from netsec_cloud.providers.aws import AWSProvider
 from netsec_cloud.providers.azure import AzureProvider

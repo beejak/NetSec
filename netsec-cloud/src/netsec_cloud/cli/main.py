@@ -2,11 +2,7 @@
 
 import click
 import json
-from typing import Optional
 from netsec_cloud.scanner import CloudScanner
-from netsec_cloud.providers.aws import AWSProvider
-from netsec_cloud.providers.azure import AzureProvider
-from netsec_cloud.providers.gcp import GCPProvider
 
 
 @click.group(

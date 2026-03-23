@@ -1,0 +1,8 @@
+{
+  "test_name": "test_analyze_patterns",
+  "status": "PASSED",
+  "timestamp": "2026-03-23T03:11:04.048043",
+  "parameters": {},
+  "duration_seconds": 10.107430833999956,
+  "test_file": "/home/user/NetSec/netsec-core/tests/test_dns_scanner.py"
+}

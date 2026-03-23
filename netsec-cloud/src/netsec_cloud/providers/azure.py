@@ -1,14 +1,12 @@
 """Azure provider implementation."""
 
 from typing import List, Dict, Any, Optional
-from datetime import datetime
 
 try:
     from azure.identity import DefaultAzureCredential, ClientSecretCredential
     from azure.mgmt.resource import ResourceManagementClient
     from azure.mgmt.storage import StorageManagementClient
     from azure.mgmt.network import NetworkManagementClient
-    from azure.core.exceptions import AzureError
     AZURE_AVAILABLE = True
 except ImportError:
     AZURE_AVAILABLE = False
@@ -148,7 +146,7 @@ class AzureProvider(CloudProvider):
         except Exception as e:
             findings.append(
                 Finding(
-                    finding_id=f"azure-scan-error-storage",
+                    finding_id="azure-scan-error-storage",
                     type="scan_error",
                     severity="info",
                     title="Error scanning Azure storage",
@@ -188,7 +186,6 @@ class AzureProvider(CloudProvider):
 
             for assignment in auth_client.role_assignments.list(scope=scope):
                 role_def_id = getattr(assignment, "role_definition_id", None)
-                principal_id = getattr(assignment, "principal_id", "") or ""
                 principal_type = getattr(assignment, "principal_type", None) or "Unknown"
                 assignment_id = getattr(assignment, "id", "") or ""
 
@@ -293,7 +290,6 @@ class AzureProvider(CloudProvider):
 
             for nsg in nsgs:
                 nsg_name = nsg.name
-                resource_group = nsg.id.split("/")[4]
 
                 # Check for overly permissive rules
                 if nsg.security_rules:
@@ -325,7 +321,7 @@ class AzureProvider(CloudProvider):
         except Exception as e:
             findings.append(
                 Finding(
-                    finding_id=f"azure-scan-error-networking",
+                    finding_id="azure-scan-error-networking",
                     type="scan_error",
                     severity="info",
                     title="Error scanning Azure networking",

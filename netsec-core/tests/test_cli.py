@@ -1,7 +1,6 @@
 """Tests for CLI commands."""
 
 import pytest
-from click.testing import CliRunner
 
 from netsec_core.cli.main import cli
 
@@ -86,8 +85,12 @@ def test_remediation_get_command(runner):
     assert result.exit_code == 0
     out = result.output.lower()
     assert (
-        "weak" in out or "cipher" in out or "remediation" in out
-        or "error" in out or "connection" in out or "refused" in out
+        "weak" in out
+        or "cipher" in out
+        or "remediation" in out
+        or "error" in out
+        or "connection" in out
+        or "refused" in out
     )
 
 
@@ -97,4 +100,8 @@ def test_health_command(runner):
     result = runner.invoke(cli, ["health"])
     # 0 if server up, or non-zero if connection refused
     assert result.exit_code in [0, 1]
-    assert "health" in result.output.lower() or "error" in result.output.lower() or "connection" in result.output.lower()
+    assert (
+        "health" in result.output.lower()
+        or "error" in result.output.lower()
+        or "connection" in result.output.lower()
+    )

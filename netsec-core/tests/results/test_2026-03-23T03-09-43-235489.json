@@ -1,0 +1,8 @@
+{
+  "test_name": "test_generate_inventory_empty",
+  "status": "PASSED",
+  "timestamp": "2026-03-23T03:09:43.235489",
+  "parameters": {},
+  "duration_seconds": 0.0002025669999738966,
+  "test_file": "/home/user/NetSec/netsec-core/tests/test_asset_discovery.py"
+}

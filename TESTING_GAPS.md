@@ -26,14 +26,14 @@ This report maps **features** across NetSec-Core, NetSec-Cloud, and NetSec-Conta
 | **Core: SSLScanner** | Unit | test_ssl_scanner | Yes | — |
 | **Core: NetworkScanner** | Unit | test_network_scanner | Yes | — |
 | **Core: RemediationGuide** | Unit | test_remediation_guide | Yes | — |
-| **Core: TrafficAnalyzer** | Unit | — | **No** | Requires scapy; no unit test |
-| **Core: AnomalyDetector** | Unit | — | **No** | No unit test for detector logic |
-| **Core: AssetDiscovery** | Unit | — | **No** | No unit test (may need network) |
-| **Core: LLMAnalyzer** | Unit | — | **No** | No unit test (mock API or skip) |
+| **Core: TrafficAnalyzer** | Unit | test_traffic_analyzer | **Yes** | 4 tests: 1 always runs; 3 use runtime `SCAPY_AVAILABLE` patch (run without scapy) |
+| **Core: AnomalyDetector** | Unit | test_anomaly_detector | **Yes** | — |
+| **Core: AssetDiscovery** | Unit | test_asset_discovery | **Yes** | — |
+| **Core: LLMAnalyzer** | Unit | test_llm_analyzer | **Yes** | LLM client mocked |
 | **Integration: API flows** | Integration | integration/test_api_integration | Yes | — |
 | **Integration: CLI flows** | Integration | integration/test_cli_integration | Yes | — |
 
-**Core gaps summary:** API and CLI for traffic, anomaly, assets, remediation, health are now covered (smoke). Remaining: TrafficAnalyzer, AnomalyDetector, AssetDiscovery, LLMAnalyzer unit tests (optional; may need network or mock).
+**Core gaps summary:** All API, CLI, and unit tests covered. TrafficAnalyzer, AnomalyDetector, AssetDiscovery, and LLMAnalyzer all have unit tests. No remaining gaps.
 
 ---
 
@@ -88,7 +88,7 @@ This report maps **features** across NetSec-Core, NetSec-Cloud, and NetSec-Conta
 | Area | Core | Cloud | Container |
 |------|------|-------|-----------|
 | **LLM-related** | No API/unit test | N/A | No unit test |
-| **Traffic / network-heavy** | No TrafficAnalyzer test | N/A | N/A |
+| **Traffic / network-heavy** | test_traffic_analyzer (runtime scapy mock) | N/A | N/A |
 | **File upload / multipart** | N/A | N/A | test_scan_upload_accepts_multipart |
 | **Integration with real services** | Optional | Optional (moto, etc.) | Optional (Docker) |
 | **Compliance POST with body** | N/A | test_compliance_check_* | N/A |
@@ -116,4 +116,4 @@ pytest -m api -v
 - **Cloud:** test_api extended (compliance controls, scan 401); test_cli.py (help, scan help, providers).
 - **Container:** test_api.py (health, scan POST smoke); test_cli.py (help, scan help); test_scoring.py (RiskScorer unit).
 
-**Remaining gaps** (to close later): Core unit tests for TrafficAnalyzer, AnomalyDetector, AssetDiscovery, LLMAnalyzer (optional); Cloud checks module unit tests; Container CLI scan/serve full run; container core modules (secrets, vuln, dockerfile, sbom) additional unit coverage.
+**Remaining gaps** (to close later): Cloud checks module unit tests; Container CLI scan/serve full run (needs Docker/image); Container core modules (secrets, vuln, dockerfile, sbom) additional unit coverage.

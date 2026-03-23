@@ -1,8 +1,10 @@
 """SSL/TLS security routes."""
 
 import logging
+
 from fastapi import APIRouter, HTTPException
-from netsec_core.api.models import SSLCheckRequest, SSLResult, Finding, Severity
+
+from netsec_core.api.models import Finding, Severity, SSLCheckRequest, SSLResult
 from netsec_core.core.ssl_scanner import SSLScanner
 
 logger = logging.getLogger(__name__)
@@ -43,7 +45,9 @@ async def check_certificate(request: SSLCheckRequest):
         )
     except Exception:
         logger.exception("SSL certificate check failed")
-        raise HTTPException(status_code=500, detail="An error occurred while checking the certificate.")
+        raise HTTPException(
+            status_code=500, detail="An error occurred while checking the certificate."
+        )
 
 
 @router.get("/certificates")
@@ -70,7 +74,8 @@ async def detect_weak_ciphers(request: SSLCheckRequest):
         )
         # Filter only cipher-related findings
         cipher_findings = [
-            f for f in result.get("findings", [])
+            f
+            for f in result.get("findings", [])
             if f.get("type") in ["weak_cipher", "weak_tls_version"]
         ]
         return {
@@ -81,7 +86,9 @@ async def detect_weak_ciphers(request: SSLCheckRequest):
         }
     except Exception:
         logger.exception("Weak cipher detection failed")
-        raise HTTPException(status_code=500, detail="An error occurred while detecting weak ciphers.")
+        raise HTTPException(
+            status_code=500, detail="An error occurred while detecting weak ciphers."
+        )
 
 
 @router.get("/expiring-soon")
@@ -97,7 +104,8 @@ async def get_expiring_certificates(hostname: str, port: int = 443):
         )
         # Filter only expiration-related findings
         expiration_findings = [
-            f for f in result.get("findings", [])
+            f
+            for f in result.get("findings", [])
             if f.get("type") in ["certificate_expired", "certificate_expiring"]
         ]
         return {

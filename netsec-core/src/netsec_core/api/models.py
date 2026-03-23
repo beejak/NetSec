@@ -1,8 +1,8 @@
 """Pydantic models for NetSec-Core API."""
 
 from datetime import datetime
-from typing import List, Optional, Dict, Any
 from enum import Enum
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -21,9 +21,9 @@ class ScanRequest(BaseModel):
     """Request model for network scanning."""
 
     target: str = Field(..., description="Target hostname or IP address")
-    ports: Optional[List[int]] = Field(None, description="Specific ports to scan")
+    ports: list[int] | None = Field(None, description="Specific ports to scan")
     scan_type: str = Field("tcp", description="Type of scan (tcp, udp, syn)")
-    timeout: Optional[float] = Field(5.0, description="Timeout in seconds")
+    timeout: float | None = Field(5.0, description="Timeout in seconds")
 
 
 class ScanResult(BaseModel):
@@ -31,10 +31,8 @@ class ScanResult(BaseModel):
 
     scan_id: str = Field(..., description="Unique scan identifier")
     target: str = Field(..., description="Scanned target")
-    open_ports: List[int] = Field(default_factory=list, description="List of open ports")
-    services: List[Dict[str, Any]] = Field(
-        default_factory=list, description="Detected services"
-    )
+    open_ports: list[int] = Field(default_factory=list, description="List of open ports")
+    services: list[dict[str, Any]] = Field(default_factory=list, description="Detected services")
     timestamp: datetime = Field(default_factory=datetime.utcnow, description="Scan timestamp")
 
 
@@ -45,9 +43,7 @@ class Finding(BaseModel):
     type: str = Field(..., description="Type of finding")
     severity: Severity = Field(..., description="Severity level")
     description: str = Field(..., description="Finding description")
-    remediation: Optional[Dict[str, Any]] = Field(
-        None, description="Remediation guidance"
-    )
+    remediation: dict[str, Any] | None = Field(None, description="Remediation guidance")
     timestamp: datetime = Field(default_factory=datetime.utcnow, description="Finding timestamp")
 
 
@@ -64,7 +60,7 @@ class DNSResult(BaseModel):
     """Result model for DNS security analysis."""
 
     domain: str = Field(..., description="Analyzed domain")
-    findings: List[Finding] = Field(default_factory=list, description="Security findings")
+    findings: list[Finding] = Field(default_factory=list, description="Security findings")
     timestamp: datetime = Field(default_factory=datetime.utcnow, description="Analysis timestamp")
 
 
@@ -83,10 +79,8 @@ class SSLResult(BaseModel):
 
     hostname: str = Field(..., description="Checked hostname")
     port: int = Field(..., description="Checked port")
-    certificate_info: Optional[Dict[str, Any]] = Field(
-        None, description="Certificate information"
-    )
-    findings: List[Finding] = Field(default_factory=list, description="Security findings")
+    certificate_info: dict[str, Any] | None = Field(None, description="Certificate information")
+    findings: list[Finding] = Field(default_factory=list, description="Security findings")
     timestamp: datetime = Field(default_factory=datetime.utcnow, description="Check timestamp")
 
 

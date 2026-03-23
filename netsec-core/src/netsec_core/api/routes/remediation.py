@@ -1,7 +1,9 @@
 """Remediation guidance routes."""
 
+from typing import Any
+
 from fastapi import APIRouter, HTTPException
-from typing import Optional, Dict, Any
+
 from netsec_core.remediation.guide import RemediationGuide
 
 router = APIRouter()
@@ -22,7 +24,7 @@ async def get_remediation(finding_type: str):
 
 
 @router.post("/")
-async def get_remediation_for_finding(finding: Dict[str, Any]):
+async def get_remediation_for_finding(finding: dict[str, Any]):
     """Get remediation guidance for a specific finding."""
     try:
         finding_type = finding.get("type", "")

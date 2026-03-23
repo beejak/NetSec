@@ -1,0 +1,8 @@
+{
+  "test_name": "test_anomaly_status_command",
+  "status": "PASSED",
+  "timestamp": "2026-03-23T03:05:12.502566",
+  "parameters": {},
+  "duration_seconds": 0.0012649479999709001,
+  "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_cli_integration.py"
+}

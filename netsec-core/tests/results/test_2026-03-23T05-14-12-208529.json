@@ -1,0 +1,8 @@
+{
+  "test_name": "test_api_docs_available",
+  "status": "PASSED",
+  "timestamp": "2026-03-23T05:14:12.208529",
+  "parameters": {},
+  "duration_seconds": 0.002802258999992091,
+  "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_api_integration.py"
+}

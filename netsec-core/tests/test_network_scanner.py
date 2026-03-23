@@ -1,6 +1,7 @@
 """Tests for Network Scanner."""
 
-import pytest
+from unittest.mock import MagicMock, patch
+
 from netsec_core.core.network_scanner import NetworkScanner
 
 
@@ -13,11 +14,14 @@ def test_network_scanner_initialization():
 
 
 def test_scan_port():
-    """Test single port scanning."""
+    """Test single port scanning with mocked socket (no live connection)."""
     scanner = NetworkScanner()
+    mock_sock = MagicMock()
+    mock_sock.connect_ex.return_value = 0  # port open
+    mock_sock.recv.return_value = b"SSH-2.0-OpenSSH_8.9\r\n"
 
-    # Test scanning a common port (may or may not be open)
-    result = scanner._scan_port("127.0.0.1", 22, "tcp")
+    with patch("socket.socket", return_value=mock_sock):
+        result = scanner._scan_port("127.0.0.1", 22, "tcp")
 
     assert "open" in result
     assert "port" in result
@@ -41,11 +45,13 @@ def test_detect_service():
 
 
 def test_scan_ports():
-    """Test port scanning."""
+    """Test port scanning with mocked socket (no live connection)."""
     scanner = NetworkScanner()
+    mock_sock = MagicMock()
+    mock_sock.connect_ex.return_value = 1  # all ports closed → deterministic
 
-    # Test scanning localhost (limited ports)
-    result = scanner.scan_ports("127.0.0.1", ports=[22, 80, 443], scan_type="tcp", timeout=1.0)
+    with patch("socket.socket", return_value=mock_sock):
+        result = scanner.scan_ports("127.0.0.1", ports=[22, 80, 443], scan_type="tcp", timeout=1.0)
 
     assert "scan_id" in result
     assert "target" in result
@@ -57,10 +63,13 @@ def test_scan_ports():
 
 
 def test_scan_services():
-    """Test service scanning."""
+    """Test service scanning with mocked socket (no live connection)."""
     scanner = NetworkScanner()
+    mock_sock = MagicMock()
+    mock_sock.connect_ex.return_value = 1  # all ports closed
 
-    result = scanner.scan_services("127.0.0.1", ports=[22, 80])
+    with patch("socket.socket", return_value=mock_sock):
+        result = scanner.scan_services("127.0.0.1", ports=[22, 80])
 
     assert "scan_id" in result
     assert "services" in result

@@ -1,6 +1,9 @@
 """Tests for DNS Scanner."""
 
-import pytest
+from unittest.mock import patch
+
+import dns.resolver
+
 from netsec_core.core.dns_scanner import DNSScanner
 
 
@@ -12,9 +15,15 @@ def test_dns_scanner_initialization():
 
 
 def test_scan_domain_basic():
-    """Test basic domain scanning."""
+    """Test basic domain scanning (no live DNS)."""
     scanner = DNSScanner()
-    result = scanner.scan_domain("example.com", check_tunneling=False, check_spoofing=False, analyze_patterns=False)
+    with patch.object(scanner.resolver, "resolve", side_effect=dns.resolver.NXDOMAIN):
+        result = scanner.scan_domain(
+            "example.com",
+            check_tunneling=False,
+            check_spoofing=False,
+            analyze_patterns=False,
+        )
 
     assert "domain" in result
     assert result["domain"] == "example.com"
@@ -23,19 +32,24 @@ def test_scan_domain_basic():
 
 
 def test_detect_tunneling():
-    """Test DNS tunneling detection returns structured result; may flag long subdomains."""
+    """Test DNS tunneling detection with a synthetic deep domain."""
     scanner = DNSScanner()
 
-    # Test with suspicious domain (long subdomain)
-    suspicious_domain = "a" * 50 + ".example.com"
-    result = scanner.scan_domain(suspicious_domain, check_tunneling=True, check_spoofing=False, analyze_patterns=False)
+    # 6-level domain reliably triggers the depth > 4 heuristic without live DNS
+    deep_domain = "payload.c2.tunnel.attacker.example.com"
+
+    with patch.object(scanner.resolver, "resolve", side_effect=dns.resolver.NXDOMAIN):
+        result = scanner.scan_domain(
+            deep_domain,
+            check_tunneling=True,
+            check_spoofing=False,
+            analyze_patterns=False,
+        )
 
     assert "findings" in result
     assert isinstance(result["findings"], list)
     tunneling_findings = [f for f in result["findings"] if f.get("type") == "dns_tunneling"]
-    # Heuristic may or may not flag this domain in CI; structure is required
-    if result["findings"]:
-        assert len(tunneling_findings) > 0
+    assert len(tunneling_findings) > 0
 
 
 def test_calculate_entropy():
@@ -57,11 +71,17 @@ def test_calculate_entropy():
 
 
 def test_analyze_patterns():
-    """Test pattern analysis."""
+    """Test pattern analysis (regex-based, no DNS needed)."""
     scanner = DNSScanner()
 
-    # Test with hex-like pattern
-    result = scanner.scan_domain("a1b2c3d4e5f6.example.com", check_tunneling=False, check_spoofing=False, analyze_patterns=True)
+    # Test with hex-like pattern; mock DNS to avoid live resolution
+    with patch.object(scanner.resolver, "resolve", side_effect=dns.resolver.NXDOMAIN):
+        result = scanner.scan_domain(
+            "a1b2c3d4e5f6.example.com",
+            check_tunneling=False,
+            check_spoofing=False,
+            analyze_patterns=True,
+        )
     pattern_findings = [f for f in result["findings"] if f.get("type") == "dns_pattern"]
     # May or may not find patterns depending on exact match
     assert isinstance(pattern_findings, list)

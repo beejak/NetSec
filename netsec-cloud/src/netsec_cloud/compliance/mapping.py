@@ -1,6 +1,6 @@
 """Map security findings to compliance framework controls (CIS, NIST, etc.)."""
 
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any
 
 # Finding type -> CIS control ID (CIS AWS/Azure/GCP Benchmark style)
 # Format: control_id, control_title (short)
@@ -128,16 +128,12 @@ def map_findings_to_framework(
     framework_lower = framework.lower()
     if framework_lower == "nist":
         mapping = NIST_MAPPING
-        control_title_key = "subcategory"
     elif framework_lower == "pci_dss":
         mapping = PCI_DSS_MAPPING
-        control_title_key = "title"
     elif framework_lower == "hipaa":
         mapping = HIPAA_MAPPING
-        control_title_key = "title"
     else:
         mapping = CIS_MAPPING
-        control_title_key = "title"
 
     # Build control_id -> list of finding ids and max severity
     control_findings: Dict[str, Dict[str, Any]] = {}

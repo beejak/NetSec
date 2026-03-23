@@ -1,18 +1,16 @@
 """Main CLI entry point for NetSec-Core."""
 
 import click
-import sys
-from typing import Optional
 
 from netsec_core.cli.commands import (
-    scan,
+    anomaly,
+    assets,
     dns,
+    health,
+    remediation,
+    scan,
     ssl,
     traffic,
-    anomaly,
-    health,
-    assets,
-    remediation,
 )
 
 
@@ -36,7 +34,7 @@ from netsec_core.cli.commands import (
 def cli(ctx: click.Context, verbose: bool, config: str):
     """
     NetSec-Core - Network Security Foundation Toolkit CLI.
-    
+
     A comprehensive network security toolkit providing:
     - Network scanning and service detection
     - DNS security analysis
@@ -45,24 +43,24 @@ def cli(ctx: click.Context, verbose: bool, config: str):
     - Asset discovery
     - LLM-powered analysis
     - Remediation guidance
-    
+
     \b
     Examples:
         # Check API health
         netsec-core health
-        
+
         # Scan DNS security
         netsec-core dns scan example.com
-        
+
         # Check SSL certificate
         netsec-core ssl check example.com
-        
+
         # Scan ports
         netsec-core scan ports 127.0.0.1 --ports 22,80,443
-        
+
         # Get remediation guidance
         netsec-core remediation get weak_cipher
-    
+
     \b
     For more information, visit:
     https://github.com/your-org/netsec-core
@@ -73,7 +71,7 @@ def cli(ctx: click.Context, verbose: bool, config: str):
 
     if verbose:
         click.echo("Verbose mode enabled", err=True)
-    
+
     # Show help if no command provided
     if ctx.invoked_subcommand is None:
         click.echo(ctx.get_help())

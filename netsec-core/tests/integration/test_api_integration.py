@@ -2,6 +2,7 @@
 
 import pytest
 from fastapi.testclient import TestClient
+
 from netsec_core.api.main import app
 
 
@@ -43,7 +44,7 @@ class TestAPIIntegration:
                 "check_tunneling": True,
                 "check_spoofing": True,
                 "analyze_patterns": True,
-            }
+            },
         )
         # May return 200 or 500 depending on network
         assert response.status_code in [200, 500]
@@ -62,7 +63,7 @@ class TestAPIIntegration:
                 "check_expiration": True,
                 "check_ciphers": True,
                 "check_chain": True,
-            }
+            },
         )
         # May return 200 or 500 depending on network
         assert response.status_code in [200, 500]
@@ -80,7 +81,7 @@ class TestAPIIntegration:
                 "ports": [22, 80, 443],
                 "scan_type": "tcp",
                 "timeout": 2.0,
-            }
+            },
         )
         # May return 200 or 500
         assert response.status_code in [200, 500]

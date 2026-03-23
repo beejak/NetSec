@@ -1,6 +1,7 @@
 """Unit tests for AssetDiscovery (no network for parse and inventory)."""
 
 import pytest
+
 from netsec_core.core.asset_discovery import AssetDiscovery
 
 
@@ -55,8 +56,18 @@ def test_generate_inventory_with_assets():
     """generate_inventory aggregates services and ports."""
     discovery = AssetDiscovery()
     assets = [
-        {"ip": "1.2.3.4", "services": [{"port": 80, "service": "http"}], "open_ports": [80], "os_fingerprint": None},
-        {"ip": "1.2.3.5", "services": [{"port": 443, "service": "https"}], "open_ports": [443], "os_fingerprint": None},
+        {
+            "ip": "1.2.3.4",
+            "services": [{"port": 80, "service": "http"}],
+            "open_ports": [80],
+            "os_fingerprint": None,
+        },
+        {
+            "ip": "1.2.3.5",
+            "services": [{"port": 443, "service": "https"}],
+            "open_ports": [443],
+            "os_fingerprint": None,
+        },
     ]
     inv = discovery.generate_inventory(assets)
     assert inv["total_assets"] == 2
