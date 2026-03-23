@@ -1,0 +1,8 @@
+{
+  "test_name": "test_traffic_analyzer_import_error_without_scapy",
+  "status": "PASSED",
+  "timestamp": "2026-03-23T04:37:19.705584",
+  "parameters": {},
+  "duration_seconds": 0.0003698909999911848,
+  "test_file": "/home/user/NetSec/netsec-core/tests/test_traffic_analyzer.py"
+}

@@ -1,6 +1,6 @@
 {
-  "total_tests": 90,
-  "passed": 89,
+  "total_tests": 94,
+  "passed": 93,
   "failed": 0,
   "skipped": 1,
   "errors": 0,
@@ -723,6 +723,38 @@
       "timestamp": "2026-03-23T04:34:38.039732",
       "parameters": {},
       "duration_seconds": 0.00032619199998862314,
+      "test_file": "/home/user/NetSec/netsec-core/tests/test_traffic_analyzer.py"
+    },
+    {
+      "test_name": "test_traffic_analyzer_import_error_without_scapy",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T04:37:19.705584",
+      "parameters": {},
+      "duration_seconds": 0.0003698909999911848,
+      "test_file": "/home/user/NetSec/netsec-core/tests/test_traffic_analyzer.py"
+    },
+    {
+      "test_name": "test_traffic_analyzer_init",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T04:37:19.710813",
+      "parameters": {},
+      "duration_seconds": 0.0008808139998564002,
+      "test_file": "/home/user/NetSec/netsec-core/tests/test_traffic_analyzer.py"
+    },
+    {
+      "test_name": "test_analyze_traffic_no_packets_returns_error",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T04:37:19.715044",
+      "parameters": {},
+      "duration_seconds": 0.0003579109998099739,
+      "test_file": "/home/user/NetSec/netsec-core/tests/test_traffic_analyzer.py"
+    },
+    {
+      "test_name": "test_analyze_traffic_pcap_not_implemented",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T04:37:19.719496",
+      "parameters": {},
+      "duration_seconds": 0.0003122350001376617,
       "test_file": "/home/user/NetSec/netsec-core/tests/test_traffic_analyzer.py"
     }
   ]
