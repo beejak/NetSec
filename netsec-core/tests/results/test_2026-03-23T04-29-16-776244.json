@@ -1,0 +1,8 @@
+{
+  "test_name": "test_remediation_list_command",
+  "status": "PASSED",
+  "timestamp": "2026-03-23T04:29:16.776244",
+  "parameters": {},
+  "duration_seconds": 0.08479446199999074,
+  "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_cli_integration.py"
+}

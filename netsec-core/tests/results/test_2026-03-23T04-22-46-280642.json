@@ -1,0 +1,8 @@
+{
+  "test_name": "test_detect_service",
+  "status": "PASSED",
+  "timestamp": "2026-03-23T04:22:46.280642",
+  "parameters": {},
+  "duration_seconds": 0.000279223000006823,
+  "test_file": "/home/user/NetSec/netsec-core/tests/test_network_scanner.py"
+}
