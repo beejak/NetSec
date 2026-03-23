@@ -1,6 +1,7 @@
 """SSL/TLS security CLI commands."""
 
 import click
+
 from netsec_core.core.ssl_scanner import SSLScanner
 
 
@@ -54,7 +55,7 @@ def check_ssl(
         if result.get("certificate_info"):
             cert_info = result["certificate_info"]
             if not cert_info.get("error"):
-                click.echo(f"\nCertificate Information:")
+                click.echo("\nCertificate Information:")
                 click.echo(f"  Common Name: {cert_info.get('common_name', 'Unknown')}")
                 click.echo(f"  Issuer: {cert_info.get('issuer_name', 'Unknown')}")
                 click.echo(f"  Valid From: {cert_info.get('not_valid_before', 'Unknown')}")
@@ -66,7 +67,9 @@ def check_ssl(
             click.echo(f"\nFound {len(findings)} security issue(s):")
             for finding in findings:
                 severity = finding.get("severity", "info").upper()
-                click.echo(f"  [{severity}] {finding.get('type', 'unknown')}: {finding.get('description', '')}")
+                click.echo(
+                    f"  [{severity}] {finding.get('type', 'unknown')}: {finding.get('description', '')}"
+                )
         else:
             click.echo("\n✓ No security issues detected")
 

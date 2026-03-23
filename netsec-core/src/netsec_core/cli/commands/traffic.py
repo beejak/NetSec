@@ -1,6 +1,7 @@
 """Traffic analysis CLI commands."""
 
 import click
+
 from netsec_core.core.traffic_analyzer import TrafficAnalyzer
 
 
@@ -51,7 +52,10 @@ def capture_traffic(interface: str, count: int, timeout: int, filter: str):
             click.echo(f"Detected {result.get('flows_detected', 0)} flows")
 
     except ImportError:
-        click.echo("Error: scapy is required for traffic capture. Install with: pip install scapy", err=True)
+        click.echo(
+            "Error: scapy is required for traffic capture. Install with: pip install scapy",
+            err=True,
+        )
     except KeyboardInterrupt:
         analyzer.stop_capture()
         click.echo("\nCapture stopped")
@@ -77,14 +81,16 @@ def analyze_traffic(pcap_file: str):
         else:
             click.echo(f"\nTotal packets: {result.get('total_packets', 0)}")
             click.echo(f"Total flows: {result.get('total_flows', 0)}")
-            click.echo(f"\nProtocols:")
+            click.echo("\nProtocols:")
             for protocol, count in result.get("protocols", {}).items():
                 click.echo(f"  {protocol}: {count}")
 
             if result.get("top_flows"):
-                click.echo(f"\nTop flows:")
+                click.echo("\nTop flows:")
                 for flow in result["top_flows"][:5]:
-                    click.echo(f"  {flow['src_ip']}:{flow['src_port']} -> {flow['dst_ip']}:{flow['dst_port']} ({flow['protocol']}) - {flow['packets']} packets")
+                    click.echo(
+                        f"  {flow['src_ip']}:{flow['src_port']} -> {flow['dst_ip']}:{flow['dst_port']} ({flow['protocol']}) - {flow['packets']} packets"
+                    )
 
     except ImportError:
         click.echo("Error: scapy is required. Install with: pip install scapy", err=True)

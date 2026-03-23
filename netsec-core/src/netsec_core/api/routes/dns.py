@@ -1,8 +1,10 @@
 """DNS security routes."""
 
 import logging
+
 from fastapi import APIRouter, HTTPException
-from netsec_core.api.models import DNSScanRequest, DNSResult, Finding, Severity
+
+from netsec_core.api.models import DNSResult, DNSScanRequest, Finding, Severity
 from netsec_core.core.dns_scanner import DNSScanner
 
 logger = logging.getLogger(__name__)
@@ -66,8 +68,7 @@ async def detect_tunneling(request: DNSScanRequest):
         )
         # Filter only tunneling findings
         tunneling_findings = [
-            f for f in result.get("findings", [])
-            if f.get("type") == "dns_tunneling"
+            f for f in result.get("findings", []) if f.get("type") == "dns_tunneling"
         ]
         return {
             "domain": request.domain,
@@ -91,7 +92,8 @@ async def get_anomalies(domain: str):
         )
         # Filter anomaly-related findings
         anomalies = [
-            f for f in result.get("findings", [])
+            f
+            for f in result.get("findings", [])
             if f.get("type") in ["dns_tunneling", "dns_spoofing", "dns_pattern"]
         ]
         return {

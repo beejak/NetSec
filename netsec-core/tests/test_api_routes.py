@@ -2,6 +2,7 @@
 
 import pytest
 from fastapi.testclient import TestClient
+
 from netsec_core.api.main import app
 
 
@@ -44,7 +45,9 @@ def test_remediation_get_known(client):
 @pytest.mark.api
 def test_assets_inventory_endpoint(client):
     """POST /api/v1/assets/inventory accepts list and returns inventory."""
-    response = client.post("/api/v1/assets/inventory", json=[{"ip": "1.2.3.4", "services": [], "open_ports": []}])
+    response = client.post(
+        "/api/v1/assets/inventory", json=[{"ip": "1.2.3.4", "services": [], "open_ports": []}]
+    )
     assert response.status_code == 200
     data = response.json()
     assert "total_assets" in data

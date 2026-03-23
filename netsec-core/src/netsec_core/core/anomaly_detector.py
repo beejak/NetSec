@@ -1,10 +1,9 @@
 """Anomaly Detector implementation."""
 
-from typing import List, Dict, Any, Optional
-from datetime import datetime, timedelta
-from collections import defaultdict, deque
 import statistics
-import math
+from collections import defaultdict, deque
+from datetime import datetime
+from typing import Any
 
 
 class AnomalyDetector:
@@ -12,13 +11,15 @@ class AnomalyDetector:
 
     def __init__(self):
         """Initialize Anomaly Detector."""
-        self.baseline_data = defaultdict(lambda: {"values": deque(maxlen=1000), "mean": 0.0, "std": 0.0})
+        self.baseline_data = defaultdict(
+            lambda: {"values": deque(maxlen=1000), "mean": 0.0, "std": 0.0}
+        )
         self.learning = False
         self.learning_duration = 3600  # 1 hour default
         self.learning_start = None
         self.anomaly_threshold = 3.0  # 3 standard deviations
 
-    def learn_baseline(self, duration: int = 3600) -> Dict[str, Any]:
+    def learn_baseline(self, duration: int = 3600) -> dict[str, Any]:
         """
         Learn baseline statistics for anomaly detection.
 
@@ -31,7 +32,9 @@ class AnomalyDetector:
         self.learning = True
         self.learning_duration = duration
         self.learning_start = datetime.utcnow()
-        self.baseline_data = defaultdict(lambda: {"values": deque(maxlen=1000), "mean": 0.0, "std": 0.0})
+        self.baseline_data = defaultdict(
+            lambda: {"values": deque(maxlen=1000), "mean": 0.0, "std": 0.0}
+        )
 
         return {
             "status": "learning",
@@ -44,7 +47,7 @@ class AnomalyDetector:
         self,
         metric: str,
         value: float,
-        timestamp: Optional[datetime] = None,
+        timestamp: datetime | None = None,
     ):
         """
         Add traffic data point for baseline learning.
@@ -87,8 +90,8 @@ class AnomalyDetector:
         self,
         metric: str,
         value: float,
-        timestamp: Optional[datetime] = None,
-    ) -> Dict[str, Any]:
+        timestamp: datetime | None = None,
+    ) -> dict[str, Any]:
         """
         Detect anomalies in traffic data.
 
@@ -137,7 +140,9 @@ class AnomalyDetector:
         }
 
         if is_anomaly:
-            result["description"] = f"Anomaly detected: {metric} = {value} (baseline: {mean:.2f} ± {std:.2f}, z-score: {z_score:.2f})"
+            result["description"] = (
+                f"Anomaly detected: {metric} = {value} (baseline: {mean:.2f} ± {std:.2f}, z-score: {z_score:.2f})"
+            )
 
         return result
 
@@ -152,7 +157,7 @@ class AnomalyDetector:
         else:
             return "low"
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get anomaly detection status."""
         return {
             "learning": self.learning,
@@ -165,8 +170,8 @@ class AnomalyDetector:
 
     def detect_pattern_anomalies(
         self,
-        traffic_data: List[Dict[str, Any]],
-    ) -> List[Dict[str, Any]]:
+        traffic_data: list[dict[str, Any]],
+    ) -> list[dict[str, Any]]:
         """
         Detect pattern-based anomalies in traffic data.
 
@@ -187,28 +192,32 @@ class AnomalyDetector:
         # Detect sudden spikes
         if len(values) >= 2:
             for i in range(1, len(values)):
-                change = abs(values[i] - values[i-1])
+                change = abs(values[i] - values[i - 1])
                 if change > statistics.mean(values) * 2:
-                    anomalies.append({
-                        "type": "sudden_spike",
-                        "index": i,
-                        "value": values[i],
-                        "previous_value": values[i-1],
-                        "change": change,
-                        "severity": "high",
-                    })
+                    anomalies.append(
+                        {
+                            "type": "sudden_spike",
+                            "index": i,
+                            "value": values[i],
+                            "previous_value": values[i - 1],
+                            "change": change,
+                            "severity": "high",
+                        }
+                    )
 
         # Detect unusual patterns
         if len(values) >= 5:
             recent_mean = statistics.mean(values[-5:])
             overall_mean = statistics.mean(values)
             if abs(recent_mean - overall_mean) > overall_mean * 0.5:
-                anomalies.append({
-                    "type": "pattern_deviation",
-                    "recent_mean": recent_mean,
-                    "overall_mean": overall_mean,
-                    "deviation": abs(recent_mean - overall_mean),
-                    "severity": "medium",
-                })
+                anomalies.append(
+                    {
+                        "type": "pattern_deviation",
+                        "recent_mean": recent_mean,
+                        "overall_mean": overall_mean,
+                        "deviation": abs(recent_mean - overall_mean),
+                        "severity": "medium",
+                    }
+                )
 
         return anomalies

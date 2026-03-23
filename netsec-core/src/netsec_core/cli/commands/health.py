@@ -1,9 +1,9 @@
 """Health check CLI command."""
 
 import sys
+
 import click
 import httpx
-from typing import Optional
 
 
 @click.command("health")

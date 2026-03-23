@@ -1,6 +1,7 @@
 """Network scanning routes."""
 
 from fastapi import APIRouter, HTTPException
+
 from netsec_core.api.models import ScanRequest, ScanResult
 from netsec_core.core.network_scanner import NetworkScanner
 

@@ -1,7 +1,7 @@
 """Tests for Network Scanner."""
 
-import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
+
 from netsec_core.core.network_scanner import NetworkScanner
 
 
@@ -51,9 +51,7 @@ def test_scan_ports():
     mock_sock.connect_ex.return_value = 1  # all ports closed → deterministic
 
     with patch("socket.socket", return_value=mock_sock):
-        result = scanner.scan_ports(
-            "127.0.0.1", ports=[22, 80, 443], scan_type="tcp", timeout=1.0
-        )
+        result = scanner.scan_ports("127.0.0.1", ports=[22, 80, 443], scan_type="tcp", timeout=1.0)
 
     assert "scan_id" in result
     assert "target" in result

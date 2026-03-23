@@ -1,7 +1,7 @@
 """Asset discovery CLI commands."""
 
 import click
-from typing import List
+
 from netsec_core.core.asset_discovery import AssetDiscovery
 
 
@@ -46,7 +46,7 @@ def discover_assets(network: str, ports: str):
             if asset.get("open_ports"):
                 click.echo(f"    Open ports: {', '.join(map(str, asset['open_ports']))}")
             if asset.get("services"):
-                click.echo(f"    Services:")
+                click.echo("    Services:")
                 for service in asset["services"]:
                     click.echo(f"      Port {service['port']}: {service['service']}")
 

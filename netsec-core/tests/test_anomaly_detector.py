@@ -1,6 +1,7 @@
 """Unit tests for AnomalyDetector (no network)."""
 
 import pytest
+
 from netsec_core.core.anomaly_detector import AnomalyDetector
 
 

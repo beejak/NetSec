@@ -1,8 +1,8 @@
 """Configuration management for NetSec-Core."""
 
 import os
-from typing import Optional, Dict, Any
 from pathlib import Path
+from typing import Any
 
 
 class Config:
@@ -25,8 +25,7 @@ class Config:
         self.log_level = os.getenv("LOG_LEVEL", "INFO")
         self.log_file = os.getenv("LOG_FILE", str(self.base_dir / "logs" / "netsec-core.log"))
         self.log_format = os.getenv(
-            "LOG_FORMAT",
-            "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+            "LOG_FORMAT", "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
         )
 
         # Scanner Configuration
@@ -66,7 +65,7 @@ class Config:
         self.cors_origins = os.getenv("CORS_ORIGINS", "*").split(",")
         self.cors_credentials = os.getenv("CORS_CREDENTIALS", "true").lower() == "true"
 
-    def get_dict(self) -> Dict[str, Any]:
+    def get_dict(self) -> dict[str, Any]:
         """Get configuration as dictionary."""
         return {
             "api": {

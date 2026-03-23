@@ -2,7 +2,6 @@
 
 import click
 import httpx
-from typing import Optional
 
 
 @click.group("remediation")

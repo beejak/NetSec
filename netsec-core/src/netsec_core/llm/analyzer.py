@@ -1,13 +1,12 @@
 """LLM-powered security analysis with support for cloud and local models."""
 
-from typing import Dict, Any, List, Optional
 import os
-import json
+from typing import Any
 
 
 class LLMAnalyzer:
     """LLM-powered analyzer for security findings and remediation.
-    
+
     Supports:
     - Cloud providers: OpenAI, Anthropic (bring your own API key)
     - Local providers: Ollama, LM Studio, vLLM, HuggingFace Transformers
@@ -17,8 +16,8 @@ class LLMAnalyzer:
         self,
         provider: str = "openai",
         model: str = "gpt-3.5-turbo",
-        api_key: Optional[str] = None,
-        base_url: Optional[str] = None,
+        api_key: str | None = None,
+        base_url: str | None = None,
     ):
         """
         Initialize LLM Analyzer.
@@ -32,7 +31,7 @@ class LLMAnalyzer:
         self.provider = provider.lower()
         self.model = model
         self.base_url = base_url
-        
+
         # API key handling - support bring your own key
         if api_key:
             self.api_key = api_key
@@ -45,7 +44,7 @@ class LLMAnalyzer:
             self.api_key = None
         else:
             self.api_key = None
-        
+
         self._client = None
 
     def _get_client(self):
@@ -56,6 +55,7 @@ class LLMAnalyzer:
         if self.provider == "openai":
             try:
                 import openai
+
                 if not self.api_key:
                     raise ValueError(
                         "OpenAI API key not provided. Set OPENAI_API_KEY env var or pass api_key parameter"
@@ -72,6 +72,7 @@ class LLMAnalyzer:
         elif self.provider == "anthropic":
             try:
                 import anthropic
+
                 if not self.api_key:
                     raise ValueError(
                         "Anthropic API key not provided. Set ANTHROPIC_API_KEY env var or pass api_key parameter"
@@ -79,52 +80,63 @@ class LLMAnalyzer:
                 self._client = anthropic.Anthropic(api_key=self.api_key)
                 return self._client
             except ImportError:
-                raise ImportError("anthropic package not installed. Install with: pip install anthropic")
+                raise ImportError(
+                    "anthropic package not installed. Install with: pip install anthropic"
+                )
 
         elif self.provider == "ollama":
             # Ollama uses OpenAI-compatible API
             try:
                 import openai
-                base_url = self.base_url or os.getenv("OLLAMA_BASE_URL", "http://localhost:11434/v1")
+
+                base_url = self.base_url or os.getenv(
+                    "OLLAMA_BASE_URL", "http://localhost:11434/v1"
+                )
                 self._client = openai.OpenAI(
-                    api_key="ollama",  # Ollama doesn't require real API key
-                    base_url=base_url
+                    api_key="ollama", base_url=base_url  # Ollama doesn't require real API key
                 )
                 return self._client
             except ImportError:
-                raise ImportError("openai package required for Ollama. Install with: pip install openai")
+                raise ImportError(
+                    "openai package required for Ollama. Install with: pip install openai"
+                )
 
         elif self.provider == "lmstudio":
             # LM Studio uses OpenAI-compatible API
             try:
                 import openai
-                base_url = self.base_url or os.getenv("LMSTUDIO_BASE_URL", "http://localhost:1234/v1")
+
+                base_url = self.base_url or os.getenv(
+                    "LMSTUDIO_BASE_URL", "http://localhost:1234/v1"
+                )
                 self._client = openai.OpenAI(
-                    api_key="lm-studio",  # LM Studio doesn't require real API key
-                    base_url=base_url
+                    api_key="lm-studio", base_url=base_url  # LM Studio doesn't require real API key
                 )
                 return self._client
             except ImportError:
-                raise ImportError("openai package required for LM Studio. Install with: pip install openai")
+                raise ImportError(
+                    "openai package required for LM Studio. Install with: pip install openai"
+                )
 
         elif self.provider == "vllm":
             # vLLM uses OpenAI-compatible API
             try:
                 import openai
+
                 base_url = self.base_url or os.getenv("VLLM_BASE_URL", "http://localhost:8000/v1")
                 self._client = openai.OpenAI(
-                    api_key="vllm",  # vLLM doesn't require real API key
-                    base_url=base_url
+                    api_key="vllm", base_url=base_url  # vLLM doesn't require real API key
                 )
                 return self._client
             except ImportError:
-                raise ImportError("openai package required for vLLM. Install with: pip install openai")
+                raise ImportError(
+                    "openai package required for vLLM. Install with: pip install openai"
+                )
 
         elif self.provider == "huggingface":
             # HuggingFace Transformers (local inference)
             try:
-                from transformers import pipeline
-                # This will be handled differently in _call_llm
+                # transformers.pipeline used in _call_llm at inference time
                 self._client = "huggingface"  # Placeholder
                 return self._client
             except ImportError:
@@ -138,7 +150,7 @@ class LLMAnalyzer:
                 f"Supported: openai, anthropic, ollama, lmstudio, vllm, huggingface"
             )
 
-    def analyze_traffic(self, traffic_summary: Dict[str, Any]) -> Dict[str, Any]:
+    def analyze_traffic(self, traffic_summary: dict[str, Any]) -> dict[str, Any]:
         """
         Analyze network traffic using LLM.
 
@@ -150,9 +162,9 @@ class LLMAnalyzer:
         """
         prompt = f"""
         Analyze the following network traffic summary and identify any security concerns:
-        
+
         {traffic_summary}
-        
+
         Provide:
         1. Security concerns identified
         2. Risk level assessment
@@ -173,9 +185,9 @@ class LLMAnalyzer:
 
     def reduce_false_positives(
         self,
-        findings: List[Dict[str, Any]],
-        context: Optional[Dict[str, Any]] = None,
-    ) -> List[Dict[str, Any]]:
+        findings: list[dict[str, Any]],
+        context: dict[str, Any] | None = None,
+    ) -> list[dict[str, Any]]:
         """
         Reduce false positives in security findings using LLM.
 
@@ -191,17 +203,17 @@ class LLMAnalyzer:
 
         prompt = f"""
         Review the following security findings and identify false positives:
-        
+
         Findings:
         {self._format_findings(findings)}
-        
+
         Context: {context or "No additional context"}
-        
+
         For each finding, determine if it's a false positive. Return only legitimate security issues.
         """
 
         try:
-            filtered = self._call_llm(prompt)
+            self._call_llm(prompt)
             # Parse LLM response and filter findings
             # This is a simplified version - in production, would parse structured response
             return findings  # Placeholder - would implement actual filtering
@@ -211,9 +223,9 @@ class LLMAnalyzer:
 
     def generate_remediation(
         self,
-        finding: Dict[str, Any],
-        context: Optional[Dict[str, Any]] = None,
-    ) -> Dict[str, Any]:
+        finding: dict[str, Any],
+        context: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
         """
         Generate remediation guidance using LLM.
 
@@ -226,13 +238,13 @@ class LLMAnalyzer:
         """
         prompt = f"""
         Generate detailed remediation steps for the following security finding:
-        
+
         Finding Type: {finding.get('type', 'unknown')}
         Severity: {finding.get('severity', 'unknown')}
         Description: {finding.get('description', '')}
-        
+
         Context: {context or "No additional context"}
-        
+
         Provide:
         1. Immediate mitigation steps
         2. Short-term remediation
@@ -252,7 +264,7 @@ class LLMAnalyzer:
             # Fallback to rule-based remediation
             return self._rule_based_remediation(finding)
 
-    def explain_finding(self, finding: Dict[str, Any]) -> str:
+    def explain_finding(self, finding: dict[str, Any]) -> str:
         """
         Generate natural language explanation of a finding.
 
@@ -264,11 +276,11 @@ class LLMAnalyzer:
         """
         prompt = f"""
         Explain the following security finding in simple, clear language:
-        
+
         Type: {finding.get('type', 'unknown')}
         Severity: {finding.get('severity', 'unknown')}
         Description: {finding.get('description', '')}
-        
+
         Provide a clear explanation that a non-technical person can understand.
         """
 
@@ -309,6 +321,7 @@ class LLMAnalyzer:
             # Local HuggingFace model
             try:
                 from transformers import pipeline
+
                 generator = pipeline(
                     "text-generation",
                     model=self.model,
@@ -328,7 +341,7 @@ class LLMAnalyzer:
         else:
             raise ValueError(f"Unsupported provider: {self.provider}")
 
-    def _format_findings(self, findings: List[Dict[str, Any]]) -> str:
+    def _format_findings(self, findings: list[dict[str, Any]]) -> str:
         """Format findings for LLM prompt."""
         formatted = []
         for i, finding in enumerate(findings, 1):
@@ -337,7 +350,7 @@ class LLMAnalyzer:
             )
         return "\n".join(formatted)
 
-    def _rule_based_filter(self, findings: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def _rule_based_filter(self, findings: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Rule-based false positive filtering (fallback)."""
         filtered = []
         for finding in findings:
@@ -354,7 +367,7 @@ class LLMAnalyzer:
                 filtered.append(finding)
         return filtered
 
-    def _rule_based_remediation(self, finding: Dict[str, Any]) -> Dict[str, Any]:
+    def _rule_based_remediation(self, finding: dict[str, Any]) -> dict[str, Any]:
         """Rule-based remediation (fallback)."""
         finding_type = finding.get("type", "")
         remediation_templates = {
@@ -375,11 +388,14 @@ class LLMAnalyzer:
             },
         }
 
-        template = remediation_templates.get(finding_type, {
-            "immediate": "Review and address the security issue",
-            "short_term": "Implement appropriate security controls",
-            "long_term": "Establish ongoing monitoring",
-        })
+        template = remediation_templates.get(
+            finding_type,
+            {
+                "immediate": "Review and address the security issue",
+                "short_term": "Implement appropriate security controls",
+                "long_term": "Establish ongoing monitoring",
+            },
+        )
 
         return {
             "finding_id": finding.get("finding_id", ""),
@@ -391,6 +407,7 @@ class LLMAnalyzer:
     def _get_timestamp(self) -> str:
         """Get current timestamp."""
         from datetime import datetime
+
         return datetime.utcnow().isoformat()
 
 
@@ -401,29 +418,35 @@ class LLMAnalyzerLocal:
         """Initialize local analyzer."""
         pass
 
-    def analyze_traffic(self, traffic_summary: Dict[str, Any]) -> Dict[str, Any]:
+    def analyze_traffic(self, traffic_summary: dict[str, Any]) -> dict[str, Any]:
         """Analyze traffic using rule-based methods."""
         return {
             "analysis": "Rule-based analysis (LLM not available)",
             "timestamp": self._get_timestamp(),
         }
 
-    def reduce_false_positives(self, findings: List[Dict[str, Any]], context: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
+    def reduce_false_positives(
+        self, findings: list[dict[str, Any]], context: dict[str, Any] | None = None
+    ) -> list[dict[str, Any]]:
         """Filter false positives using rules."""
         # Simple filtering logic
         return [f for f in findings if f.get("severity", "").lower() in ["high", "critical"]]
 
-    def generate_remediation(self, finding: Dict[str, Any], context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def generate_remediation(
+        self, finding: dict[str, Any], context: dict[str, Any] | None = None
+    ) -> dict[str, Any]:
         """Generate remediation using templates."""
         from netsec_core.remediation.guide import RemediationGuide
+
         guide = RemediationGuide()
         return guide.get_remediation(finding.get("type", ""), finding)
 
-    def explain_finding(self, finding: Dict[str, Any]) -> str:
+    def explain_finding(self, finding: dict[str, Any]) -> str:
         """Explain finding in simple terms."""
         return finding.get("description", "No explanation available")
 
     def _get_timestamp(self) -> str:
         """Get current timestamp."""
         from datetime import datetime
+
         return datetime.utcnow().isoformat()

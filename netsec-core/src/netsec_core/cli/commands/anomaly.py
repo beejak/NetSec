@@ -1,6 +1,7 @@
 """Anomaly detection CLI commands."""
 
 import click
+
 from netsec_core.core.anomaly_detector import AnomalyDetector
 
 
@@ -46,12 +47,12 @@ def detect_anomalies(metric: str, value: float):
         result = detector.detect_anomalies(metric=metric, value=value)
 
         if result.get("anomaly_detected"):
-            click.echo(f"⚠️  ANOMALY DETECTED!")
+            click.echo("⚠️  ANOMALY DETECTED!")
             click.echo(f"  Severity: {result.get('severity', 'unknown').upper()}")
             click.echo(f"  Z-score: {result.get('z_score', 0):.2f}")
             click.echo(f"  Description: {result.get('description', '')}")
         else:
-            click.echo(f"✓ No anomaly detected")
+            click.echo("✓ No anomaly detected")
             click.echo(f"  Baseline mean: {result.get('baseline_mean', 0):.2f}")
             click.echo(f"  Baseline std: {result.get('baseline_std', 0):.2f}")
 

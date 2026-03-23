@@ -1,6 +1,7 @@
 """DNS security CLI commands."""
 
 import click
+
 from netsec_core.core.dns_scanner import DNSScanner
 
 
@@ -57,7 +58,9 @@ def scan_dns(domain: str, check_tunneling: bool, check_spoofing: bool, analyze_p
             click.echo(f"\nFound {len(findings)} security issue(s):")
             for finding in findings:
                 severity = finding.get("severity", "info").upper()
-                click.echo(f"  [{severity}] {finding.get('type', 'unknown')}: {finding.get('description', '')}")
+                click.echo(
+                    f"  [{severity}] {finding.get('type', 'unknown')}: {finding.get('description', '')}"
+                )
         else:
             click.echo("\n✓ No security issues detected")
 

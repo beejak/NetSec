@@ -1,7 +1,7 @@
 """Tests for SSL Scanner."""
 
-import pytest
 from unittest.mock import patch
+
 from netsec_core.core.ssl_scanner import SSLScanner
 
 

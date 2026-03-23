@@ -1,12 +1,13 @@
 """Tests for API models."""
 
 from datetime import datetime
+
 from netsec_core.api.models import (
+    DNSScanRequest,
+    Finding,
     ScanRequest,
     ScanResult,
-    Finding,
     Severity,
-    DNSScanRequest,
     SSLCheckRequest,
 )
 

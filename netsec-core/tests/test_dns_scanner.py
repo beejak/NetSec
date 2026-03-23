@@ -1,8 +1,9 @@
 """Tests for DNS Scanner."""
 
-import pytest
-import dns.resolver
 from unittest.mock import patch
+
+import dns.resolver
+
 from netsec_core.core.dns_scanner import DNSScanner
 
 
@@ -47,9 +48,7 @@ def test_detect_tunneling():
 
     assert "findings" in result
     assert isinstance(result["findings"], list)
-    tunneling_findings = [
-        f for f in result["findings"] if f.get("type") == "dns_tunneling"
-    ]
+    tunneling_findings = [f for f in result["findings"] if f.get("type") == "dns_tunneling"]
     assert len(tunneling_findings) > 0
 
 

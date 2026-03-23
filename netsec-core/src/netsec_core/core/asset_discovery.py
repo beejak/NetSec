@@ -1,12 +1,12 @@
 """Asset Discovery implementation."""
 
-from typing import List, Dict, Any, Optional
-from datetime import datetime
-from collections import defaultdict
+import platform
 import socket
 import subprocess
-import platform
+from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime
+from typing import Any
 
 
 class AssetDiscovery:
@@ -19,8 +19,8 @@ class AssetDiscovery:
     def discover_network(
         self,
         network: str,
-        ports: Optional[List[int]] = None,
-    ) -> Dict[str, Any]:
+        ports: list[int] | None = None,
+    ) -> dict[str, Any]:
         """
         Discover assets on a network.
 
@@ -40,12 +40,10 @@ class AssetDiscovery:
         # Scan hosts in parallel
         with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
             future_to_host = {
-                executor.submit(self._discover_host, host, ports): host
-                for host in network_hosts
+                executor.submit(self._discover_host, host, ports): host for host in network_hosts
             }
 
             for future in as_completed(future_to_host):
-                host = future_to_host[future]
                 try:
                     asset = future.result()
                     if asset:
@@ -60,7 +58,7 @@ class AssetDiscovery:
             "timestamp": datetime.utcnow().isoformat(),
         }
 
-    def _parse_network(self, network: str) -> List[str]:
+    def _parse_network(self, network: str) -> list[str]:
         """Parse network CIDR or range into list of IPs."""
         hosts = []
 
@@ -98,7 +96,7 @@ class AssetDiscovery:
 
         return hosts
 
-    def _discover_host(self, host: str, ports: List[int]) -> Optional[Dict[str, Any]]:
+    def _discover_host(self, host: str, ports: list[int]) -> dict[str, Any] | None:
         """Discover information about a single host."""
         asset = {
             "ip": host,
@@ -125,10 +123,12 @@ class AssetDiscovery:
                 asset["open_ports"].append(port)
                 service = self._detect_service(host, port)
                 if service:
-                    asset["services"].append({
-                        "port": port,
-                        "service": service,
-                    })
+                    asset["services"].append(
+                        {
+                            "port": port,
+                            "service": service,
+                        }
+                    )
 
         # Only return asset if it has open ports or hostname
         if asset["open_ports"] or asset["hostname"]:
@@ -168,7 +168,7 @@ class AssetDiscovery:
         except Exception:
             return False
 
-    def _detect_service(self, host: str, port: int) -> Optional[str]:
+    def _detect_service(self, host: str, port: int) -> str | None:
         """Detect service on port."""
         # Common port mappings
         port_services = {
@@ -182,7 +182,7 @@ class AssetDiscovery:
         }
         return port_services.get(port)
 
-    def generate_inventory(self, assets: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def generate_inventory(self, assets: list[dict[str, Any]]) -> dict[str, Any]:
         """Generate asset inventory report."""
         inventory = {
             "total_assets": len(assets),

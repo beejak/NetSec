@@ -1,10 +1,11 @@
 """Unit tests for TrafficAnalyzer (no live capture)."""
 
-import pytest
 from unittest.mock import patch
 
+import pytest
+
 try:
-    from netsec_core.core.traffic_analyzer import TrafficAnalyzer, SCAPY_AVAILABLE
+    from netsec_core.core.traffic_analyzer import SCAPY_AVAILABLE, TrafficAnalyzer
 except ImportError:
     TrafficAnalyzer = None
     SCAPY_AVAILABLE = False

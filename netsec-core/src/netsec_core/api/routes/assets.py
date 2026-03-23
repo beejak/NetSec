@@ -1,7 +1,7 @@
 """Asset discovery routes."""
 
 from fastapi import APIRouter, HTTPException
-from typing import List, Optional
+
 from netsec_core.core.asset_discovery import AssetDiscovery
 
 router = APIRouter()
@@ -9,7 +9,7 @@ discovery = AssetDiscovery()
 
 
 @router.post("/discover")
-async def discover_assets(network: str, ports: Optional[List[int]] = None):
+async def discover_assets(network: str, ports: list[int] | None = None):
     """Discover assets on a network."""
     try:
         result = discovery.discover_network(network=network, ports=ports)
@@ -22,7 +22,7 @@ async def discover_assets(network: str, ports: Optional[List[int]] = None):
 
 
 @router.post("/inventory")
-async def generate_inventory(assets: List[dict]):
+async def generate_inventory(assets: list[dict]):
     """Generate asset inventory report."""
     try:
         result = discovery.generate_inventory(assets=assets)

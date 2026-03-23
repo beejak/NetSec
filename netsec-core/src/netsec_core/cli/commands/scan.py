@@ -1,7 +1,7 @@
 """Network scanning CLI commands."""
 
 import click
-from typing import Optional, List
+
 from netsec_core.core.network_scanner import NetworkScanner
 
 
@@ -30,7 +30,7 @@ def scan_group():
     default=5.0,
     help="Timeout in seconds",
 )
-def scan_ports(target: str, ports: Optional[str], scan_type: str, timeout: float):
+def scan_ports(target: str, ports: str | None, scan_type: str, timeout: float):
     """Scan target for open ports."""
     scanner = NetworkScanner()
 
@@ -55,7 +55,9 @@ def scan_ports(target: str, ports: Optional[str], scan_type: str, timeout: float
         )
 
         click.echo(f"\nScan ID: {result['scan_id']}")
-        click.echo(f"Open ports: {', '.join(map(str, result['open_ports'])) if result['open_ports'] else 'None'}")
+        click.echo(
+            f"Open ports: {', '.join(map(str, result['open_ports'])) if result['open_ports'] else 'None'}"
+        )
 
         if result.get("services"):
             click.echo("\nDetected services:")
@@ -75,7 +77,7 @@ def scan_ports(target: str, ports: Optional[str], scan_type: str, timeout: float
     "-p",
     help="Ports to scan (comma-separated)",
 )
-def scan_services(target: str, ports: Optional[str]):
+def scan_services(target: str, ports: str | None):
     """Scan target for services."""
     scanner = NetworkScanner()
 
@@ -94,12 +96,16 @@ def scan_services(target: str, ports: Optional[str]):
         result = scanner.scan_services(target=target, ports=port_list)
 
         click.echo(f"\nScan ID: {result['scan_id']}")
-        click.echo(f"Open ports: {', '.join(map(str, result['open_ports'])) if result['open_ports'] else 'None'}")
+        click.echo(
+            f"Open ports: {', '.join(map(str, result['open_ports'])) if result['open_ports'] else 'None'}"
+        )
 
         if result.get("services"):
             click.echo("\nDetected services:")
             for service in result["services"]:
-                click.echo(f"  Port {service['port']}: {service.get('service', 'unknown')} ({service.get('protocol', 'tcp')})")
+                click.echo(
+                    f"  Port {service['port']}: {service.get('service', 'unknown')} ({service.get('protocol', 'tcp')})"
+                )
                 if service.get("banner"):
                     click.echo(f"    Banner: {service['banner'][:100]}")
 

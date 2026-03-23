@@ -2,8 +2,9 @@
 
 import socket
 import ssl
-from typing import List, Dict, Any, Optional
-from datetime import datetime, timedelta
+from datetime import datetime
+from typing import Any
+
 from cryptography import x509
 from cryptography.hazmat.backends import default_backend
 
@@ -33,7 +34,7 @@ class SSLScanner:
         check_expiration: bool = True,
         check_ciphers: bool = True,
         check_chain: bool = True,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Check SSL/TLS certificate and configuration.
 
@@ -75,29 +76,35 @@ class SSLScanner:
             findings.extend(validity_findings)
 
         except socket.gaierror as e:
-            findings.append({
-                "finding_id": f"ssl-error-{hostname}",
-                "type": "ssl_error",
-                "severity": "high",
-                "description": f"Could not resolve hostname: {str(e)}",
-                "timestamp": datetime.utcnow().isoformat(),
-            })
+            findings.append(
+                {
+                    "finding_id": f"ssl-error-{hostname}",
+                    "type": "ssl_error",
+                    "severity": "high",
+                    "description": f"Could not resolve hostname: {str(e)}",
+                    "timestamp": datetime.utcnow().isoformat(),
+                }
+            )
         except ssl.SSLError as e:
-            findings.append({
-                "finding_id": f"ssl-error-{hostname}",
-                "type": "ssl_error",
-                "severity": "high",
-                "description": f"SSL/TLS error: {str(e)}",
-                "timestamp": datetime.utcnow().isoformat(),
-            })
+            findings.append(
+                {
+                    "finding_id": f"ssl-error-{hostname}",
+                    "type": "ssl_error",
+                    "severity": "high",
+                    "description": f"SSL/TLS error: {str(e)}",
+                    "timestamp": datetime.utcnow().isoformat(),
+                }
+            )
         except Exception as e:
-            findings.append({
-                "finding_id": f"ssl-error-{hostname}",
-                "type": "ssl_error",
-                "severity": "medium",
-                "description": f"Error checking certificate: {str(e)}",
-                "timestamp": datetime.utcnow().isoformat(),
-            })
+            findings.append(
+                {
+                    "finding_id": f"ssl-error-{hostname}",
+                    "type": "ssl_error",
+                    "severity": "medium",
+                    "description": f"Error checking certificate: {str(e)}",
+                    "timestamp": datetime.utcnow().isoformat(),
+                }
+            )
 
         return {
             "hostname": hostname,
@@ -117,7 +124,7 @@ class SSLScanner:
                 cert_der = ssock.getpeercert(binary_form=True)
                 return cert_der
 
-    def _parse_certificate(self, cert_der: bytes) -> Dict[str, Any]:
+    def _parse_certificate(self, cert_der: bytes) -> dict[str, Any]:
         """Parse certificate and extract information."""
         try:
             cert = x509.load_der_x509_certificate(cert_der, default_backend())
@@ -147,7 +154,7 @@ class SSLScanner:
         except Exception as e:
             return {"error": str(e)}
 
-    def _check_expiration(self, cert_der: bytes, hostname: str) -> List[Dict[str, Any]]:
+    def _check_expiration(self, cert_der: bytes, hostname: str) -> list[dict[str, Any]]:
         """Check certificate expiration."""
         findings = []
 
@@ -159,42 +166,50 @@ class SSLScanner:
             days_until_expiry = (expires - now).days
 
             if days_until_expiry < 0:
-                findings.append({
-                    "finding_id": f"ssl-expired-{hostname}",
-                    "type": "certificate_expired",
-                    "severity": "critical",
-                    "description": f"Certificate expired {abs(days_until_expiry)} days ago",
-                    "timestamp": datetime.utcnow().isoformat(),
-                })
+                findings.append(
+                    {
+                        "finding_id": f"ssl-expired-{hostname}",
+                        "type": "certificate_expired",
+                        "severity": "critical",
+                        "description": f"Certificate expired {abs(days_until_expiry)} days ago",
+                        "timestamp": datetime.utcnow().isoformat(),
+                    }
+                )
             elif days_until_expiry < 7:
-                findings.append({
-                    "finding_id": f"ssl-expiring-{hostname}",
-                    "type": "certificate_expiring",
-                    "severity": "high",
-                    "description": f"Certificate expires in {days_until_expiry} days",
-                    "timestamp": datetime.utcnow().isoformat(),
-                })
+                findings.append(
+                    {
+                        "finding_id": f"ssl-expiring-{hostname}",
+                        "type": "certificate_expiring",
+                        "severity": "high",
+                        "description": f"Certificate expires in {days_until_expiry} days",
+                        "timestamp": datetime.utcnow().isoformat(),
+                    }
+                )
             elif days_until_expiry < 30:
-                findings.append({
-                    "finding_id": f"ssl-expiring-soon-{hostname}",
-                    "type": "certificate_expiring",
-                    "severity": "medium",
-                    "description": f"Certificate expires in {days_until_expiry} days",
-                    "timestamp": datetime.utcnow().isoformat(),
-                })
+                findings.append(
+                    {
+                        "finding_id": f"ssl-expiring-soon-{hostname}",
+                        "type": "certificate_expiring",
+                        "severity": "medium",
+                        "description": f"Certificate expires in {days_until_expiry} days",
+                        "timestamp": datetime.utcnow().isoformat(),
+                    }
+                )
 
         except Exception as e:
-            findings.append({
-                "finding_id": f"ssl-expiration-check-error-{hostname}",
-                "type": "ssl_error",
-                "severity": "low",
-                "description": f"Error checking expiration: {str(e)}",
-                "timestamp": datetime.utcnow().isoformat(),
-            })
+            findings.append(
+                {
+                    "finding_id": f"ssl-expiration-check-error-{hostname}",
+                    "type": "ssl_error",
+                    "severity": "low",
+                    "description": f"Error checking expiration: {str(e)}",
+                    "timestamp": datetime.utcnow().isoformat(),
+                }
+            )
 
         return findings
 
-    def _check_ciphers(self, hostname: str, port: int) -> List[Dict[str, Any]]:
+    def _check_ciphers(self, hostname: str, port: int) -> list[dict[str, Any]]:
         """Check for weak SSL/TLS ciphers."""
         findings = []
 
@@ -222,38 +237,44 @@ class SSLScanner:
                         # Check for weak ciphers
                         for weak in self.weak_ciphers:
                             if weak.upper() in cipher_name.upper():
-                                findings.append({
-                                    "finding_id": f"ssl-weak-cipher-{hostname}",
-                                    "type": "weak_cipher",
-                                    "severity": "high",
-                                    "description": f"Weak cipher detected: {cipher_name} ({cipher_version})",
-                                    "timestamp": datetime.utcnow().isoformat(),
-                                })
+                                findings.append(
+                                    {
+                                        "finding_id": f"ssl-weak-cipher-{hostname}",
+                                        "type": "weak_cipher",
+                                        "severity": "high",
+                                        "description": f"Weak cipher detected: {cipher_name} ({cipher_version})",
+                                        "timestamp": datetime.utcnow().isoformat(),
+                                    }
+                                )
                                 break
 
                         # Check TLS version
                         if "TLSv1" in cipher_version or "SSLv" in cipher_version:
                             if "TLSv1.3" not in cipher_version and "TLSv1.2" not in cipher_version:
-                                findings.append({
-                                    "finding_id": f"ssl-weak-version-{hostname}",
-                                    "type": "weak_tls_version",
-                                    "severity": "high",
-                                    "description": f"Outdated TLS version: {cipher_version}",
-                                    "timestamp": datetime.utcnow().isoformat(),
-                                })
+                                findings.append(
+                                    {
+                                        "finding_id": f"ssl-weak-version-{hostname}",
+                                        "type": "weak_tls_version",
+                                        "severity": "high",
+                                        "description": f"Outdated TLS version: {cipher_version}",
+                                        "timestamp": datetime.utcnow().isoformat(),
+                                    }
+                                )
 
         except Exception as e:
-            findings.append({
-                "finding_id": f"ssl-cipher-check-error-{hostname}",
-                "type": "ssl_error",
-                "severity": "low",
-                "description": f"Error checking ciphers: {str(e)}",
-                "timestamp": datetime.utcnow().isoformat(),
-            })
+            findings.append(
+                {
+                    "finding_id": f"ssl-cipher-check-error-{hostname}",
+                    "type": "ssl_error",
+                    "severity": "low",
+                    "description": f"Error checking ciphers: {str(e)}",
+                    "timestamp": datetime.utcnow().isoformat(),
+                }
+            )
 
         return findings
 
-    def _check_certificate_chain(self, cert_der: bytes) -> List[Dict[str, Any]]:
+    def _check_certificate_chain(self, cert_der: bytes) -> list[dict[str, Any]]:
         """Check certificate chain validity."""
         findings = []
 
@@ -267,26 +288,30 @@ class SSLScanner:
 
             # Check if self-signed
             if issuer == subject:
-                findings.append({
-                    "finding_id": "ssl-self-signed",
-                    "type": "self_signed_certificate",
-                    "severity": "medium",
-                    "description": "Self-signed certificate detected",
-                    "timestamp": datetime.utcnow().isoformat(),
-                })
+                findings.append(
+                    {
+                        "finding_id": "ssl-self-signed",
+                        "type": "self_signed_certificate",
+                        "severity": "medium",
+                        "description": "Self-signed certificate detected",
+                        "timestamp": datetime.utcnow().isoformat(),
+                    }
+                )
 
         except Exception as e:
-            findings.append({
-                "finding_id": "ssl-chain-check-error",
-                "type": "ssl_error",
-                "severity": "low",
-                "description": f"Error checking certificate chain: {str(e)}",
-                "timestamp": datetime.utcnow().isoformat(),
-            })
+            findings.append(
+                {
+                    "finding_id": "ssl-chain-check-error",
+                    "type": "ssl_error",
+                    "severity": "low",
+                    "description": f"Error checking certificate chain: {str(e)}",
+                    "timestamp": datetime.utcnow().isoformat(),
+                }
+            )
 
         return findings
 
-    def _check_certificate_validity(self, cert_der: bytes) -> List[Dict[str, Any]]:
+    def _check_certificate_validity(self, cert_der: bytes) -> list[dict[str, Any]]:
         """Check certificate validity (not before, not after)."""
         findings = []
 
@@ -297,35 +322,41 @@ class SSLScanner:
             not_after = cert.not_valid_after_utc.replace(tzinfo=None)
 
             if now < not_before:
-                findings.append({
-                    "finding_id": "ssl-not-valid-yet",
-                    "type": "certificate_not_valid",
-                    "severity": "high",
-                    "description": f"Certificate not valid until {not_before.isoformat()}",
-                    "timestamp": datetime.utcnow().isoformat(),
-                })
+                findings.append(
+                    {
+                        "finding_id": "ssl-not-valid-yet",
+                        "type": "certificate_not_valid",
+                        "severity": "high",
+                        "description": f"Certificate not valid until {not_before.isoformat()}",
+                        "timestamp": datetime.utcnow().isoformat(),
+                    }
+                )
 
             if now > not_after:
-                findings.append({
-                    "finding_id": "ssl-expired",
-                    "type": "certificate_expired",
-                    "severity": "critical",
-                    "description": f"Certificate expired on {not_after.isoformat()}",
-                    "timestamp": datetime.utcnow().isoformat(),
-                })
+                findings.append(
+                    {
+                        "finding_id": "ssl-expired",
+                        "type": "certificate_expired",
+                        "severity": "critical",
+                        "description": f"Certificate expired on {not_after.isoformat()}",
+                        "timestamp": datetime.utcnow().isoformat(),
+                    }
+                )
 
         except Exception as e:
-            findings.append({
-                "finding_id": "ssl-validity-check-error",
-                "type": "ssl_error",
-                "severity": "low",
-                "description": f"Error checking validity: {str(e)}",
-                "timestamp": datetime.utcnow().isoformat(),
-            })
+            findings.append(
+                {
+                    "finding_id": "ssl-validity-check-error",
+                    "type": "ssl_error",
+                    "severity": "low",
+                    "description": f"Error checking validity: {str(e)}",
+                    "timestamp": datetime.utcnow().isoformat(),
+                }
+            )
 
         return findings
 
-    def list_certificates(self) -> List[Dict[str, Any]]:
+    def list_certificates(self) -> list[dict[str, Any]]:
         """List monitored certificates (placeholder for future implementation)."""
         return {
             "message": "Certificate monitoring requires database storage (to be implemented)",

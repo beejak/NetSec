@@ -3,8 +3,18 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from netsec_core.api.routes import health, dns, ssl, scan, traffic, anomaly, assets, llm, remediation
 from netsec_core import __version__
+from netsec_core.api.routes import (
+    anomaly,
+    assets,
+    dns,
+    health,
+    llm,
+    remediation,
+    scan,
+    ssl,
+    traffic,
+)
 from netsec_core.config import config
 from netsec_core.utils.logger import logger
 
