@@ -1,14 +1,10 @@
 """Simple web interface for container scanning"""
 
-from fastapi import FastAPI, File, UploadFile, HTTPException, Request
-from fastapi.responses import HTMLResponse, FileResponse, JSONResponse
-from fastapi.staticfiles import StaticFiles
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from pathlib import Path
-import tempfile
-import asyncio
 
-from netsec_container import ContainerScanner
 
 # Create templates directory if it doesn't exist
 templates_dir = Path(__file__).parent / "templates"

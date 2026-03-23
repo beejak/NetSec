@@ -1,8 +1,7 @@
 """LLM-powered security analysis and remediation"""
 
-import asyncio
 import logging
-from typing import Optional, Dict, Any
+from typing import Optional
 
 from netsec_container.core.results import ScanResults, LLMRemediation
 

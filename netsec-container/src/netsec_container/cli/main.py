@@ -1,9 +1,7 @@
 """CLI interface for netsec-container"""
 
 import click
-import asyncio
 import sys
-from pathlib import Path
 
 from netsec_container import ContainerScanner
 
@@ -63,7 +61,7 @@ def scan(
         )
         
         # Display summary
-        click.echo(f"\n📊 Scan Results:")
+        click.echo("\n📊 Scan Results:")
         click.echo(f"  Risk Score: {results.risk_score:.1f}/100 ({results.risk_level.upper()})")
         click.echo(f"  Vulnerabilities: {len(results.vulnerabilities)}")
         click.echo(f"  Secrets: {len(results.secrets)}")

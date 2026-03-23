@@ -3,7 +3,7 @@
 import asyncio
 import logging
 from pathlib import Path
-from typing import Dict, List, Optional, Union
+from typing import Optional, Union
 from datetime import datetime
 
 from netsec_container.core.vulnerability import VulnerabilityScanner

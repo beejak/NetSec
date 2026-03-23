@@ -5,7 +5,7 @@ import logging
 import subprocess
 import json
 from pathlib import Path
-from typing import Dict, List, Optional, Union, Any
+from typing import Optional, Union
 
 from netsec_container.core.results import SBOM
 
