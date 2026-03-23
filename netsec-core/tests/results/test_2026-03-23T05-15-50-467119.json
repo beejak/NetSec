@@ -1,0 +1,8 @@
+{
+  "test_name": "test_parse_certificate",
+  "status": "PASSED",
+  "timestamp": "2026-03-23T05:15:50.467119",
+  "parameters": {},
+  "duration_seconds": 0.0002846110000120916,
+  "test_file": "/home/user/NetSec/netsec-core/tests/test_ssl_scanner.py"
+}

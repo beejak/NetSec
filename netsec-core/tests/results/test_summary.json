@@ -1,6 +1,6 @@
 {
-  "total_tests": 94,
-  "passed": 93,
+  "total_tests": 137,
+  "passed": 136,
   "failed": 0,
   "skipped": 1,
   "errors": 0,
@@ -756,6 +756,350 @@
       "parameters": {},
       "duration_seconds": 0.0003122350001376617,
       "test_file": "/home/user/NetSec/netsec-core/tests/test_traffic_analyzer.py"
+    },
+    {
+      "test_name": "test_traffic_analyzer_import_error_without_scapy",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:13:36.306227",
+      "parameters": {},
+      "duration_seconds": 0.0004260800000110976,
+      "test_file": "/home/user/NetSec/netsec-core/tests/test_traffic_analyzer.py"
+    },
+    {
+      "test_name": "test_traffic_analyzer_init",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:13:36.312349",
+      "parameters": {},
+      "duration_seconds": 0.00104728100001239,
+      "test_file": "/home/user/NetSec/netsec-core/tests/test_traffic_analyzer.py"
+    },
+    {
+      "test_name": "test_analyze_traffic_no_packets_returns_error",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:13:36.316955",
+      "parameters": {},
+      "duration_seconds": 0.0002546059999986028,
+      "test_file": "/home/user/NetSec/netsec-core/tests/test_traffic_analyzer.py"
+    },
+    {
+      "test_name": "test_analyze_traffic_pcap_not_implemented",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:13:36.321326",
+      "parameters": {},
+      "duration_seconds": 0.00023155399999552628,
+      "test_file": "/home/user/NetSec/netsec-core/tests/test_traffic_analyzer.py"
+    },
+    {
+      "test_name": "test_root_endpoint",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:13:41.972537",
+      "parameters": {},
+      "duration_seconds": 0.00674227700000074,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_api_integration.py"
+    },
+    {
+      "test_name": "test_health_endpoint",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:13:41.980934",
+      "parameters": {},
+      "duration_seconds": 0.003665243999989798,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_api_integration.py"
+    },
+    {
+      "test_name": "test_dns_scan_endpoint",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:13:52.097751",
+      "parameters": {},
+      "duration_seconds": 10.112210965000003,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_api_integration.py"
+    },
+    {
+      "test_name": "test_ssl_check_endpoint",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:14:12.152012",
+      "parameters": {},
+      "duration_seconds": 20.049075786000003,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_api_integration.py"
+    },
+    {
+      "test_name": "test_scan_ports_endpoint",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:14:12.164920",
+      "parameters": {},
+      "duration_seconds": 0.007839197999999215,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_api_integration.py"
+    },
+    {
+      "test_name": "test_remediation_endpoint",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:14:12.173614",
+      "parameters": {},
+      "duration_seconds": 0.003862885000017968,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_api_integration.py"
+    },
+    {
+      "test_name": "test_remediation_list_endpoint",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:14:12.182631",
+      "parameters": {},
+      "duration_seconds": 0.0037197999999989406,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_api_integration.py"
+    },
+    {
+      "test_name": "test_remediation_search_endpoint",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:14:12.191649",
+      "parameters": {},
+      "duration_seconds": 0.003876068000010946,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_api_integration.py"
+    },
+    {
+      "test_name": "test_anomaly_status_endpoint",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:14:12.200820",
+      "parameters": {},
+      "duration_seconds": 0.004606830000000173,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_api_integration.py"
+    },
+    {
+      "test_name": "test_api_docs_available",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:14:12.208529",
+      "parameters": {},
+      "duration_seconds": 0.002802258999992091,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_api_integration.py"
+    },
+    {
+      "test_name": "test_openapi_schema_available",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:14:12.291769",
+      "parameters": {},
+      "duration_seconds": 0.07807012800000734,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_api_integration.py"
+    },
+    {
+      "test_name": "test_cli_version",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:14:12.297849",
+      "parameters": {},
+      "duration_seconds": 0.0008997879999981251,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_cli_integration.py"
+    },
+    {
+      "test_name": "test_cli_help",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:14:12.305240",
+      "parameters": {},
+      "duration_seconds": 0.002709457000008797,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_cli_integration.py"
+    },
+    {
+      "test_name": "test_dns_scan_command",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:14:22.417918",
+      "parameters": {},
+      "duration_seconds": 10.10780145999999,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_cli_integration.py"
+    },
+    {
+      "test_name": "test_dns_scan_with_options",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:14:32.529300",
+      "parameters": {},
+      "duration_seconds": 10.103240419999992,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_cli_integration.py"
+    },
+    {
+      "test_name": "test_ssl_check_command",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:14:52.585452",
+      "parameters": {},
+      "duration_seconds": 20.050852911999982,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_cli_integration.py"
+    },
+    {
+      "test_name": "test_ssl_check_with_port",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:15:12.638178",
+      "parameters": {},
+      "duration_seconds": 20.047407915000008,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_cli_integration.py"
+    },
+    {
+      "test_name": "test_scan_ports_command",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:15:12.656036",
+      "parameters": {},
+      "duration_seconds": 0.011084721999992553,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_cli_integration.py"
+    },
+    {
+      "test_name": "test_scan_ports_with_options",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:15:12.665612",
+      "parameters": {},
+      "duration_seconds": 0.002827066999998351,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_cli_integration.py"
+    },
+    {
+      "test_name": "test_scan_services_command",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:15:12.679431",
+      "parameters": {},
+      "duration_seconds": 0.00891509699999915,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_cli_integration.py"
+    },
+    {
+      "test_name": "test_remediation_get_command",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:15:12.848738",
+      "parameters": {},
+      "duration_seconds": 0.16412820700000452,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_cli_integration.py"
+    },
+    {
+      "test_name": "test_remediation_list_command",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:15:12.938736",
+      "parameters": {},
+      "duration_seconds": 0.0845638529999917,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_cli_integration.py"
+    },
+    {
+      "test_name": "test_anomaly_status_command",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:15:12.945333",
+      "parameters": {},
+      "duration_seconds": 0.0012790279999990162,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_cli_integration.py"
+    },
+    {
+      "test_name": "test_anomaly_learn_command",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:15:12.951200",
+      "parameters": {},
+      "duration_seconds": 0.0009574460000010276,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_cli_integration.py"
+    },
+    {
+      "test_name": "test_root_endpoint",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:15:42.136459",
+      "parameters": {},
+      "duration_seconds": 0.0075666399999931855,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_api_integration.py"
+    },
+    {
+      "test_name": "test_health_endpoint",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:15:42.146483",
+      "parameters": {},
+      "duration_seconds": 0.003730880999995634,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_api_integration.py"
+    },
+    {
+      "test_name": "test_dns_scan_endpoint",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:15:52.263604",
+      "parameters": {},
+      "duration_seconds": 10.111288235000018,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_api_integration.py"
+    },
+    {
+      "test_name": "test_ssl_check_endpoint",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:16:12.320313",
+      "parameters": {},
+      "duration_seconds": 20.050975394999966,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_api_integration.py"
+    },
+    {
+      "test_name": "test_scan_ports_endpoint",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:16:12.332879",
+      "parameters": {},
+      "duration_seconds": 0.006613392000019758,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_api_integration.py"
+    },
+    {
+      "test_name": "test_remediation_endpoint",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:16:12.342188",
+      "parameters": {},
+      "duration_seconds": 0.0038740859999961685,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_api_integration.py"
+    },
+    {
+      "test_name": "test_remediation_list_endpoint",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:16:12.351127",
+      "parameters": {},
+      "duration_seconds": 0.003462194000007912,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_api_integration.py"
+    },
+    {
+      "test_name": "test_remediation_search_endpoint",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:16:12.360378",
+      "parameters": {},
+      "duration_seconds": 0.003910740000037549,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_api_integration.py"
+    },
+    {
+      "test_name": "test_anomaly_status_endpoint",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:16:12.370981",
+      "parameters": {},
+      "duration_seconds": 0.004566847999967649,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_api_integration.py"
+    },
+    {
+      "test_name": "test_api_docs_available",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:16:12.379435",
+      "parameters": {},
+      "duration_seconds": 0.002956347999997888,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_api_integration.py"
+    },
+    {
+      "test_name": "test_openapi_schema_available",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:16:12.459484",
+      "parameters": {},
+      "duration_seconds": 0.07456410200001073,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_api_integration.py"
+    },
+    {
+      "test_name": "test_cli_version",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:16:12.465821",
+      "parameters": {},
+      "duration_seconds": 0.000920189999987997,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_cli_integration.py"
+    },
+    {
+      "test_name": "test_cli_help",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:16:12.473217",
+      "parameters": {},
+      "duration_seconds": 0.00208420000001297,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_cli_integration.py"
+    },
+    {
+      "test_name": "test_dns_scan_command",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:16:22.586757",
+      "parameters": {},
+      "duration_seconds": 10.108344064999983,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_cli_integration.py"
+    },
+    {
+      "test_name": "test_dns_scan_with_options",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:16:32.700989",
+      "parameters": {},
+      "duration_seconds": 10.107724710000014,
+      "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_cli_integration.py"
     }
   ]
 }

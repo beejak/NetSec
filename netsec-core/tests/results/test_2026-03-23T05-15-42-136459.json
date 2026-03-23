@@ -1,0 +1,8 @@
+{
+  "test_name": "test_root_endpoint",
+  "status": "PASSED",
+  "timestamp": "2026-03-23T05:15:42.136459",
+  "parameters": {},
+  "duration_seconds": 0.0075666399999931855,
+  "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_api_integration.py"
+}

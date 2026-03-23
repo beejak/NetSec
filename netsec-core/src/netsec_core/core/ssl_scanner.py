@@ -126,8 +126,8 @@ class SSLScanner:
                 "subject": {},
                 "issuer": {},
                 "serial_number": str(cert.serial_number),
-                "not_valid_before": cert.not_valid_before.isoformat(),
-                "not_valid_after": cert.not_valid_after.isoformat(),
+                "not_valid_before": cert.not_valid_before_utc.isoformat(),
+                "not_valid_after": cert.not_valid_after_utc.isoformat(),
                 "version": cert.version.name,
             }
 
@@ -154,7 +154,7 @@ class SSLScanner:
         try:
             cert = x509.load_der_x509_certificate(cert_der, default_backend())
             now = datetime.utcnow()
-            expires = cert.not_valid_after.replace(tzinfo=None)
+            expires = cert.not_valid_after_utc.replace(tzinfo=None)
 
             days_until_expiry = (expires - now).days
 
@@ -293,8 +293,8 @@ class SSLScanner:
         try:
             cert = x509.load_der_x509_certificate(cert_der, default_backend())
             now = datetime.utcnow()
-            not_before = cert.not_valid_before.replace(tzinfo=None)
-            not_after = cert.not_valid_after.replace(tzinfo=None)
+            not_before = cert.not_valid_before_utc.replace(tzinfo=None)
+            not_after = cert.not_valid_after_utc.replace(tzinfo=None)
 
             if now < not_before:
                 findings.append({

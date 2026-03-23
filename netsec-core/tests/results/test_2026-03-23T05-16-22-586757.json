@@ -1,0 +1,8 @@
+{
+  "test_name": "test_dns_scan_command",
+  "status": "PASSED",
+  "timestamp": "2026-03-23T05:16:22.586757",
+  "parameters": {},
+  "duration_seconds": 10.108344064999983,
+  "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_cli_integration.py"
+}
