@@ -10,7 +10,7 @@ A suite of three security projects: **NetSec-Core** (network security), **NetSec
 |--------|-------------|--------|
 | **[NetSec-Core](netsec-core/)** | Network scanning, DNS security, SSL/TLS monitoring, traffic analysis, anomaly detection, LLM integration | Implemented |
 | **[NetSec-Cloud](netsec-cloud/)** | Multi-cloud (AWS, Azure, GCP) scanning, CIS/NIST compliance mapping, storage/IAM/networking/compute checks | Implemented |
-| **[NetSec-Container](netsec-container/)** | Container image scanning, secrets detection, vulnerability scanning, SBOM, LLM remediation | In progress |
+| **[NetSec-Container](netsec-container/)** | Container image scanning, secrets detection, vulnerability scanning, SBOM, LLM remediation | Implemented |
 
 ---
 

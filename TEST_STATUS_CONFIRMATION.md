@@ -32,7 +32,7 @@ Or use the root scripts: [run_all_tests_parallel.sh](run_all_tests_parallel.sh) 
 
 | Area | Covered | Gaps (optional or deferred) |
 |------|---------|------------------------------|
-| **Core** | API (health, DNS, SSL, scan, anomaly, assets, remediation, traffic, LLM smoke); CLI (version, help, scan, dns, ssl, traffic, anomaly, assets, remediation, health); unit (DNS, SSL, network, remediation, anomaly detector, asset discovery). | TrafficAnalyzer, AnomalyDetector, AssetDiscovery, LLMAnalyzer **unit** tests (need scapy/network/mock). |
+| **Core** | API (health, DNS, SSL, scan, anomaly, assets, remediation, traffic, LLM smoke); CLI (version, help, scan, dns, ssl, traffic, anomaly, assets, remediation, health); unit (DNS, SSL, network, remediation, anomaly detector, asset discovery, LLM analyzer, traffic analyzer). | None — all unit tests now covered. |
 | **Cloud** | API (root, health, providers, scan 401, multi-scan body, compliance frameworks/controls, compliance check 401/400); CLI (help, scan help, providers); unit (scanner, providers, compliance mapping). | CLI scan full run (needs creds/mock); checks module unit tests. |
 | **Container** | API (root, health, scan POST, scan/upload); CLI (help, scan help); unit (scanner, scoring, secrets, vulnerability_basic, dockerfile, image_extractor, imports). | CLI scan/serve full run (needs Docker/image); ScanResults/Vulnerability/Secret and LLM unit coverage. |
 
@@ -63,10 +63,10 @@ There is **no enforced coverage threshold** in CI today; see [TESTING_GAPS.md](T
 
 | Project | Test count (approx) | Status |
 |---------|---------------------|--------|
-| NetSec-Core | ~55 (unit+api+cli, excl. integration) | Passing |
+| NetSec-Core | ~83 (unit+api+cli, excl. integration) | Passing |
 | NetSec-Cloud | ~33 | Passing |
 | NetSec-Container | ~30 | Passing |
 
 **Conclusion:** All tests are passing. Coverage is **complete for API/CLI and main business logic**; remaining gaps are documented in [TESTING_GAPS.md](TESTING_GAPS.md) and are optional or environment-dependent.
 
-**Latest changes (Container skopeo/crane, OSV lookup, Cloud root keys, CI lint):** Re-run `pytest` in each project to confirm locally. CI now enforces `ruff check`; optional `pip-audit` step runs in each job.
+**Latest changes (2026-03-23):** Fixed `CryptographyDeprecationWarning` in netsec-core `ssl_scanner.py`; fixed all ruff lint errors across all three packages; replaced live network calls in netsec-core tests with deterministic mocks; unblocked 3 traffic analyzer tests. All units tests now covered including TrafficAnalyzer, AnomalyDetector, AssetDiscovery, and LLMAnalyzer.
