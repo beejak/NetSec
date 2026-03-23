@@ -2,6 +2,27 @@
 
 All notable changes to NetSec-Core will be documented in this file.
 
+## [Unreleased] - 2026-03-23
+
+### Fixed
+- `CryptographyDeprecationWarning` in `ssl_scanner.py` — replaced deprecated
+  `not_valid_before`/`not_valid_after` with timezone-aware `not_valid_before_utc`/`not_valid_after_utc`
+- All ruff lint errors across `src/` and `tests/` (import sorting, typing
+  modernization, unused variables/imports)
+- Reformatted all source and test files with black
+
+### Changed
+- Replaced live network calls in tests with deterministic mocks:
+  - DNS tests: `resolver.resolve` patched via `unittest.mock`
+  - SSL tests: `_get_certificate` patched with a synthetic self-signed DER cert
+  - Network scanner tests: `socket.socket` patched to avoid real TCP connections
+- Unblocked 3 traffic analyzer tests via runtime `SCAPY_AVAILABLE` patch
+  (tests now run without scapy installed)
+
+### Chore
+- Added `tests/results/test_*.json` to `.gitignore` to stop tracking
+  auto-generated test run artifacts
+
 ## [0.1.0] - 2024-12-XX
 
 ### Added - Week 1-2: Foundation & API Framework
