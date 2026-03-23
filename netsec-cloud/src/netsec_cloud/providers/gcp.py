@@ -7,7 +7,6 @@ try:
     from google.cloud import storage
     from google.cloud import compute_v1
     from google.oauth2 import service_account
-    from google.auth.exceptions import GoogleAuthError
     GCP_AVAILABLE = True
 except ImportError:
     GCP_AVAILABLE = False
@@ -142,7 +141,7 @@ class GCPProvider(CloudProvider):
         except Exception as e:
             findings.append(
                 Finding(
-                    finding_id=f"gcp-scan-error-storage",
+                    finding_id="gcp-scan-error-storage",
                     type="scan_error",
                     severity="info",
                     title="Error scanning GCP storage",
@@ -325,7 +324,7 @@ class GCPProvider(CloudProvider):
         except Exception as e:
             findings.append(
                 Finding(
-                    finding_id=f"gcp-scan-error-networking",
+                    finding_id="gcp-scan-error-networking",
                     type="scan_error",
                     severity="info",
                     title="Error scanning GCP networking",

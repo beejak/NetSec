@@ -1,7 +1,6 @@
 """Compliance checking routes."""
 
 from fastapi import APIRouter, HTTPException
-from typing import List
 from datetime import datetime, timezone
 
 from netsec_cloud.api.models import ComplianceCheckRequest

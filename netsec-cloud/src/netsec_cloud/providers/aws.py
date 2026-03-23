@@ -38,7 +38,7 @@ class AWSProvider(CloudProvider):
             self.authenticated = True
             return True
 
-        except (NoCredentialsError, ClientError) as e:
+        except (NoCredentialsError, ClientError):
             self.authenticated = False
             return False
 
@@ -100,7 +100,7 @@ class AWSProvider(CloudProvider):
 
                     # Check 2: Encryption
                     try:
-                        encryption = s3_client.get_bucket_encryption(Bucket=bucket_name)
+                        s3_client.get_bucket_encryption(Bucket=bucket_name)
                         # Encryption is enabled
                     except ClientError as e:
                         if e.response["Error"]["Code"] == "ServerSideEncryptionConfigurationNotFoundError":
@@ -138,7 +138,7 @@ class AWSProvider(CloudProvider):
                     except Exception:
                         pass
 
-                except ClientError as e:
+                except ClientError:
                     # Skip buckets we can't access
                     continue
 
@@ -146,7 +146,7 @@ class AWSProvider(CloudProvider):
             # Log error but continue
             findings.append(
                 Finding(
-                    finding_id=f"aws-scan-error-storage",
+                    finding_id="aws-scan-error-storage",
                     type="scan_error",
                     severity="info",
                     title="Error scanning AWS storage",
@@ -251,7 +251,7 @@ class AWSProvider(CloudProvider):
         except Exception as e:
             findings.append(
                 Finding(
-                    finding_id=f"aws-scan-error-iam",
+                    finding_id="aws-scan-error-iam",
                     type="scan_error",
                     severity="info",
                     title="Error scanning AWS IAM",
@@ -304,7 +304,7 @@ class AWSProvider(CloudProvider):
         except Exception as e:
             findings.append(
                 Finding(
-                    finding_id=f"aws-scan-error-networking",
+                    finding_id="aws-scan-error-networking",
                     type="scan_error",
                     severity="info",
                     title="Error scanning AWS networking",
@@ -328,7 +328,6 @@ class AWSProvider(CloudProvider):
         reg = region or "us-east-1"
         try:
             ec2_client = self.session.client("ec2", region_name=reg)
-            ec2_resource = self.session.resource("ec2", region_name=reg)
 
             # EC2 instances
             paginator = ec2_client.get_paginator("describe_instances")
