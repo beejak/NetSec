@@ -1,6 +1,6 @@
 {
-  "total_tests": 165,
-  "passed": 164,
+  "total_tests": 166,
+  "passed": 165,
   "failed": 0,
   "skipped": 1,
   "errors": 0,
@@ -1323,6 +1323,14 @@
       "timestamp": "2026-03-23T05:19:13.352360",
       "parameters": {},
       "duration_seconds": 0.004165787999966142,
+      "test_file": "/home/user/NetSec/netsec-core/tests/test_api_routes.py"
+    },
+    {
+      "test_name": "test_dns_scan_endpoint",
+      "status": "PASSED",
+      "timestamp": "2026-03-23T05:19:23.470423",
+      "parameters": {},
+      "duration_seconds": 10.111510517999989,
       "test_file": "/home/user/NetSec/netsec-core/tests/test_api_routes.py"
     }
   ]
