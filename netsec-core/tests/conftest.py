@@ -1,9 +1,43 @@
 """Pytest configuration and fixtures."""
 
+import datetime
 import pytest
 from fastapi.testclient import TestClient
 from netsec_core.api.main import app
 from netsec_core.utils.test_logger import TestResultLogger, TestStatus, get_test_logger
+from cryptography import x509
+from cryptography.x509.oid import NameOID
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.backends import default_backend
+
+
+@pytest.fixture(scope="session")
+def synthetic_cert_der():
+    """Generate a self-signed DER certificate for offline SSL tests."""
+    key = rsa.generate_private_key(
+        public_exponent=65537, key_size=2048, backend=default_backend()
+    )
+    subject = issuer = x509.Name([
+        x509.NameAttribute(NameOID.COMMON_NAME, "example.com"),
+        x509.NameAttribute(NameOID.ORGANIZATION_NAME, "Test Org"),
+    ])
+    now = datetime.datetime.utcnow()
+    cert = (
+        x509.CertificateBuilder()
+        .subject_name(subject)
+        .issuer_name(issuer)
+        .public_key(key.public_key())
+        .serial_number(x509.random_serial_number())
+        .not_valid_before(now)
+        .not_valid_after(now + datetime.timedelta(days=365))
+        .add_extension(
+            x509.SubjectAlternativeName([x509.DNSName("example.com")]),
+            critical=False,
+        )
+        .sign(key, hashes.SHA256(), default_backend())
+    )
+    return cert.public_bytes(serialization.Encoding.DER)
 
 
 @pytest.fixture
