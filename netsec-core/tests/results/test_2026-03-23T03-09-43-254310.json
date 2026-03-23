@@ -1,0 +1,8 @@
+{
+  "test_name": "test_cli_help",
+  "status": "PASSED",
+  "timestamp": "2026-03-23T03:09:43.254310",
+  "parameters": {},
+  "duration_seconds": 0.0021489069999915955,
+  "test_file": "/home/user/NetSec/netsec-core/tests/test_cli.py"
+}

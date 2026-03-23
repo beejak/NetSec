@@ -1,0 +1,8 @@
+{
+  "test_name": "test_ssl_check_with_port",
+  "status": "PASSED",
+  "timestamp": "2026-03-23T03:05:12.226722",
+  "parameters": {},
+  "duration_seconds": 20.053431060000037,
+  "test_file": "/home/user/NetSec/netsec-core/tests/integration/test_cli_integration.py"
+}

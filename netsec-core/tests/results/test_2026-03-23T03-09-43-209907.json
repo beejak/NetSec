@@ -1,0 +1,8 @@
+{
+  "test_name": "test_llm_analyze_traffic_endpoint",
+  "status": "PASSED",
+  "timestamp": "2026-03-23T03:09:43.209907",
+  "parameters": {},
+  "duration_seconds": 0.005035763000023508,
+  "test_file": "/home/user/NetSec/netsec-core/tests/test_api_routes.py"
+}

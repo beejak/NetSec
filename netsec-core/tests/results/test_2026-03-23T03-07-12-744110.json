@@ -1,0 +1,8 @@
+{
+  "test_name": "test_ssl_check_request",
+  "status": "PASSED",
+  "timestamp": "2026-03-23T03:07:12.744110",
+  "parameters": {},
+  "duration_seconds": 0.0001985879999892859,
+  "test_file": "/home/user/NetSec/netsec-core/tests/test_api_models.py"
+}

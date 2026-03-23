@@ -1,0 +1,8 @@
+{
+  "test_name": "test_anomaly_detect_endpoint",
+  "status": "PASSED",
+  "timestamp": "2026-03-23T03:07:12.789317",
+  "parameters": {},
+  "duration_seconds": 0.00436426300001358,
+  "test_file": "/home/user/NetSec/netsec-core/tests/test_api_routes.py"
+}
